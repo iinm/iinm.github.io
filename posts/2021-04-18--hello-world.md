@@ -2,12 +2,12 @@
 
 ## List
 
-- one
-- two
-- three
+* one
+* two
+* three
 
 ## Code
 
-```sh
+```
 echo "Hello, World!"
 ```
