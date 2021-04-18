@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Loading...</title>
+  </head>
+  <body>
+    <pre><code id="post"></code></pre>
+    <script charset="utf-8">
+      (() => {
+        const render = (markdownContent, el) => {
+          // TODO: parse markdown then generate HTML
+          document.title = markdownContent.split(/\n/)[0];
+          el.textContent = markdownContent;
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const source = window.location.origin + window.location.pathname + urlParams.get('source');
+
+        const postEl = document.querySelector('#post');
+        postEl.textContent = "⌛ Loading...";
+        fetch(source)
+          .then(res => res.text())
+          .then(markdownContent => render(markdownContent, postEl))
+        ;
+      })();
+    </script>
+  </body>
+</html>
