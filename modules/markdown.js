@@ -5,9 +5,7 @@ export const parseBlocks = (markdownContentLines) => {
     for (const reader of blockReaders) {
       if (reader.match(markdownContentLines, start)) {
         const { block, readLineCount } = reader.read(markdownContentLines, start)
-        if (block.type !== 'empty_line') {
-          blocks.push(block)
-        }
+        blocks.push(block)
         start += readLineCount
         break
       }
