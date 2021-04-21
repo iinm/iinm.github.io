@@ -18,6 +18,68 @@ export const parseBlocks = (markdownContentLines) => {
   return blocks
 }
 
+const parseInline = (inlineContent) => {
+  if (inlineContent === '') return []
+  for (const segmenter of inlineContentSegmenters) {
+    const { before, segment, after } = segmenter(inlineContent)
+    if (segment) {
+      return [...parseInline(before), segment, ...parseInline(after)]
+    }
+  }
+  return [{ type: 'text', text: inlineContent, props: {} }]
+}
+
+const inlineContentSegmenters = [
+  // image
+  (inlineContent) => {
+    const match = inlineContent.match('(.*)!\\[([^\\]]*)\\]\\(([^\\)]+)\\)(.*)')
+    if (match === null) return {}
+    return {
+      before: match[1],
+      segment: {
+        type: 'image',
+        text: '',
+        props: {
+          url: match[3],
+          alt: match[2]
+        }
+      },
+      after: match[4]
+    }
+  },
+  // link
+  (inlineContent) => {
+    const match = inlineContent.match('(.*)\\[([^\\]]+)\\]\\(([^\\)]+)\\)(.*)')
+    if (match === null) return {}
+    return {
+      before: match[1],
+      segment: {
+        type: 'url',
+        text: match[2],
+        props: {
+          url: match[3]
+        }
+      },
+      after: match[4]
+    }
+
+  },
+  // bold
+  (inlineContent) => {
+    const match = inlineContent.match(/(.*)\*\*(.+)\*\*(.*)/)
+    if (match === null) return {}
+    return {
+      before: match[1],
+      segment: {
+        type: 'bold',
+        text: match[2],
+        props: {}
+      },
+      after: match[3]
+    }
+  }
+]
+
 const blockReaders = [
   // heading
   {
@@ -153,7 +215,7 @@ const blockReaders = [
       }
     }
   },
-  // paragraph
+  // inline
   {
     match: (lines, start) => {
       return lines[start].match(/^ *.+$/) !== null
@@ -162,8 +224,11 @@ const blockReaders = [
       const match = lines[start].match(/^ *(.+)$/)
       return {
         block: {
-          type: 'paragragh',
-          contents: [match[1]]
+          type: 'inline',
+          contents: [],
+          props: {
+            segments: parseInline(match[1])
+          }
         },
         readLineCount: 1
       }
