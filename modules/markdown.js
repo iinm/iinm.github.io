@@ -79,7 +79,7 @@ const blockReaders = [
       }
     }
   },
-  // unordered list
+  // list
   {
     match: (lines, start) => {
       return lines[start].match(/^(?:[\-+*]|\d+\.) +.+$/) !== null
