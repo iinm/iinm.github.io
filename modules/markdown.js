@@ -1,11 +1,10 @@
-export const parseBlocks = (markdownContent) => {
+export const parseBlocks = (markdownContentLines) => {
   const blocks = []
-  const lines = markdownContent.split('\n')
-  for (let start = 0; start < lines.length;) {
+  for (let start = 0; start < markdownContentLines.length;) {
     const previousStart = start
     for (const reader of blockReaders) {
-      if (reader.match(lines, start)) {
-        const { block, readLineCount } = reader.read(lines, start)
+      if (reader.match(markdownContentLines, start)) {
+        const { block, readLineCount } = reader.read(markdownContentLines, start)
         if (block.type !== 'empty_line') {
           blocks.push(block)
         }
@@ -76,8 +75,7 @@ const blockReaders = [
       return {
         block: {
           type: 'blockquote',
-          // TODO: 再帰的に処理する
-          contents: blockLines
+          contents: parseBlocks(blockLines)
         },
         readLineCount: cursor - start
       }
@@ -89,7 +87,7 @@ const blockReaders = [
       return lines[start].match(/^(?:[\-+*]|\d+\.) +.+$/) !== null
     },
     read: (lines, start) => {
-      const blockLines = []
+      const blocks = []
       let itemLines = []
       let itemStartSymbol = ''
       let indent = 0
@@ -101,7 +99,7 @@ const blockReaders = [
         if (itemStartMatch !== null) {
           itemStartSymbol = itemStartSymbol !== '' ? itemStartMatch[1] : itemStartSymbol
           if (itemLines.length > 0) {
-            blockLines.push(itemLines)
+            blocks.push(itemLines)
           }
           itemLines = [itemStartMatch[2]]
           continue
@@ -115,13 +113,12 @@ const blockReaders = [
         break
       }
       if (itemLines.length > 0) {
-        blockLines.push(itemLines)
+        blocks.push(itemLines)
       }
       return {
         block: {
           type: itemStartSymbol.match(/^[\-+*]/) ? 'unordered_list' : 'ordered_list',
-          // TODO: 再帰的に処理する
-          contents: blockLines
+          contents: blocks.map(blockLines => parseBlocks(blockLines))
         },
         readLineCount: cursor - start
       }
