@@ -11,7 +11,7 @@ export const parseBlocks = (markdownContentLines) => {
       }
     }
     if (previousStart === start) {
-      console.warn(`Cannot parse after "${lines[start]}", blocks: ${JSON.stringify(blocks, null, 2)}`)
+      console.warn("Cannot parse after:", markdownContentLines[start], "blocks:", blocks)
       break
     }
   }
