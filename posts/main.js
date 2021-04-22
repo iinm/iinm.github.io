@@ -13,7 +13,10 @@ window.onload = () => {
       if (titleBlock) {
         document.title = titleBlock.props.heading
       }
-      document.querySelector('.loading-screen').style.visibility = 'hidden'
+      // remove loading screen
+      const loadingScreen = document.querySelector('.loading-screen')
+      loadingScreen.style.display = 'none'
+      // render post
       renderBlocks(document.getElementById('post'), blocks)
     })
     .catch(console.error)
