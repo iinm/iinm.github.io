@@ -1,0 +1,24 @@
+.loading-screen {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  line-height: 100vh;
+  text-align: center;
+  font-size: 5rem;
+}
+
+.shaking {
+  display: inline-block;
+  animation: shaking .5s  infinite;
+}
+
+@keyframes shaking {
+  0%   { transform: translate(0px, 0px) rotateZ(0deg)}
+  25%  { transform: translate(2px, 2px) rotateZ(1deg)}
+  50%  { transform: translate(0px, 2px) rotateZ(0deg)}
+  75%  { transform: translate(2px, 0px) rotateZ(-1deg)}
+  100% { transform: translate(0px, 0px) rotateZ(0deg)}
+}

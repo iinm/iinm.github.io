@@ -1,5 +1,24 @@
 import * as markdown from '../modules/markdown.js'
 
+window.onload = () => {
+  const urlParams = new URLSearchParams(window.location.search)
+  const source = window.location.pathname + urlParams.get('post') + '.md'
+
+  fetch(source)
+    .then(res => res.text())
+    .then(markdownContent => markdown.parseBlocks(markdownContent.split('\n')))
+    .then(mergeInlineBlocks)
+    .then(blocks => {
+      const titleBlock = blocks.find(block => block.type === 'heading')
+      if (titleBlock) {
+        document.title = titleBlock.props.heading
+      }
+      document.querySelector('.loading-screen').style.visibility = 'hidden'
+      renderBlocks(document.getElementById('post'), blocks)
+    })
+    .catch(console.error)
+}
+
 const renderBlocks = (parentNode, blocks) => {
   for (const block of blocks) {
     switch (block.type) {
@@ -102,19 +121,3 @@ const mergeInlineBlocks = (blocks) => {
   }
   return merged
 }
-
-const urlParams = new URLSearchParams(window.location.search)
-const source = window.location.pathname + urlParams.get('post') + '.md'
-
-fetch(source)
-  .then(res => res.text())
-  .then(markdownContent => markdown.parseBlocks(markdownContent.split('\n')))
-  .then(mergeInlineBlocks)
-  .then(blocks => {
-    const titleBlock = blocks.find(block => block.type === 'heading')
-    if (titleBlock) {
-      document.title = titleBlock.props.heading
-    }
-    renderBlocks(document.getElementById('post'), blocks)
-  })
-  .catch(console.error)
