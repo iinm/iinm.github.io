@@ -12,7 +12,7 @@
 
 .shaking {
   display: inline-block;
-  animation: shaking .5s  infinite;
+  animation: shaking .2s  infinite;
 }
 
 @keyframes shaking {
