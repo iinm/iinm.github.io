@@ -110,5 +110,11 @@ fetch(source)
   .then(res => res.text())
   .then(markdownContent => markdown.parseBlocks(markdownContent.split('\n')))
   .then(mergeInlineBlocks)
-  .then(blocks => renderBlocks(document.getElementById('post'), blocks))
+  .then(blocks => {
+    const titleBlock = blocks.find(block => block.type === 'heading')
+    if (titleBlock) {
+      document.title = titleBlock.props.heading
+    }
+    renderBlocks(document.getElementById('post'), blocks)
+  })
   .catch(console.error)
