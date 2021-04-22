@@ -10,9 +10,9 @@
   font-size: 5rem;
 }
 
-.shaking {
+.loading-screen__loading-emoji {
   display: inline-block;
-  animation: shaking .2s  infinite;
+  animation: fade-in linear .2s, shaking .2s infinite;
 }
 
 @keyframes shaking {
@@ -21,4 +21,9 @@
   50%  { transform: translate(0px, 2px) rotateZ(0deg)}
   75%  { transform: translate(2px, 0px) rotateZ(-1deg)}
   100% { transform: translate(0px, 0px) rotateZ(0deg)}
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
