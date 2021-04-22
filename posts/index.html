@@ -5,23 +5,7 @@
     <meta name="viewport" content="width=device-width" />
   </head>
   <body>
-    <div id="post"><div>
-    <script charset="utf-8">
-      (() => {
-        const render = (markdownContent, el) => {
-          document.title = markdownContent.split(/\n/)[0].replace(/^#/, '') + ' - Low-Tech Blog'
-          el.innerHTML = `<pre><code>${markdownContent}</code></pre>`
-        }
-
-        const urlParams = new URLSearchParams(window.location.search)
-        const source = window.location.origin + window.location.pathname + urlParams.get('post') + '.md'
-
-        const postEl = document.querySelector('#post')
-        postEl.textContent = "⌛ Loading..."
-        fetch(source)
-          .then(res => res.text())
-          .then(markdownContent => render(markdownContent, postEl))
-      })()
-    </script>
+    <div id="post"></div>
+    <script type="module" src="main.js"></script>
   </body>
 </html>
