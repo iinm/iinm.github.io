@@ -18,10 +18,7 @@ window.onload = () => {
       const loadingScreen = document.querySelector('.loading-screen')
       loadingScreen.style.display = 'none'
       // Render post
-      const post = document.createElement('div')
-      post.className = 'post'
-      renderBlocks(post, blocks)
-      document.querySelector('.post-container').appendChild(post)
+      renderBlocks(document.querySelector('.post'), blocks)
     })
     .catch(console.error)
 }
