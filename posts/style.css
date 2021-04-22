@@ -1,5 +1,4 @@
 .loading-screen {
-  display: inline-block;
   position: absolute;
   top: 0;
   left: 0;
@@ -7,12 +6,13 @@
   width: 100vw;
   line-height: 95vh;
   text-align: center;
-  font-size: 5rem;
+  animation: fade-in linear .2s
 }
 
 .loading-screen__loading-emoji {
   display: inline-block;
-  animation: fade-in linear .2s, shaking .2s infinite;
+  font-size: 5rem;
+  animation: shaking .2s infinite;
 }
 
 @keyframes shaking {
@@ -24,6 +24,6 @@
 }
 
 @keyframes fade-in {
-  0% { opacity: 0; }
+  0%   { opacity: 0; }
   100% { opacity: 1; }
 }
