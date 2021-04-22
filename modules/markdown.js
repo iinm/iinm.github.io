@@ -26,7 +26,7 @@ const parseInline = (inlineContent) => {
       return [...parseInline(before), segment, ...parseInline(after)]
     }
   }
-  return [{ type: 'text', text: inlineContent, props: {} }]
+  return [{ type: 'text', props: { text: inlineContent } }]
 }
 
 const inlineContentSegmenters = [
@@ -38,10 +38,9 @@ const inlineContentSegmenters = [
       before: match[1],
       segment: {
         type: 'image',
-        text: '',
         props: {
-          url: match[3],
-          alt: match[2]
+          alt: match[2],
+          src: match[3]
         }
       },
       after: match[4]
@@ -55,8 +54,8 @@ const inlineContentSegmenters = [
       before: match[1],
       segment: {
         type: 'url',
-        text: match[2],
         props: {
+          text: match[2],
           url: match[3]
         }
       },
@@ -66,18 +65,35 @@ const inlineContentSegmenters = [
   },
   // bold
   (inlineContent) => {
-    const match = inlineContent.match(/(.*)\*\*(.+)\*\*(.*)/)
+    const match = inlineContent.match(/(.*)\*\*([^*]+)\*\*(.*)/)
     if (match === null) return {}
     return {
       before: match[1],
       segment: {
         type: 'bold',
-        text: match[2],
-        props: {}
+        props: {
+          text: match[2],
+        }
+      },
+      after: match[3]
+    }
+  },
+  // italic
+  (inlineContent) => {
+    const match = inlineContent.match(/(.*)\*([^*]+)\*(.*)/)
+    if (match === null) return {}
+    return {
+      before: match[1],
+      segment: {
+        type: 'italic',
+        props: {
+          text: match[2],
+        }
       },
       after: match[3]
     }
   }
+
 ]
 
 const blockReaders = [
@@ -91,9 +107,10 @@ const blockReaders = [
       return {
         block: {
           type: 'heading',
-          contents: [match[2]],
+          contents: [],
           props: {
-            level: match[1].length
+            level: match[1].length,
+            heading: match[2]
           }
         },
         readLineCount: 1
@@ -157,7 +174,7 @@ const blockReaders = [
       for (; cursor < lines.length; cursor++) {
         const itemStartMatch = lines[cursor].match(itemStartPattern)
         if (itemStartMatch !== null) {
-          itemStartSymbol = itemStartSymbol !== '' ? itemStartMatch[1] : itemStartSymbol
+          itemStartSymbol = itemStartSymbol === '' ? itemStartMatch[1] : itemStartSymbol
           if (itemLines.length > 0) {
             blocks.push(itemLines)
           }
@@ -178,7 +195,11 @@ const blockReaders = [
       return {
         block: {
           type: itemStartSymbol.match(/^[\-+*]/) ? 'unordered_list' : 'ordered_list',
-          contents: blocks.map(blockLines => parseBlocks(blockLines))
+          contents: blocks.map(blockLines => ({
+            type: 'list_item',
+            contents: parseBlocks(blockLines),
+            props: {}
+          }))
         },
         readLineCount: cursor - start
       }
@@ -206,9 +227,10 @@ const blockReaders = [
       return {
         block: {
           type: 'code_block',
-          contents: blockLines.join('\n'),
+          contents: [],
           props: {
-            language: startMatch[1]
+            language: startMatch[1],
+            code: blockLines.join('\n')
           }
         },
         readLineCount: cursor - start
