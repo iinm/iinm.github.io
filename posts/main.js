@@ -9,15 +9,19 @@ window.onload = () => {
     .then(markdownContent => markdown.parseBlocks(markdownContent.split('\n')))
     .then(mergeInlineBlocks)
     .then(blocks => {
+      // Set title
       const titleBlock = blocks.find(block => block.type === 'heading')
       if (titleBlock) {
         document.title = titleBlock.props.heading
       }
-      // remove loading screen
+      // Hide loading screen
       const loadingScreen = document.querySelector('.loading-screen')
       loadingScreen.style.display = 'none'
-      // render post
-      renderBlocks(document.getElementById('post'), blocks)
+      // Render post
+      const post = document.createElement('div')
+      post.className = 'post'
+      renderBlocks(post, blocks)
+      document.querySelector('.post-container').appendChild(post)
     })
     .catch(console.error)
 }
