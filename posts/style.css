@@ -1,6 +1,6 @@
 @import '../style.css';
 
-header {
+.navigation {
   padding-top: .5rem;
   border-bottom: .1rem solid #ddd;
 }
@@ -13,7 +13,7 @@ header {
   width: 100vw;
   line-height: 95vh;
   text-align: center;
-  animation: fade-in linear .2s
+  animation: fade-in linear .2s;
 }
 
 .loading-screen__loading-emoji {

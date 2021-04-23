@@ -30,6 +30,14 @@ window.onload = async () => {
   }
   // Hide loading screen
   loadingScreen.style.display = 'none'
+  // Render navigation
+  const navigation = document.createElement('div')
+  navigation.className = 'navigation'
+  const link = document.createElement('a')
+  link.setAttribute('href', '/')
+  link.appendChild(document.createTextNode('Back to Index'))
+  navigation.appendChild(link)
+  document.querySelector('header').appendChild(navigation)
   // Render post
   renderBlocks(document.querySelector('.post'), blocks)
 }
