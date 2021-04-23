@@ -1,5 +1,10 @@
 @import '../style.css';
 
+header {
+  padding-top: .5rem;
+  border-bottom: .1rem solid #ddd;
+}
+
 .loading-screen {
   position: absolute;
   top: 0;
