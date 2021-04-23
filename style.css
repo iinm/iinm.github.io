@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Ubuntu+Mono&family=Shippori+Mincho:wght@500&display=swap');
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Cormorant+Garamond', 'Shippori Mincho', serif;
+  font-weight: 500;
+  background-color: #fffffc;
+  color: #444;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+h1, h2 {
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 1.7rem;
+}
+
+h2 {
+  font-size: 1.3rem;
+}
+
+ul, ol {
+  padding: 0 0 0 2rem;
+}
+
+blockquote {
+  border-left: .2rem solid #ddd;
+  margin: 0;
+  padding: 0 .5rem;
+}
+
+pre,
+code {
+  font-family: 'Ubuntu Mono', monospace;
+  background-color: #f6f6f6;
+}
+
+pre {
+  padding: .5rem 1rem;
+  border-left: .2rem solid #ddd;
+}
+
+img {
+  max-width: 100%;
+}
+
+a,
+a:visited {
+  color: #2bd;
+  text-decoration: none;
+}
+
+a:hover,
+a:focus,
+a:active {
+  text-decoration: underline;
+}

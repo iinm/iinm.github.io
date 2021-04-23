@@ -1,26 +1,37 @@
 import * as markdown from '../modules/markdown.js'
 
-window.onload = () => {
+window.onload = async () => {
   const urlParams = new URLSearchParams(window.location.search)
   const source = window.location.pathname + urlParams.get('post') + '.md'
+  const loadingScreen = document.querySelector('.loading-screen')
 
-  fetch(source)
-    .then(res => res.text())
-    .then(markdownContent => markdown.parseBlocks(markdownContent.split('\n')))
-    .then(mergeInlineBlocks)
-    .then(blocks => {
-      // Set title
-      const titleBlock = blocks.find(block => block.type === 'heading')
-      if (titleBlock) {
-        document.title = titleBlock.props.heading
-      }
-      // Hide loading screen
-      const loadingScreen = document.querySelector('.loading-screen')
-      loadingScreen.style.display = 'none'
-      // Render post
-      renderBlocks(document.querySelector('.post'), blocks)
-    })
-    .catch(console.error)
+  const response = await fetch(source)
+  if (!response.ok) {
+    // Set title
+    document.title = `${response.status}`
+    // Hide loading screen
+    loadingScreen.style.display = 'none'
+    // Show error screen
+    const errorScreen = document.querySelector('.error-screen')
+    const statusCode = document.querySelector('.error-screen__status-code')
+    statusCode.appendChild(document.createTextNode(`${response.status}`))
+    errorScreen.style.display = 'block'
+    return
+  }
+
+  const markdownContent = await response.text()
+  const blocks = mergeInlineBlocks(
+    markdown.parseBlocks(markdownContent.split('\n'))
+  )
+  // Set title
+  const titleBlock = blocks.find(block => block.type === 'heading')
+  if (titleBlock) {
+    document.title = titleBlock.props.heading
+  }
+  // Hide loading screen
+  loadingScreen.style.display = 'none'
+  // Render post
+  renderBlocks(document.querySelector('.post'), blocks)
 }
 
 const renderBlocks = (parentNode, blocks) => {

@@ -1,3 +1,5 @@
+@import '../style.css';
+
 .loading-screen {
   position: absolute;
   top: 0;
@@ -13,6 +15,22 @@
   display: inline-block;
   font-size: 5rem;
   animation: shaking .2s infinite;
+}
+
+.error-screen {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  line-height: 95vh;
+  text-align: center;
+}
+
+.error-screen__status-code {
+  display: inline-block;
+  font-size: 5rem;
 }
 
 @keyframes shaking {
