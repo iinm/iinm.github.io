@@ -44,6 +44,7 @@ code {
 pre {
   padding: .5rem 1rem;
   border-left: .2rem solid #ddd;
+  overflow-x: scroll;
 }
 
 img {
