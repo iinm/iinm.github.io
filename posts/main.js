@@ -38,7 +38,7 @@ window.onload = async () => {
   console.log(dateMatch)
   if (dateMatch !== null) {
     const dateContainer = document.createElement('div')
-    dateContainer.className = 'post__date-container'
+    dateContainer.className = 'post__date'
     const date = document.createElement('time')
     date.setAttribute('datetime', dateMatch[0])
     date.appendChild(document.createTextNode(dateMatch[0]))
@@ -56,7 +56,7 @@ window.onload = async () => {
   link.setAttribute('href', '/')
   link.appendChild(document.createTextNode('Back to Index'))
   navigation.appendChild(link)
-  document.querySelector('header').appendChild(navigation)
+  document.querySelector('nav').appendChild(navigation)
 
   // Render post
   renderBlocks(postNode, blocks)

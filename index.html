@@ -3,14 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="style.css" type="text/css" media="all">
+    <link rel="shortcut icon" href="https://avatars.githubusercontent.com/u/8685693?s=48" type="image/x-icon">
+    <link rel="stylesheet" href="page.css" type="text/css" media="all">
     <title>iinm.github.io</title>
   </head>
   <body>
-    <h1>iinm.github.io</h1>
-    <ul>
-      <li><a href="posts?post=2021-04-24--markdown-to-html">2021-04-24 Client-side JavaScriptでMarkdownをHTMLに変換する</a></li>
-      <li><a href="posts?post=2021-04-18--starting-a-tech-blog">2021-04-18 技術ブログを始める</a></li>
-    </ul>
+    <header>
+      <img class="page-header__icon" src="https://avatars.githubusercontent.com/u/8685693?s=48" alt=""/>
+      <h1 class="page-header__title">iinm.github.io</h1>
+    </header>
+    <section>
+      <h2>Posts</h2>
+      <ul class="posts">
+        <li class="posts__item">
+          <div class="posts__date">
+            <time datetime="2021-04-24">2021-04-24</time>
+          </div>
+          <a href="posts?post=2021-04-24--markdown-to-html">Client-side JavaScriptでMarkdownをHTMLに変換する</a>
+        </li>
+        <li class="posts__item">
+          <div class="posts__date">
+            <time datetime="2021-04-18">2021-04-18</time>
+          </div>
+          <a href="posts?post=2021-04-18--starting-a-tech-blog">技術ブログを始める</a>
+        </li>
+      </ul>
+    </section>
   </body>
 </html>
