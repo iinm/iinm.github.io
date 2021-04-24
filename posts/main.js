@@ -35,7 +35,6 @@ window.onload = async () => {
 
   // Set date
   const dateMatch = postId.match(/^\d{4}-\d{2}-\d{2}/)
-  console.log(dateMatch)
   if (dateMatch !== null) {
     const dateContainer = document.createElement('div')
     dateContainer.className = 'post__date'
