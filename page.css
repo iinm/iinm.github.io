@@ -9,7 +9,8 @@
 
 .page-header__icon {
   border-radius: 50%;
-  max-width: 3rem;
+  width: 3rem;
+  height: 3rem;
 }
 
 .posts {
