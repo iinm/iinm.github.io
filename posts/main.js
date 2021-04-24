@@ -1,6 +1,4 @@
-import * as markdown from '../modules/markdown.js'
-
-window.onload = async () => {
+export const render = async ({ modules: { markdown } }) => {
   const urlParams = new URLSearchParams(window.location.search)
   const postId = urlParams.get('post')
   const source = window.location.pathname + postId + '.md'

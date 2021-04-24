@@ -21,6 +21,10 @@
 
     <section class="post"></section>
 
-    <script type="module" src="main.js"></script>
+    <script type="module">
+      import * as markdown from '/modules/markdown.js'
+      import * as main from './main.js'
+      window.onload = () => main.render({ modules: { markdown } })
+    </script>
   </body>
 </html>
