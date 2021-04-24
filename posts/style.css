@@ -13,7 +13,7 @@
   width: 100vw;
   line-height: 95vh;
   text-align: center;
-  animation: fade-in linear .2s;
+  animation: fade-in linear .3s;
 }
 
 .loading-screen__loading-emoji {
