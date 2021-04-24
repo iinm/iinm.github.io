@@ -40,7 +40,8 @@ pre {
 
 pre,
 code {
-  font-family: 'Ubuntu Mono', monospace;
+  font-family: monospace;
+  font-size: .9rem;
   background-color: #f6f6f6;
 }
 
