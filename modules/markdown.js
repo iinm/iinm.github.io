@@ -92,8 +92,22 @@ const inlineContentSegmenters = [
       },
       after: match[3]
     }
+  },
+  // codd
+  (inlineContent) => {
+    const match = inlineContent.match('(.*)`([^`]+)`(.*)')
+    if (match === null) return {}
+    return {
+      before: match[1],
+      segment: {
+        type: 'code',
+        props: {
+          text: match[2],
+        }
+      },
+      after: match[3]
+    }
   }
-
 ]
 
 const blockReaders = [

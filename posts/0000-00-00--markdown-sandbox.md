@@ -21,10 +21,6 @@ This *is* italic.
 
 This*is*italic.
 
-This ***is*** bold and italic.
-
-This***is***bold and italic.
-
 ## Blockquotes
 
 > May the Force be with you.
@@ -69,6 +65,8 @@ This***is***bold and italic.
 - baz
 
 ## Code
+
+This is inline `code`.
 
 ```sh
 echo "Hello, World!"

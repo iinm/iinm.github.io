@@ -121,6 +121,10 @@ const inlineSegmentToElement = (segment) => {
       const italic = document.createElement('em')
       italic.appendChild(document.createTextNode(segment.props.text))
       return italic
+    case 'code':
+      const code = document.createElement('code')
+      code.appendChild(document.createTextNode(segment.props.text))
+      return code
     case 'text':
       return document.createTextNode(segment.props.text)
     default:
