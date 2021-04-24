@@ -2,7 +2,8 @@ import * as markdown from '../modules/markdown.js'
 
 window.onload = async () => {
   const urlParams = new URLSearchParams(window.location.search)
-  const source = window.location.pathname + urlParams.get('post') + '.md'
+  const postId = urlParams.get('post')
+  const source = window.location.pathname + postId + '.md'
   const loadingScreen = document.querySelector('.loading-screen')
 
   const response = await fetch(source)
@@ -23,13 +24,31 @@ window.onload = async () => {
   const blocks = mergeInlineBlocks(
     markdown.parseBlocks(markdownContent.split('\n'))
   )
+
   // Set title
   const titleBlock = blocks.find(block => block.type === 'heading')
   if (titleBlock) {
     document.title = titleBlock.props.heading
   }
+
+  const postNode = document.querySelector('.post')
+
+  // Set date
+  const dateMatch = postId.match(/^\d{4}-\d{2}-\d{2}/)
+  console.log(dateMatch)
+  if (dateMatch !== null) {
+    const dateContainer = document.createElement('div')
+    dateContainer.className = 'post__date-container'
+    const date = document.createElement('time')
+    date.setAttribute('datetime', dateMatch[0])
+    date.appendChild(document.createTextNode(dateMatch[0]))
+    dateContainer.appendChild(date)
+    postNode.appendChild(dateContainer)
+  }
+
   // Hide loading screen
   loadingScreen.style.display = 'none'
+
   // Render navigation
   const navigation = document.createElement('div')
   navigation.className = 'navigation'
@@ -38,8 +57,9 @@ window.onload = async () => {
   link.appendChild(document.createTextNode('Back to Index'))
   navigation.appendChild(link)
   document.querySelector('header').appendChild(navigation)
+
   // Render post
-  renderBlocks(document.querySelector('.post'), blocks)
+  renderBlocks(postNode, blocks)
 }
 
 const renderBlocks = (parentNode, blocks) => {
