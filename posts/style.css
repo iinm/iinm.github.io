@@ -38,6 +38,20 @@
   font-size: 5rem;
 }
 
+.code-block__language-label {
+  display: inline-block;
+  padding: .1rem .3rem;
+  background-color: #777;
+  color: #fffffe;
+  font-size: .8rem;
+  font-family: 'Ubuntu Mono', monospace;
+  font-weight: 600;
+}
+
+.code-block__language-label + pre {
+  margin-top: 0;
+}
+
 @keyframes shaking {
   0%   { transform: translate(0px, 0px) rotateZ(0deg)}
   25%  { transform: translate(2px, 2px) rotateZ(1deg)}

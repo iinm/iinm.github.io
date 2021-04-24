@@ -74,6 +74,14 @@ const renderBlocks = (parentNode, blocks) => {
         parentNode.appendChild(item)
         break
       case 'code_block':
+        // language label
+        if (block.props.language !== '') {
+          const label = document.createElement('div')
+          label.className = 'code-block__language-label'
+          label.appendChild(document.createTextNode(block.props.language))
+          parentNode.appendChild(label)
+        }
+        // pre, code
         const pre = document.createElement('pre')
         const code = document.createElement('code')
         code.append(document.createTextNode(block.props.code))
