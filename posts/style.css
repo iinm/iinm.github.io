@@ -13,7 +13,7 @@
   width: 100vw;
   line-height: 95vh;
   text-align: center;
-  animation: fade-in linear .2s;
+  animation: fade-in linear .3s;
 }
 
 .loading-screen__loading-emoji {
@@ -36,6 +36,30 @@
 .error-screen__status-code {
   display: inline-block;
   font-size: 5rem;
+}
+
+.code-block__language-label {
+  display: inline-block;
+  padding: .1rem .3rem;
+  background-color: #777;
+  color: #fffffe;
+  font-size: .8rem;
+  font-family: 'Ubuntu Mono', monospace;
+  font-weight: 600;
+}
+
+.code-block__language-label + pre {
+  margin-top: 0;
+}
+
+.post__date-container {
+  margin-top: .5rem;
+  font-size: .9rem;
+  color: #666;
+}
+
+.post__date-container + h1 {
+  margin-top: 0;
 }
 
 @keyframes shaking {
