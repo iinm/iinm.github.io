@@ -15,7 +15,7 @@
 
 その第一歩としてMarkdownで書いた記事をHTMLに変換することが目的です。
 静的なコンテンツなのでコマンドラインツールでも目的は達成できますが、
-いつの間にかJavaScript Modulesが使えるなどブラウザが進化していたため、最近のブラウザでできることを
+JavaScript Modulesなど最近のブラウザでできることを
 試したかったためClient-side JavaScriptでMarkdownを処理する方法を選びました。
 
 ## どんなものを作ったか？
