@@ -11,13 +11,12 @@
   width: 100vw;
   line-height: 95vh;
   text-align: center;
-  animation: fade-in linear .3s;
 }
 
 .loading-screen__loading-emoji {
   display: inline-block;
   font-size: 5rem;
-  animation: shaking .2s infinite;
+  animation: fade-in linear .3s, shaking .2s infinite;
 }
 
 .error-screen {
