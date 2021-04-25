@@ -6,7 +6,7 @@
 
 - Markdownで書いたブログ記事をHTMLに変換するためにMarkdown parserを書いた。
 - この記事はClient-side JavaScriptで上記parserを使って表示している。※ 今後変えるかも
-- まずは記事を書くための最低限のSyntaxのみをサポート。※ [Markdown Sandbox : 現時点でサポートする要素](/posts?post=0000-00-00--markdown-sandbox)
+- まずは記事を書くための最低限のSyntaxのみをサポート。※ [Markdown Sandbox : 現時点でサポートする要素](/posts/?post=0000-00-00--markdown-sandbox)
 
 ## 背景、目的
 
