@@ -46,11 +46,11 @@ pre {
 pre,
 code {
   font-family:
-  'Ubuntu Mono', /* for Ubuntu */
   Monaco,        /* for macOS */
   Consolas,      /* for Windows */
   monospace
   ;
+  font-size: .9rem;
   background-color: #f6f6f6;
 }
 
