@@ -182,3 +182,8 @@ HTML要素への変換は上記の出力結果をトレースしながら`docume
 
 まだまだ改善の余地がありますが、これでブログを書くための最低限の環境ができました。
 これからいろいろ書いていきます。
+
+## 参考
+
+- [Simple Markdown Parser with JavaScript and Regular Expressions](https://www.bigomega.dev/markdown-parser) - 最終的にはやりませんでしたが、正規表現でHTMLに直接書き換えるという発想を得ました。
+- [marked](https://github.com/markedjs/marked) - block要素とinline要素に分けて処理するという発想を得ました。
