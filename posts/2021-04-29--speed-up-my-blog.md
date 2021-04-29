@@ -130,6 +130,6 @@ after:
 
 ## 今後の課題
 
-- modulepreloadの挙動確認
 - JavaScript Modulesの使い方改善: 結果的にDepedency Indejction風になりテストが書きやすそうな形になったものの、Moduleが増えて依存関係が複雑になると煩雑になることが見えている。（Bundler使おうな！って結論になるかもしれない）
-- Service workerの利用: 他のサイトを見るとService workerを使って各種リソースをfetchしていた。何ができるのか？から調べる。
+- modulepreloadの挙動確認: 今回は白い画面が表示される時間が長くなってしまったため使わなかったが、使い方を間違えただけかもしれないのでもう一度調べる。
+- Service workerの利用: 他のサイトではService workerを使ってリソースをprefetchしていた。このブログでも使えないか？
