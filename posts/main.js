@@ -139,6 +139,7 @@ const inlineSegmentToElement = (segment) => {
       const imageLink = document.createElement('a')
       imageLink.setAttribute('href', segment.props.src)
       imageLink.setAttribute('target', '_blank')
+      imageLink.setAttribute('rel', 'noopener')
       imageLinkContainer.appendChild(imageLink)
       const image = document.createElement('img')
       image.setAttribute('alt', segment.props.alt)
