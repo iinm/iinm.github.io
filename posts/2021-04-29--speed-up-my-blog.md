@@ -111,7 +111,7 @@ JavaScriptとMarkdownのGETリクエストはどうしても直列になって�
 <link rel="prefetch" href="posts/2021-04-24--markdown-to-html.md">
 ```
 
-ここまでの修正で、Markdownファイルのfetch時間がほぼなくなりました。
+結果、Markdownファイルのfetch時間がほぼなくなりました。
 
 ![](https://resource-iinm-github-io.s3-ap-northeast-1.amazonaws.com/2021-04-29--speed-up-my-blog/prefetched.webp)
 
