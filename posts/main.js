@@ -134,10 +134,18 @@ const inlineSegmentToElement = (segment) => {
       link.appendChild(document.createTextNode(segment.props.text))
       return link
     case 'image':
+      const imageLinkContainer = document.createElement('div')
+      imageLinkContainer.className = 'image-link'
+      const imageLink = document.createElement('a')
+      imageLink.setAttribute('href', segment.props.src)
+      imageLink.setAttribute('target', '_blank')
+      imageLinkContainer.appendChild(imageLink)
       const image = document.createElement('img')
       image.setAttribute('alt', segment.props.alt)
       image.setAttribute('src', segment.props.src)
-      return image
+      image.setAttribute('loading', 'lazy')
+      imageLink.appendChild(image)
+      return imageLinkContainer
     case 'bold':
       const bold = document.createElement('b')
       bold.appendChild(document.createTextNode(segment.props.text))

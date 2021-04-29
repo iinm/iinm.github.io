@@ -1,3 +1,19 @@
+body {
+  max-width: 55rem;
+}
+
+.image-link {
+  display: block;
+  margin: 1rem auto;
+  /* text-align: center; */
+}
+
+.image-link img {
+  max-width: 30rem;
+  max-height: 25rem;
+  box-shadow: 0 0 .5rem #ddd;
+}
+
 .navigation {
   padding-top: .5rem;
   border-bottom: .1rem solid #ddd;
