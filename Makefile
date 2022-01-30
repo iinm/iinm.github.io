@@ -23,5 +23,5 @@ sitemap:
 		| grep -Eo '[0-9]{4}-[^.]+' \
 		| grep -v "0000" \
 		| sort -r \
-		| awk '{ printf "/posts/?post=%s\n", $$1 }' \
+		| awk '{ printf "$(BASE_URL)/posts/?post=%s\n", $$1 }' \
 		>> sitemap.txt
