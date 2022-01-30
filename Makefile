@@ -19,9 +19,7 @@ start-server:
 ## sitemap | Create sitemap
 sitemap:
 	echo $(BASE_URL) > sitemap.txt
-	find posts -name "*.md" \
-		| grep -Eo '[0-9]{4}-[^.]+' \
-		| grep -v "0000" \
+	find posts -name "*.html" -not -name "template.html" \
 		| sort -r \
-		| awk '{ printf "$(BASE_URL)/posts/?post=%s\n", $$1 }' \
+		| awk '{ printf "$(BASE_URL)/%s\n", $$1 }' \
 		>> sitemap.txt

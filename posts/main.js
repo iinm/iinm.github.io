@@ -1,7 +1,6 @@
 export const render = async ({ modules: { markdown } }) => {
-  const urlParams = new URLSearchParams(window.location.search)
-  const postId = urlParams.get('post')
-  const source = window.location.pathname + postId + '.md'
+  const postId = window.location.pathname.split('/').at(-1).split('.')[0];
+  const source = '/posts/' + postId + '.md'
   const loadingScreen = document.querySelector('.loading-screen')
 
   const response = await fetch(source)

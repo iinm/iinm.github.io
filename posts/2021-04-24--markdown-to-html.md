@@ -5,7 +5,7 @@
 ## サマリー
 
 - フロントエンドの要素技術を学びながらブログを作っている。
-- Markdownで書いたブログ記事をHTMLに変換するためにMarkdown parserを書いた。まずは記事を書くための最低限のSyntaxのみをサポート。※ [Markdown Sandbox : 現時点でサポートする要素](/posts/?post=0000-00-00--markdown-sandbox)
+- Markdownで書いたブログ記事をHTMLに変換するためにMarkdown parserを書いた。まずは記事を書くための最低限のSyntaxのみをサポート。※ [Markdown Sandbox : 現時点でサポートする要素](/posts/0000-00-00--markdown-sandbox.html)
 - この記事はClient-side JavaScriptで上記parserを使って表示している。※ 今後変えるかも
 
 ## 目的
