@@ -1,5 +1,7 @@
 .DEFAULT_GOAL := help
 
+BASE_URL=https://iinm.github.io
+
 .PHONY: help
 ## help | show help
 help:
@@ -13,10 +15,13 @@ help:
 start-server:
 	python -m http.server --bind 127.0.0.1 8000
 
-sitemap.txt:
+.PHONY: sitemap
+## sitemap | Create sitemap
+sitemap:
+	echo $(BASE_URL) > sitemap.txt
 	find posts -name "*.md" \
 		| grep -Eo '[0-9]{4}-[^.]+' \
 		| grep -v "0000" \
 		| sort -r \
-		| awk '{ printf "https://iinm.github.io/posts/?post=%s\n", $$1 }' \
-		> sitemap.txt
+		| awk '{ printf "/posts/?post=%s\n", $$1 }' \
+		>> sitemap.txt
