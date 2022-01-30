@@ -1,1 +1,4 @@
+User-agent: *
+Allow: /
+
 Sitemap: https://iinm.github.io/sitemap.txt
