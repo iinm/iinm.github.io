@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="https://avatars.githubusercontent.com/u/8685693?s=48" type="image/x-icon">
+    <link rel="stylesheet" href="/site.css" type="text/css" media="all">
+    <link rel="stylesheet" href="page.css" type="text/css" media="all">
+    <title>Arch Linux インストールメモ</title>
+  </head>
+  <body>
+    <nav><div class="navigation"><a href="/">Back to Index</a></div></nav>
+
+    <div class="loading-screen" style="display: none;">
+      <span class="loading-screen__loading-emoji">⚡</span>
+    </div>
+
+    <div class="error-screen">
+      <span class="error-screen__status-code"></span>
+    </div>
+
+    <section class="post"><div class="post__date"><time datetime="2022-01-30">2022-01-30</time></div><h1>Arch Linux インストールメモ</h1><p>Arch Linuxのインストールから、基本的なデスクトップ環境、Webブラウザと日本語入力をインストールするまでのメモです。 基本的には <a href="https://wiki.archlinux.org/title/installation_guide">Installation Guide</a> の流れの通りですが、今後のアップデートで問題が発生したときに対応できるように設定した内容を残すことが目的です。 (特に考えることがなかった部分は省略します。)</p><ul><li>ハードウェア: ThinkPad T490s</li><li>インストールに使用したイメージ: <a href="http://ftp.jaist.ac.jp/pub/Linux/ArchLinux/iso/2022.01.01/">archlinux-2022.01.01-x86_64.iso</a></li><li>デュアルブート: なし</li><li>Desktop環境: GNOME</li></ul><hr><p>ここからはライブ環境での操作</p><h2>パーティショニング</h2><ul><li>EFI用とroot用の2つに分割</li><li>後でswapfileを追加するのでswap用パーティションはなし</li><li>rootファイルシステムは <a href="https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition">LUKS on a partition</a> の方法で暗号化<ul><li><code>cryptsetup open /dev/nvme0n1p2 root</code> とすると <code>/dev/mapper/root</code> を通して暗号化されたvolumeに読み書きできるようになる。</li></ul></li></ul><pre><code>NAME        MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
+nvme0n1     259:0    0 238.5G  0 disk
+├─nvme0n1p1 259:1    0   512M  0 part  /boot
+└─nvme0n1p2 259:2    0   238G  0 part
+  └─root    254:0    0   238G  0 crypt /</code></pre><h2>パッケージのインストール</h2><ul><li>KernelはLTS版のlinux-ltsを選択 <a href="https://wiki.archlinux.org/title/Kernel">ref</a></li><li>その他、最低限必要なパッケージを追加でインストール</li></ul><div class="code-block__language-label">sh</div><pre><code>pacstrap /mnt base linux-lts linux-firmware \
+  neovim iwd sudo intel-ucode</code></pre><h2>Initramfs</h2><p>volumeを暗号化しているのでHOOKSにencryptを追加。</p><div class="code-block__language-label">conf</div><pre><code># mkinitcpio.conf
+HOOKS=(... block encrypt filesystem ...)</code></pre><h2>ブートローダー</h2><ul><li><a href="https://wiki.archlinux.org/title/Systemd-boot">systemd-boot</a> を選択。追加でパッケージをインストールする必要がなく、機能も必要十分だったため。</li><li>Intelのプロセッサを使っているので intel-ucode を読み込むように設定。</li><li>volumeを暗号化しているのでoptionsに設定を追加。</li></ul><div class="code-block__language-label">conf</div><pre><code># /boot/loader/entries/arch.conf
+title   Arch Linux
+linux   /vmlinuz-linux-lts
+initrd  /intel-ucode.img
+initrd  /initramfs-linux-lts.img
+options cryptdevice=UUID=4fdc1b7b-1991-4458-b33c-8639d59b3758:root root=/dev/mapper/root</code></pre><hr><p>ここからはインストール後のrootユーザによる操作</p><h2>Swapfile追加</h2><div class="code-block__language-label">sh</div><pre><code>dd if=/dev/zero of=/swapfile bs=1M count=512 status=progress
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile</code></pre><pre><code># /etc/fstab
+
+/swapfile none swap defaults 0 0</code></pre><h2>ユーザ作成</h2><div class="code-block__language-label">sh</div><pre><code># sudoが使えるようにwheel groupに追加しておく
+useradd -m -g wheel me
+
+# パスワード設定
+passwd me</code></pre><div class="code-block__language-label">conf</div><pre><code># /etc/sudoers ( edit by command 'EDITOR=nvim visudo' )
+%wheel ALL=(ALL) ALL</code></pre><hr><p>ここからは追加した一般ユーザによる操作</p><h2>Wifi設定</h2><p>GNOME &amp; NetworkManagerをインストールするまではiwdを使う。 ※ 先にNetworkManagerをインストールしてnmcliを使うでも良かったが、ライブ環境にインストールされていたiwdを初めて触ったので、使ってみたかった。</p><p>iwdの設定 <a href="https://wiki.archlinux.org/title/Iwd#Optional_configuration">ref</a></p><ul><li>DHCPを使うには <code>EnableNetworkConfiguration=True</code> が必要</li><li>DNSの設定も必要で、特に追加パッケージのインストールが不要なsystemdのものを使うことにした。</li></ul><div class="code-block__language-label">conf</div><pre><code># /etc/iwd/main.conf
+
+[General]
+EnableNetworkConfiguration=True
+
+[Network]
+NameResolvingService=systemd</code></pre><div class="code-block__language-label">sh</div><pre><code># GNOMEインストール後はNetworkManagerを使うのでenableにはしない
+sudo systemctl start iwd
+sudo systemctl start systemd-resolved</code></pre><h2>GNOMEのインストール</h2><p><a href="https://wiki.archlinux.org/title/GNOME">ref</a></p><div class="code-block__language-label">sh</div><pre><code># パッケージのインストール
+sudo pacman -Sy gnome gnome-terminal networkmanager
+
+# 自動起動設定
+sudo systemctl enable gdm
+sudo systemctl enable NetworkManager
+
+sudo reboot</code></pre><h2>フォント</h2><div class="code-block__language-label">sh</div><pre><code># Notoフォントをインストール
+sudo pacman -Sy noto-fonts noto-fonts-cjk noto-fonts-emoji
+
+# その他、購入したフォントを ~/.fonts に配置</code></pre><h2>AUR Helperのインストール</h2><p><a href="https://github.com/Jguer/yay">ref</a></p><div class="code-block__language-label">sh</div><pre><code># AURを使うには開発用パッケージが必要
+sudo pacman -Sy git base-devel
+
+cd ~/Downloads
+git clone https://aur.archlinux.org/yay-bin.git &amp;&amp; cd yay-bin
+makepkg -si</code></pre><h2>ブラウザ (Google Chrome)</h2><p>インストール</p><div class="code-block__language-label">sh</div><pre><code>yay -Sy google-chrome</code></pre><p>画面共有できるようにする <a href="https://wiki.archlinux.org/title/PipeWire#WebRTC_screen_sharing">ref</a></p><div class="code-block__language-label">sh</div><pre><code>sudo pacman -Sy xdg-desktop-portal xdg-desktop-portal-gnome</code></pre><p><a href="chrome://flags/#enable-webrtc-pipewire-capturer">chrome://flags/#enable-webrtc-pipewire-capturer</a> を有効化</p><h2>日本語入力 (Mozc)</h2><p><a href="https://wiki.archlinux.org/title/Fcitx5">ref</a></p><div class="code-block__language-label">sh</div><pre><code>sudo pacman -Sy fcitx5-im fcitx5-mozc</code></pre><p>環境変数を設定</p><pre><code># /etc/environment
+
+GTK_IM_MODULE=fcitx
+QT_IM_MODULE=fcitx
+XMODIFIERS=@im=fcitx</code></pre></section>
+
+    <script type="module">
+      import * as markdown from '/modules/markdown.js'
+      import * as main from './main.js'
+      window.onload = () => main.render({ modules: { markdown } })
+    </script>
+  
+
+</body></html>
