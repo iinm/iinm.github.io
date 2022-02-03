@@ -1,6 +1,9 @@
 export const render = async ({ modules: { markdown } }) => {
   const urlParams = new URLSearchParams(window.location.search)
   const postId = urlParams.get('post')
+  if (!postId) {
+    return
+  }
   const source = window.location.pathname + postId + '.md'
   const loadingScreen = document.querySelector('.loading-screen')
 
