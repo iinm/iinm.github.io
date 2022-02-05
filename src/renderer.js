@@ -1,30 +1,10 @@
-import * as markdown from '/modules/markdown.js'
+const markdown = require('./markdown')
+const jsdom = require('jsdom')
 
-export const render = async () => {
-  const urlParams = new URLSearchParams(window.location.search)
-  const postId = urlParams.get('post')
-  if (!postId) {
-    return
-  }
-  const source = window.location.pathname + postId + '.md'
-  const loadingScreen = document.querySelector('.loading-screen')
-  const errorScreen = document.querySelector('.error-screen')
+const render = (template, markdownContent, postId) => {
+  const dom = new jsdom.JSDOM(template)
+  const { document } = dom.window
 
-  const response = await fetch(source)
-  if (!response.ok) {
-    // Set title
-    document.title = `${response.status}`
-    // Hide loading screen
-    // loadingScreen.style.display = 'none'
-    loadingScreen.remove()
-    // Show error screen
-    const statusCode = document.querySelector('.error-screen__status-code')
-    statusCode.appendChild(document.createTextNode(`${response.status}`))
-    errorScreen.style.display = 'block'
-    return
-  }
-
-  const markdownContent = await response.text()
   const blocks = mergeInlineBlocks(
     markdown.parseBlocks(markdownContent.split('\n'))
   )
@@ -49,17 +29,12 @@ export const render = async () => {
     postNode.appendChild(dateContainer)
   }
 
-  errorScreen.remove()
-  // Hide loading screen
-  // loadingScreen.style.display = 'none'
-  loadingScreen.remove()
-  // Show navigation
-  document.querySelector('nav').style.display = "block"
-  // Render post
-  renderBlocks(postNode, blocks)
+  renderBlocks(document, postNode, blocks)
+
+  return dom
 }
 
-const renderBlocks = (parentNode, blocks) => {
+const renderBlocks = (document, parentNode, blocks) => {
   for (const block of blocks) {
     switch (block.type) {
       case 'heading':
@@ -72,22 +47,22 @@ const renderBlocks = (parentNode, blocks) => {
         break
       case 'blockquote':
         const blockquote = document.createElement('blockquote')
-        renderBlocks(blockquote, block.contents)
+        renderBlocks(document, blockquote, block.contents)
         parentNode.appendChild(blockquote)
         break
       case 'unordered_list':
         const ulist = document.createElement('ul')
-        renderBlocks(ulist, block.contents)
+        renderBlocks(document, ulist, block.contents)
         parentNode.appendChild(ulist)
         break
       case 'ordered_list':
         const olist = document.createElement('ol')
-        renderBlocks(olist, block.contents)
+        renderBlocks(document, olist, block.contents)
         parentNode.appendChild(olist)
         break
       case 'list_item':
         const item = document.createElement('li')
-        renderBlocks(item, block.contents)
+        renderBlocks(document, item, block.contents)
         parentNode.appendChild(item)
         break
       case 'code_block':
@@ -108,13 +83,13 @@ const renderBlocks = (parentNode, blocks) => {
       case 'inline':
         if (['LI'].includes(parentNode.tagName)) {
           for (const segment of block.props.segments) {
-            parentNode.appendChild(inlineSegmentToElement(segment))
+            parentNode.appendChild(inlineSegmentToElement(document, segment))
           }
         } else {
           const paragraph = document.createElement('p')
           parentNode.appendChild(paragraph)
           for (const segment of block.props.segments) {
-            paragraph.appendChild(inlineSegmentToElement(segment))
+            paragraph.appendChild(inlineSegmentToElement(document, segment))
           }
         }
         break
@@ -126,7 +101,7 @@ const renderBlocks = (parentNode, blocks) => {
   }
 }
 
-const inlineSegmentToElement = (segment) => {
+const inlineSegmentToElement = (document, segment) => {
   switch (segment.type) {
     case 'url':
       const link = document.createElement('a')
@@ -181,4 +156,8 @@ const mergeInlineBlocks = (blocks) => {
     }
   }
   return merged
+}
+
+module.exports = {
+  render
 }

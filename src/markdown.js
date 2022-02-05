@@ -1,4 +1,4 @@
-export const parseBlocks = (markdownContentLines) => {
+const parseBlocks = (markdownContentLines) => {
   const blocks = []
   for (let start = 0; start < markdownContentLines.length;) {
     const previousStart = start
@@ -286,3 +286,7 @@ const blockReaders = [
     }
   }
 ]
+
+module.exports = {
+  parseBlocks
+}
