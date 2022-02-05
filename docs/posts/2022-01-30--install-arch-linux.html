@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="ja"><head>
+<!DOCTYPE html><html lang="ja"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="https://avatars.githubusercontent.com/u/8685693?s=48" type="image/x-icon">
@@ -8,16 +7,11 @@
     <title>Arch Linux インストールメモ</title>
   </head>
   <body>
-    
-
-    
-
-    <nav style="display: block;">
+    <nav>
       <div class="navigation">
         <a href="/">Back to Index</a>
       </div>
     </nav>
-
     <section class="post"><div class="post__date"><time datetime="2022-01-30">2022-01-30</time></div><h1>Arch Linux インストールメモ</h1><p>Arch Linuxのインストールから、基本的なデスクトップ環境、Webブラウザと日本語入力をインストールするまでのメモです。 基本的には <a href="https://wiki.archlinux.org/title/installation_guide">Installation Guide</a> の流れの通りですが、今後のアップデートで問題が発生したときに対応できるように設定した内容を残すことが目的です。 (特に考えることがなかった部分は省略します。)</p><ul><li>ハードウェア: ThinkPad T490s</li><li>インストールに使用したイメージ: <a href="http://ftp.jaist.ac.jp/pub/Linux/ArchLinux/iso/2022.01.01/">archlinux-2022.01.01-x86_64.iso</a></li><li>デュアルブート: なし</li><li>Desktop環境: GNOME</li></ul><hr><p>ここからはライブ環境での操作</p><h2>パーティショニング</h2><ul><li>EFI用とroot用の2つに分割</li><li>後でswapfileを追加するのでswap用パーティションはなし</li><li>rootファイルシステムは <a href="https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition">LUKS on a partition</a> の方法で暗号化<ul><li><code>cryptsetup open /dev/nvme0n1p2 root</code> とすると <code>/dev/mapper/root</code> を通して暗号化されたvolumeに読み書きできるようになる。</li></ul></li></ul><pre><code>NAME        MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
 nvme0n1     259:0    0 238.5G  0 disk
 ├─nvme0n1p1 259:1    0   512M  0 part  /boot
@@ -67,8 +61,6 @@ makepkg -si</code></pre><h2>ブラウザ (Google Chrome)</h2><p>インストー�
 GTK_IM_MODULE=fcitx
 QT_IM_MODULE=fcitx
 XMODIFIERS=@im=fcitx</code></pre></section>
-
-    
   
 
 </body></html>
