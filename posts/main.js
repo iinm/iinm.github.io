@@ -1,4 +1,6 @@
-export const render = async ({ modules: { markdown } }) => {
+import * as markdown from '/modules/markdown.js'
+
+export const render = async () => {
   const urlParams = new URLSearchParams(window.location.search)
   const postId = urlParams.get('post')
   if (!postId) {
@@ -6,15 +8,16 @@ export const render = async ({ modules: { markdown } }) => {
   }
   const source = window.location.pathname + postId + '.md'
   const loadingScreen = document.querySelector('.loading-screen')
+  const errorScreen = document.querySelector('.error-screen')
 
   const response = await fetch(source)
   if (!response.ok) {
     // Set title
     document.title = `${response.status}`
     // Hide loading screen
-    loadingScreen.style.display = 'none'
+    // loadingScreen.style.display = 'none'
+    loadingScreen.remove()
     // Show error screen
-    const errorScreen = document.querySelector('.error-screen')
     const statusCode = document.querySelector('.error-screen__status-code')
     statusCode.appendChild(document.createTextNode(`${response.status}`))
     errorScreen.style.display = 'block'
@@ -46,18 +49,12 @@ export const render = async ({ modules: { markdown } }) => {
     postNode.appendChild(dateContainer)
   }
 
+  errorScreen.remove()
   // Hide loading screen
-  loadingScreen.style.display = 'none'
-
-  // Render navigation
-  const navigation = document.createElement('div')
-  navigation.className = 'navigation'
-  const link = document.createElement('a')
-  link.setAttribute('href', '/')
-  link.appendChild(document.createTextNode('Back to Index'))
-  navigation.appendChild(link)
-  document.querySelector('nav').appendChild(navigation)
-
+  // loadingScreen.style.display = 'none'
+  loadingScreen.remove()
+  // Show navigation
+  document.querySelector('nav').style.display = "block"
   // Render post
   renderBlocks(postNode, blocks)
 }

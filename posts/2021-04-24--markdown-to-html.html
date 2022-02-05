@@ -8,15 +8,15 @@
     <title>Client-side JavaScriptでMarkdownをHTMLに変換する</title>
   </head>
   <body>
-    <nav><div class="navigation"><a href="/">Back to Index</a></div></nav>
+    
 
-    <div class="loading-screen" style="display: none;">
-      <span class="loading-screen__loading-emoji">⚡</span>
-    </div>
+    
 
-    <div class="error-screen">
-      <span class="error-screen__status-code"></span>
-    </div>
+    <nav style="display: block;">
+      <div class="navigation">
+        <a href="/">Back to Index</a>
+      </div>
+    </nav>
 
     <section class="post"><div class="post__date"><time datetime="2021-04-24">2021-04-24</time></div><h1>Client-side JavaScriptでMarkdownをHTMLに変換する</h1><blockquote><p><em>この記事が表示できているということは、HTMLに変換できているということでしょう。</em></p></blockquote><h2>サマリー</h2><ul><li>フロントエンドの要素技術を学びながらブログを作っている。</li><li>Markdownで書いたブログ記事をHTMLに変換するためにMarkdown parserを書いた。まずは記事を書くための最低限のSyntaxのみをサポート。※ <a href="/posts/?post=0000-00-00--markdown-sandbox">Markdown Sandbox : 現時点でサポートする要素</a></li><li>この記事はClient-side JavaScriptで上記parserを使って表示している。※ 今後変えるかも</li></ul><h2>目的</h2><p>先週末に技術ブログをはじめました。 仕事はバックエンドが中心なので、せっかくならフロントエンドの基本的な要素技術を学ぼう、という意図でライブラリ、フレームワークは使わずにブログを作っています。</p><p>その第一歩としてMarkdownで書いた記事をHTMLに変換することが目的です。 静的なコンテンツなのでコマンドラインツールでも目的は達成できますが、 JavaScript Modulesなど最近のブラウザでできることを 試したかったためClient-side JavaScriptでMarkdownを処理する方法を選びました。</p><h2>どんなものを作ったか？</h2><p>Markdownの内容 (String) を受け取り、構造化して返します。</p><p>入力例:</p><div class="code-block__language-label">markdown</div><pre><code># Hello, World!
 
@@ -129,11 +129,7 @@ This **is** inline element.
   return [{ type: 'text', props: { text: inlineContent } }]
 }</code></pre><p>HTML要素への変換は上記の出力結果をトレースしながら<code>document.createElement</code>を呼んでいるだけなので割愛します。</p><h2>今後の課題</h2><ul><li>TableやInline HTMLなどサポートしてない要素は今後必要に応じて実装する予定です。</li><li>HTML要素への変換部分が<code>createElement</code>、<code>appendChild</code>の繰り返しで煩雑になってしまったので、仮想DOMみたいな層を挟んでみようと考えています。</li><li>分かってはいましたがClient-sideレンダリングするとMarkdownファイルをダウンロードするまで白い画面が表示されてしまいます。他にもいくつか気づきがあり、対策してみたのでこれは次の記事で紹介できればと思います。</li><li>コードハイライトしたい。</li></ul><p>まだまだ改善の余地がありますが、これでブログを書くための最低限の環境ができました。 これからいろいろ書いていきます。</p><h2>参考</h2><ul><li><a href="https://www.bigomega.dev/markdown-parser">Simple Markdown Parser with JavaScript and Regular Expressions</a> - 最終的にはやりませんでしたが、正規表現でHTMLに直接書き換えるという発想を得ました。</li><li><a href="https://github.com/markedjs/marked">marked</a> - block要素とinline要素に分けて処理するという発想を得ました。</li></ul></section>
 
-    <script type="module">
-      import * as markdown from '/modules/markdown.js'
-      import * as main from './main.js'
-      window.onload = () => main.render({ modules: { markdown } })
-    </script>
+    
   
 
 </body></html>

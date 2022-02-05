@@ -8,23 +8,19 @@
     <title>技術ブログを始める</title>
   </head>
   <body>
-    <nav><div class="navigation"><a href="/">Back to Index</a></div></nav>
+    
 
-    <div class="loading-screen" style="display: none;">
-      <span class="loading-screen__loading-emoji">⚡</span>
-    </div>
+    
 
-    <div class="error-screen">
-      <span class="error-screen__status-code"></span>
-    </div>
+    <nav style="display: block;">
+      <div class="navigation">
+        <a href="/">Back to Index</a>
+      </div>
+    </nav>
 
     <section class="post"><div class="post__date"><time datetime="2021-04-18">2021-04-18</time></div><h1>技術ブログを始める</h1><h2>技術ブログを書く目的</h2><ul><li>未来の自分のために知識を再利用できるように残すこと</li><li>人に説明できるように考えを整理すること</li><li>人に伝わるように上手く説明する訓練をすること</li></ul><h2>ついでにやりたいこと</h2><p>ライブラリ、フレームワークを使わずに作ることでフロントエンドの基本的な要素技術を学び、応用できるようになること。</p><h2>気をつけること</h2><p>あくまでもアウトプットが目的なのでブログの仕組みづくりにこだわりすぎない。 まずは見た目がダサくてもテキストが表示できれば良いので、徐々に必要なものを作っていく。</p><p>※ これもMarkdownをHTMLに変換できて、まともなCSSがかけたらと思っていたけどまずpushする。</p><h2>ブログの作りに対する要求</h2><ul><li>記事を書くときはマークアップよりも内容に集中したい → Markdownで書けること</li><li>サーバ管理が不要であること</li><li>シンプルに簡単に投稿できること（例：Markdownをpushするだけで記事が公開される）</li><li>作っていて楽しいこと</li></ul><h2>ブログのアーキテクチャ</h2><p>(アーキテクチャっていうほどでもないが)</p><ul><li>静的サイトホスティングを使う (GitHub Pages)</li><li>コンテンツはクライアントサイドのJavaScriptでMarkdownをfetchしてレンダリングする</li></ul><p>document.titleなどをJavaScriptで書くため、検索エンジンにインデックスされるのか？ → 商用サイトを作っているわけじゃないので今は気にしない</p><h2>これからやること</h2><ul><li>Markdownで書いた記事をcode要素に突っ込んで表示する (これはDone)</li><li>MarkdownをHTMLに変換する</li><li>CSSを書いて見た目を整える</li><li>MarkdownをHTMLに変換するネタの記事を書く</li><li>たくさんアウトプットする</li><li>記事にタグを付けられるようにする？</li><li>記事を検索できるようにする？</li></ul></section>
 
-    <script type="module">
-      import * as markdown from '/modules/markdown.js'
-      import * as main from './main.js'
-      window.onload = () => main.render({ modules: { markdown } })
-    </script>
+    
   
 
 </body></html>

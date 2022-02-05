@@ -5,7 +5,6 @@ body {
 .image-link {
   display: block;
   margin: 1rem auto;
-  /* text-align: center; */
 }
 
 .image-link img {
@@ -38,7 +37,6 @@ body {
 }
 
 .error-screen {
-  display: none;
   position: absolute;
   top: 0;
   left: 0;

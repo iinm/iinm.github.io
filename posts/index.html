@@ -9,22 +9,28 @@
     <title>Loading...</title>
   </head>
   <body>
-    <nav></nav>
-
-    <div class="loading-screen">
+    <div class="loading-screen" style="display: block;">
       <span class="loading-screen__loading-emoji">⚡</span>
     </div>
 
-    <div class="error-screen">
+    <div class="error-screen" style="display: none;">
       <span class="error-screen__status-code"></span>
     </div>
 
+    <nav style="display: none;">
+      <div class="navigation">
+        <a href="/">Back to Index</a>
+      </div>
+    </nav>
+
     <section class="post"></section>
 
-    <script type="module">
-      import * as markdown from '/modules/markdown.js'
+    <script id="main" type="module">
       import * as main from './main.js'
-      window.onload = () => main.render({ modules: { markdown } })
+      window.onload = async () => {
+        await main.render()
+        document.querySelector('#main').remove()
+      }
     </script>
   </body>
 </html>
