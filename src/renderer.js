@@ -1,7 +1,7 @@
 const markdown = require('./markdown')
 const jsdom = require('jsdom')
 
-const render = (template, markdownContent, postId) => {
+const render = (template, markdownContent, meta) => {
   const dom = new jsdom.JSDOM(template)
   const { document } = dom.window
 
@@ -18,16 +18,13 @@ const render = (template, markdownContent, postId) => {
   const postNode = document.querySelector('.post')
 
   // Set date
-  const dateMatch = postId.match(/^\d{4}-\d{2}-\d{2}/)
-  if (dateMatch !== null) {
-    const dateContainer = document.createElement('div')
-    dateContainer.className = 'post__date'
-    const date = document.createElement('time')
-    date.setAttribute('datetime', dateMatch[0])
-    date.appendChild(document.createTextNode(dateMatch[0]))
-    dateContainer.appendChild(date)
-    postNode.appendChild(dateContainer)
-  }
+  const dateContainer = document.createElement('div')
+  dateContainer.className = 'post__date'
+  const date = document.createElement('time')
+  date.setAttribute('datetime', meta.date)
+  date.appendChild(document.createTextNode(meta.date))
+  dateContainer.appendChild(date)
+  postNode.appendChild(dateContainer)
 
   renderBlocks(document, postNode, blocks)
 
