@@ -93,7 +93,7 @@ const inlineContentSegmenters = [
       after: match[3]
     }
   },
-  // codd
+  // code
   (inlineContent) => {
     const match = inlineContent.match('(.*)`([^`]+)`(.*)')
     if (match === null) return {}
