@@ -1,7 +1,7 @@
 const { render } = require('../src/renderer')
 const fs = require('fs')
 
-const template = fs.readFileSync('./templates/post.html', { encoding: 'utf-8', flag: 'r' })
+const template = fs.readFileSync('./templates/posts/index.html', { encoding: 'utf-8', flag: 'r' })
 fs.readdirSync('./posts').forEach(filename => {
   console.log(filename)
   const markdownContent = fs.readFileSync(`./posts/${filename}`, { encoding: 'utf-8', flag: 'r' })
