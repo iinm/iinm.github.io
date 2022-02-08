@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "renderPosts": "node ./scripts/renderPosts.js"
+    "makeSite": "npm run renderPosts && npm run makeSitemap",
+    "renderPosts": "node ./scripts/renderPosts.js",
+    "makeSitemap": "node ./scripts/makeSitemap.js"
   },
   "devDependencies": {
     "jsdom": "^19.0.0"
