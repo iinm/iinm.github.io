@@ -11,7 +11,7 @@ const parseBlocks = (markdownContentLines) => {
       }
     }
     if (previousStart === start) {
-      console.warn("Cannot parse after:", markdownContentLines[start], "blocks:", blocks)
+      console.warn('Cannot parse after:', markdownContentLines[start], 'blocks:', blocks)
       break
     }
   }
@@ -61,7 +61,6 @@ const inlineContentSegmenters = [
       },
       after: match[4]
     }
-
   },
   // bold
   (inlineContent) => {
@@ -72,7 +71,7 @@ const inlineContentSegmenters = [
       segment: {
         type: 'bold',
         props: {
-          text: match[2],
+          text: match[2]
         }
       },
       after: match[3]
@@ -87,7 +86,7 @@ const inlineContentSegmenters = [
       segment: {
         type: 'italic',
         props: {
-          text: match[2],
+          text: match[2]
         }
       },
       after: match[3]
@@ -102,7 +101,7 @@ const inlineContentSegmenters = [
       segment: {
         type: 'code',
         props: {
-          text: match[2],
+          text: match[2]
         }
       },
       after: match[3]
@@ -134,8 +133,8 @@ const blockReaders = [
   // horizontal ruler
   {
     match: (lines, start) => {
-      return lines[start] === ''
-        && lines.length > start + 1 && lines[start+1].match(/^-{3,}$/) !== null
+      return lines[start] === '' &&
+        lines.length > start + 1 && lines[start + 1].match(/^-{3,}$/) !== null
     },
     read: (_0, _1) => {
       return {
@@ -175,14 +174,14 @@ const blockReaders = [
   // list
   {
     match: (lines, start) => {
-      return lines[start].match(/^(?:[\-+*]|\d+\.) +.+$/) !== null
+      return lines[start].match(/^(?:[-+*]|\d+\.) +.+$/) !== null
     },
     read: (lines, start) => {
       const blocks = []
       let itemLines = []
       let itemStartSymbol = ''
       let indent = 0
-      const itemStartPattern = /^([\-+*]|\d+\.) +(.+)$/
+      const itemStartPattern = /^([-+*]|\d+\.) +(.+)$/
       const contentPattern = /^( +).+$/
       let cursor = start
       for (; cursor < lines.length; cursor++) {
@@ -208,7 +207,7 @@ const blockReaders = [
       }
       return {
         block: {
-          type: itemStartSymbol.match(/^[\-+*]/) ? 'unordered_list' : 'ordered_list',
+          type: itemStartSymbol.match(/^[-+*]/) ? 'unordered_list' : 'ordered_list',
           contents: blocks.map(blockLines => ({
             type: 'list_item',
             contents: parseBlocks(blockLines),
