@@ -1,5 +1,5 @@
-const parseBlocks = (markdownContentLines) => {
-  const blocks = []
+export const parseBlocks = (markdownContentLines: string[]): Block[] => {
+  const blocks: Block[] = []
   for (let start = 0; start < markdownContentLines.length;) {
     const previousStart = start
     for (const reader of blockReaders) {
@@ -18,105 +18,30 @@ const parseBlocks = (markdownContentLines) => {
   return blocks
 }
 
-const parseInline = (inlineContent) => {
-  if (inlineContent === '') return []
-  for (const segmenter of inlineContentSegmenters) {
-    const { before, segment, after } = segmenter(inlineContent)
-    if (segment) {
-      return [...parseInline(before), segment, ...parseInline(after)]
-    }
-  }
-  return [{ type: 'text', props: { text: inlineContent } }]
+type BlockType = 'heading' | 'horizontal_rule' | 'blockquote' | 'unordered_list' | 'ordered_list' | 'list_item' | 'code_block' | 'inline' | 'empty_line'
+
+interface Block<Props = Record<string,unknown>> {
+  type: BlockType
+  contents: Block[]
+  props?: Props
 }
 
-const inlineContentSegmenters = [
-  // image
-  (inlineContent) => {
-    const match = inlineContent.match('(.*)!\\[([^\\]]*)\\]\\(([^\\)]+)\\)(.*)')
-    if (match === null) return {}
-    return {
-      before: match[1],
-      segment: {
-        type: 'image',
-        props: {
-          alt: match[2],
-          src: match[3]
-        }
-      },
-      after: match[4]
-    }
-  },
-  // link
-  (inlineContent) => {
-    const match = inlineContent.match('(.*)\\[([^\\]]+)\\]\\(([^\\)]+)\\)(.*)')
-    if (match === null) return {}
-    return {
-      before: match[1],
-      segment: {
-        type: 'url',
-        props: {
-          text: match[2],
-          url: match[3]
-        }
-      },
-      after: match[4]
-    }
-  },
-  // bold
-  (inlineContent) => {
-    const match = inlineContent.match(/(.*)\*\*([^*]+)\*\*(.*)/)
-    if (match === null) return {}
-    return {
-      before: match[1],
-      segment: {
-        type: 'bold',
-        props: {
-          text: match[2]
-        }
-      },
-      after: match[3]
-    }
-  },
-  // italic
-  (inlineContent) => {
-    const match = inlineContent.match(/(.*)\*([^*]+)\*(.*)/)
-    if (match === null) return {}
-    return {
-      before: match[1],
-      segment: {
-        type: 'italic',
-        props: {
-          text: match[2]
-        }
-      },
-      after: match[3]
-    }
-  },
-  // code
-  (inlineContent) => {
-    const match = inlineContent.match('(.*)`([^`]+)`(.*)')
-    if (match === null) return {}
-    return {
-      before: match[1],
-      segment: {
-        type: 'code',
-        props: {
-          text: match[2]
-        }
-      },
-      after: match[3]
-    }
-  }
-]
+interface BlockReader {
+  match: (lines: string[], start: number) => boolean
+  read: (lines: string[], start: number) => { block: Block, readLineCount: number }
+}
 
-const blockReaders = [
+const blockReaders: BlockReader[] = [
   // heading
   {
     match: (lines, start) => {
       return lines[start].match(/^#+ +.+$/) !== null
     },
-    read: (lines, start) => {
+    read: (lines: string[], start: number) => {
       const match = lines[start].match(/^(#+) +(.+)$/)
+      if (match?.length !== 3) {
+        throw new Error(`Failed to read line, "${lines[start]}" as heading`)
+      }
       return {
         block: {
           type: 'heading',
@@ -136,7 +61,7 @@ const blockReaders = [
       return lines[start] === '' &&
         lines.length > start + 1 && lines[start + 1].match(/^-{3,}$/) !== null
     },
-    read: (_0, _1) => {
+    read: () => {
       return {
         block: {
           type: 'horizontal_rule',
@@ -157,7 +82,7 @@ const blockReaders = [
       let cursor = start
       for (; cursor < lines.length; cursor++) {
         const match = lines[cursor].match(pattern)
-        if (match === null) {
+        if (match?.length !== 2) {
           break
         }
         blockLines.push(match[1])
@@ -177,8 +102,8 @@ const blockReaders = [
       return lines[start].match(/^(?:[-+*]|\d+\.) +.+$/) !== null
     },
     read: (lines, start) => {
-      const blocks = []
-      let itemLines = []
+      const blocks: string[][] = []
+      let itemLines: string[] = []
       let itemStartSymbol = ''
       let indent = 0
       const itemStartPattern = /^([-+*]|\d+\.) +(.+)$/
@@ -186,7 +111,7 @@ const blockReaders = [
       let cursor = start
       for (; cursor < lines.length; cursor++) {
         const itemStartMatch = lines[cursor].match(itemStartPattern)
-        if (itemStartMatch !== null) {
+        if (itemStartMatch?.length === 3) {
           itemStartSymbol = itemStartSymbol === '' ? itemStartMatch[1] : itemStartSymbol
           if (itemLines.length > 0) {
             blocks.push(itemLines)
@@ -195,7 +120,7 @@ const blockReaders = [
           continue
         }
         const contentMatch = lines[cursor].match(contentPattern)
-        if (contentMatch !== null) {
+        if (contentMatch?.length === 2) {
           indent = indent > 0 ? indent : contentMatch[1].length
           itemLines.push(contentMatch[0].substring(indent))
           continue
@@ -224,7 +149,7 @@ const blockReaders = [
       return lines[start].match('^```.*$') !== null
     },
     read: (lines, start) => {
-      const blockLines = []
+      const blockLines: string[] = []
       const startPattern = '^```(.*)$'
       const endPattern = '^```$'
       const startMatch = lines[start].match(startPattern)
@@ -242,7 +167,7 @@ const blockReaders = [
           type: 'code_block',
           contents: [],
           props: {
-            language: startMatch[1],
+            language: startMatch?.[1],
             code: blockLines.join('\n')
           }
         },
@@ -257,6 +182,9 @@ const blockReaders = [
     },
     read: (lines, start) => {
       const match = lines[start].match(/^ *(.+)$/)
+      if (match?.length !== 2) {
+        throw new Error(`Failed to read line, "${lines[start]}" as inline`)
+      }
       return {
         block: {
           type: 'inline',
@@ -274,7 +202,7 @@ const blockReaders = [
     match: (lines, start) => {
       return lines[start] === ''
     },
-    read: (_0, _1) => {
+    read: () => {
       return {
         block: {
           type: 'empty_line',
@@ -286,6 +214,109 @@ const blockReaders = [
   }
 ]
 
-module.exports = {
-  parseBlocks
+type InlineContentType = 'text' | 'image' | 'url' | 'italic' | 'bold' | 'code'
+
+interface InlineContent {
+  type: InlineContentType
+  props: Record<string,unknown>
 }
+
+const parseInline = (inlineContent: string): InlineContent[] => {
+  if (!inlineContent) return []
+  for (const segmenter of inlineContentSegmenters) {
+    const segments = segmenter(inlineContent)
+    if (segments) {
+      const { before, segment, after } = segments
+      return [...parseInline(before), segment, ...parseInline(after)]
+    }
+  }
+  return [{ type: 'text', props: { text: inlineContent } }]
+}
+
+type InlineContentSegmenter = (inlineContent: string) => {
+  before: string
+  segment: InlineContent
+  after: string
+} | undefined
+
+const inlineContentSegmenters: InlineContentSegmenter[] = [
+  // image
+  (inlineContent) => {
+    const match = inlineContent.match('(.*)!\\[([^\\]]*)\\]\\(([^\\)]+)\\)(.*)')
+    if (match === null) return
+    return {
+      before: match[1],
+      segment: {
+        type: 'image',
+        props: {
+          alt: match[2],
+          src: match[3]
+        }
+      },
+      after: match[4]
+    }
+  },
+  // link
+  (inlineContent) => {
+    const match = inlineContent.match('(.*)\\[([^\\]]+)\\]\\(([^\\)]+)\\)(.*)')
+    if (match === null) return
+    return {
+      before: match[1],
+      segment: {
+        type: 'url',
+        props: {
+          text: match[2],
+          url: match[3]
+        }
+      },
+      after: match[4]
+    }
+  },
+  // bold
+  (inlineContent) => {
+    const match = inlineContent.match(/(.*)\*\*([^*]+)\*\*(.*)/)
+    if (match === null) return
+    return {
+      before: match[1],
+      segment: {
+        type: 'bold',
+        props: {
+          text: match[2]
+        }
+      },
+      after: match[3]
+    }
+  },
+  // italic
+  (inlineContent) => {
+    const match = inlineContent.match(/(.*)\*([^*]+)\*(.*)/)
+    if (match === null) return
+    return {
+      before: match[1],
+      segment: {
+        type: 'italic',
+        props: {
+          text: match[2]
+        }
+      },
+      after: match[3]
+    }
+  },
+  // code
+  (inlineContent) => {
+    const match = inlineContent.match('(.*)`([^`]+)`(.*)')
+    if (match === null) return
+    return {
+      before: match[1],
+      segment: {
+        type: 'code',
+        props: {
+          text: match[2]
+        }
+      },
+      after: match[3]
+    }
+  }
+]
+
+
