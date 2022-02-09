@@ -5,6 +5,7 @@
     "makeSitemap": "node ./scripts/makeSitemap.js"
   },
   "devDependencies": {
-    "jsdom": "^19.0.0"
+    "jsdom": "^19.0.0",
+    "typescript": "^4.5.5"
   }
 }
