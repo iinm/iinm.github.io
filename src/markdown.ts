@@ -1,3 +1,93 @@
+interface InlineSegmentBase<
+  Type = 'base',
+  Props = Record<string, unknown>
+  > {
+  type: Type
+  props: Props
+}
+
+export type TextSegment = InlineSegmentBase<'text', { text: string; }>
+export type ImageSegment = InlineSegmentBase<'image', { alt?: string; src: string; }>
+export type LinkSegment = InlineSegmentBase<'link', { url: string; text: string; }>
+export type BoldTextSegment = InlineSegmentBase<'bold', { text: string; }>
+export type ItalicTextSegment = InlineSegmentBase<'italic', { text: string; }>
+export type CodeSegment = InlineSegmentBase<'code', { text: string; }>
+
+export type InlineSegment =
+  | TextSegment
+  | ImageSegment
+  | LinkSegment
+  | BoldTextSegment
+  | ItalicTextSegment
+  | CodeSegment
+
+interface HeadingBlock {
+  type: 'heading'
+  props: {
+    level: number
+    heading: string
+  }
+}
+
+interface HorizontalRuleBlock {
+  type: 'horizontal_rule'
+}
+
+interface BlockquoteBlock<T> {
+  type: 'blockquote'
+  contents: T[]
+}
+
+interface ListItemBlock<T> {
+  type: 'list_item'
+  contents: T[]
+}
+
+interface UnorderedListBlock<T> {
+  type: 'unordered_list'
+  contents: T[]
+}
+
+interface OrderedListBlock<T> {
+  type: 'ordered_list'
+  contents: T[]
+}
+
+interface CodeBlock {
+  type: 'code_block'
+  props: {
+    language?: string
+    code: string
+  }
+}
+
+export interface InlineBlock {
+  type: 'inline'
+  props: {
+    segments: InlineSegment[]
+  }
+}
+
+interface EmptyLineBlock {
+  type: 'empty_line'
+}
+
+export type Block =
+  | HeadingBlock
+  | HorizontalRuleBlock
+  | BlockquoteBlock<Block>
+  | ListItemBlock<Block>
+  | UnorderedListBlock<ListItemBlock<Block>>
+  | OrderedListBlock<ListItemBlock<Block>>
+  | CodeBlock
+  | InlineBlock
+  | EmptyLineBlock
+
+interface BlockReader {
+  match: (lines: string[], start: number) => boolean
+  read: (lines: string[], start: number) => { block: Block, readLineCount: number }
+}
+
 export const parseBlocks = (markdownContentLines: string[]): Block[] => {
   const blocks: Block[] = []
   for (let start = 0; start < markdownContentLines.length;) {
@@ -16,42 +106,6 @@ export const parseBlocks = (markdownContentLines: string[]): Block[] => {
     }
   }
   return blocks
-}
-
-interface BlockBase<
-  Type = 'base',
-  Props = Record<string,unknown>,
-  Child = Block
-  > {
-  type: Type
-  props: Props
-  contents: Child[]
-}
-
-export type HeadingBlock = BlockBase<'heading', { level: number; heading: string }>
-export type HorizontalRuleBlock = BlockBase<'horizontal_rule', {}>
-export type BlockquoteBlock = BlockBase<'blockquote', {}>
-export type ListItemBlock = BlockBase<'list_item', {}>
-export type UnorderedListBlock = BlockBase<'unordered_list', {}, ListItemBlock>
-export type OrderedListBlock = BlockBase<'ordered_list', {}, ListItemBlock>
-export type CodeBlock = BlockBase<'code_block', { language?: string; code: string; }>
-export type InlineBlock = BlockBase<'inline', { segments: InlineSegment[] }>
-export type EmptyLineBlock = BlockBase<'empty_line', {}>
-
-export type Block =
-  | HeadingBlock
-  | HorizontalRuleBlock
-  | BlockquoteBlock
-  | UnorderedListBlock
-  | OrderedListBlock
-  | ListItemBlock
-  | CodeBlock
-  | InlineBlock
-  | EmptyLineBlock
-
-interface BlockReader {
-  match: (lines: string[], start: number) => boolean
-  read: (lines: string[], start: number) => { block: Block, readLineCount: number }
 }
 
 const blockReaders: BlockReader[] = [
@@ -232,36 +286,13 @@ const blockReaders: BlockReader[] = [
         block: {
           type: 'empty_line',
           contents: [],
-          props: {},
+          props: {}
         },
         readLineCount: 1
       }
     }
   }
 ]
-
-interface InlineSegmentBase<
-  Type = 'base',
-  Props = Record<string,unknown>
-  > {
-  type: Type
-  props: Props
-}
-
-export type TextSegment = InlineSegmentBase<'text', { text: string; }>
-export type ImageSegment = InlineSegmentBase<'image', { alt?: string; src: string; }>
-export type LinkSegment = InlineSegmentBase<'link', { url: string; text: string; }>
-export type BoldTextSegment = InlineSegmentBase<'bold', { text: string; }>
-export type ItalicTextSegment = InlineSegmentBase<'italic', { text: string; }>
-export type CodeSegment = InlineSegmentBase<'code', { text: string; }>
-
-export type InlineSegment =
-  | TextSegment
-  | ImageSegment
-  | LinkSegment
-  | BoldTextSegment
-  | ItalicTextSegment
-  | CodeSegment
 
 const parseInline = (inlineContent: string): InlineSegment[] => {
   if (!inlineContent) return []
@@ -360,5 +391,3 @@ const inlineContentSegmenters: InlineContentSegmenter[] = [
     }
   }
 ]
-
-

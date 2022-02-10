@@ -29,7 +29,7 @@ export const render = (template: string, markdownContent: string, meta: Metadata
 
   const postNode = document.querySelector('.post')
   if (!postNode) {
-    throw new Error("Element .post not found.")
+    throw new Error('Element .post not found.')
   }
   postNode.appendChild(dateContainer)
   renderBlocks(document, postNode, blocks)
@@ -135,7 +135,7 @@ const inlineSegmentToElement = (document: Document, segment: markdown.InlineSegm
       imageLink.setAttribute('rel', 'noopener')
       imageLinkContainer.appendChild(imageLink)
       const image = document.createElement('img')
-      image.setAttribute('alt', segment.props.alt || "")
+      image.setAttribute('alt', segment.props.alt || '')
       image.setAttribute('src', segment.props.src)
       image.setAttribute('loading', 'lazy')
       imageLink.appendChild(image)
