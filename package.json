@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "lint": "eslint src scripts",
+    "lint": "eslint --ext ts,js src scripts",
     "makeSite": "npm run renderPosts && npm run makeSitemap",
     "renderPosts": "ts-node ./scripts/renderPosts.js",
     "makeSitemap": "ts-node ./scripts/makeSitemap.js"
