@@ -1,16 +1,16 @@
-import * as markdown from './markdown'
-import jsdom from 'jsdom'
+import { JSDOM } from 'jsdom'
+import { Block, InlineBlock, InlineSegment, parseBlocks } from './markdown'
 
 interface Metadata {
   date: string
 }
 
 export const render = (template: string, markdownContent: string, meta: Metadata) => {
-  const dom = new jsdom.JSDOM(template)
+  const dom = new JSDOM(template)
   const { document } = dom.window
 
   const blocks = mergeInlineBlocks(
-    markdown.parseBlocks(markdownContent.split('\n'))
+    parseBlocks(markdownContent.split('\n'))
   )
 
   // Set title
@@ -37,7 +37,7 @@ export const render = (template: string, markdownContent: string, meta: Metadata
   return dom
 }
 
-const renderBlocks = (document: Document, parentNode: Element, blocks: markdown.Block[]) => {
+const renderBlocks = (document: Document, parentNode: Element, blocks: Block[]) => {
   for (const block of blocks) {
     switch (block.type) {
       case 'heading': {
@@ -118,7 +118,7 @@ const renderBlocks = (document: Document, parentNode: Element, blocks: markdown.
   }
 }
 
-const inlineSegmentToElement = (document: Document, segment: markdown.InlineSegment) => {
+const inlineSegmentToElement = (document: Document, segment: InlineSegment) => {
   switch (segment.type) {
     case 'link': {
       const link = document.createElement('a')
@@ -164,11 +164,11 @@ const inlineSegmentToElement = (document: Document, segment: markdown.InlineSegm
   }
 }
 
-const mergeInlineBlocks = (blocks: markdown.Block[]): markdown.Block[] => {
-  const merged: markdown.Block[] = []
+const mergeInlineBlocks = (blocks: Block[]): Block[] => {
+  const merged: Block[] = []
   for (const block of blocks) {
     if (merged.length > 0 && merged[merged.length - 1].type === 'inline' && block.type === 'inline') {
-      const previousBlock = merged[merged.length - 1] as markdown.InlineBlock
+      const previousBlock = merged[merged.length - 1] as InlineBlock
       const mergedSegments = previousBlock.props.segments.concat(
         [{ type: 'text', props: { text: ' ' } }],
         block.props.segments
