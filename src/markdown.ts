@@ -18,13 +18,36 @@ export const parseBlocks = (markdownContentLines: string[]): Block[] => {
   return blocks
 }
 
-type BlockType = 'heading' | 'horizontal_rule' | 'blockquote' | 'unordered_list' | 'ordered_list' | 'list_item' | 'code_block' | 'inline' | 'empty_line'
-
-interface Block<Props = Record<string,unknown>> {
-  type: BlockType
-  contents: Block[]
-  props?: Props
+interface BlockBase<
+  Type = 'base',
+  Props = Record<string,unknown>,
+  Child = Block
+  > {
+  type: Type
+  props: Props
+  contents: Child[]
 }
+
+export type HeadingBlock = BlockBase<'heading', { level: number; heading: string }>
+export type HorizontalRuleBlock = BlockBase<'horizontal_rule', {}>
+export type BlockquoteBlock = BlockBase<'blockquote', {}>
+export type ListItemBlock = BlockBase<'list_item', {}>
+export type UnorderedListBlock = BlockBase<'unordered_list', {}, ListItemBlock>
+export type OrderedListBlock = BlockBase<'ordered_list', {}, ListItemBlock>
+export type CodeBlock = BlockBase<'code_block', { language?: string; code: string; }>
+export type InlineBlock = BlockBase<'inline', { segments: InlineSegment[] }>
+export type EmptyLineBlock = BlockBase<'empty_line', {}>
+
+export type Block =
+  | HeadingBlock
+  | HorizontalRuleBlock
+  | BlockquoteBlock
+  | UnorderedListBlock
+  | OrderedListBlock
+  | ListItemBlock
+  | CodeBlock
+  | InlineBlock
+  | EmptyLineBlock
 
 interface BlockReader {
   match: (lines: string[], start: number) => boolean
@@ -65,7 +88,8 @@ const blockReaders: BlockReader[] = [
       return {
         block: {
           type: 'horizontal_rule',
-          contents: []
+          contents: [],
+          props: {}
         },
         readLineCount: 2
       }
@@ -90,7 +114,8 @@ const blockReaders: BlockReader[] = [
       return {
         block: {
           type: 'blockquote',
-          contents: parseBlocks(blockLines)
+          contents: parseBlocks(blockLines),
+          props: {}
         },
         readLineCount: cursor - start
       }
@@ -131,7 +156,7 @@ const blockReaders: BlockReader[] = [
         blocks.push(itemLines)
       }
       return {
-        block: {
+        block: <Block>{
           type: itemStartSymbol.match(/^[-+*]/) ? 'unordered_list' : 'ordered_list',
           contents: blocks.map(blockLines => ({
             type: 'list_item',
@@ -206,7 +231,8 @@ const blockReaders: BlockReader[] = [
       return {
         block: {
           type: 'empty_line',
-          contents: []
+          contents: [],
+          props: {},
         },
         readLineCount: 1
       }
@@ -214,14 +240,30 @@ const blockReaders: BlockReader[] = [
   }
 ]
 
-type InlineContentType = 'text' | 'image' | 'url' | 'italic' | 'bold' | 'code'
-
-interface InlineContent {
-  type: InlineContentType
-  props: Record<string,unknown>
+interface InlineSegmentBase<
+  Type = 'base',
+  Props = Record<string,unknown>
+  > {
+  type: Type
+  props: Props
 }
 
-const parseInline = (inlineContent: string): InlineContent[] => {
+export type TextSegment = InlineSegmentBase<'text', { text: string; }>
+export type ImageSegment = InlineSegmentBase<'image', { alt?: string; src: string; }>
+export type LinkSegment = InlineSegmentBase<'link', { url: string; text: string; }>
+export type BoldTextSegment = InlineSegmentBase<'bold', { text: string; }>
+export type ItalicTextSegment = InlineSegmentBase<'italic', { text: string; }>
+export type CodeSegment = InlineSegmentBase<'code', { text: string; }>
+
+export type InlineSegment =
+  | TextSegment
+  | ImageSegment
+  | LinkSegment
+  | BoldTextSegment
+  | ItalicTextSegment
+  | CodeSegment
+
+const parseInline = (inlineContent: string): InlineSegment[] => {
   if (!inlineContent) return []
   for (const segmenter of inlineContentSegmenters) {
     const segments = segmenter(inlineContent)
@@ -235,7 +277,7 @@ const parseInline = (inlineContent: string): InlineContent[] => {
 
 type InlineContentSegmenter = (inlineContent: string) => {
   before: string
-  segment: InlineContent
+  segment: InlineSegment
   after: string
 } | undefined
 
@@ -259,11 +301,11 @@ const inlineContentSegmenters: InlineContentSegmenter[] = [
   // link
   (inlineContent) => {
     const match = inlineContent.match('(.*)\\[([^\\]]+)\\]\\(([^\\)]+)\\)(.*)')
-    if (match === null) return
+    if (match?.length !== 5) return
     return {
       before: match[1],
       segment: {
-        type: 'url',
+        type: 'link',
         props: {
           text: match[2],
           url: match[3]

@@ -1,7 +1,11 @@
-const markdown = require('./markdown')
-const jsdom = require('jsdom')
+import * as markdown from './markdown'
+import jsdom from 'jsdom'
 
-const render = (template, markdownContent, meta) => {
+interface Metadata {
+  date: string
+}
+
+export const render = (template: string, markdownContent: string, meta: Metadata) => {
   const dom = new jsdom.JSDOM(template)
   const { document } = dom.window
 
@@ -11,11 +15,9 @@ const render = (template, markdownContent, meta) => {
 
   // Set title
   const titleBlock = blocks.find(block => block.type === 'heading')
-  if (titleBlock) {
-    document.title = titleBlock.props.heading
+  if (titleBlock?.type === 'heading') {
+    document.title = String(titleBlock.props.heading)
   }
-
-  const postNode = document.querySelector('.post')
 
   // Set date
   const dateContainer = document.createElement('div')
@@ -24,14 +26,18 @@ const render = (template, markdownContent, meta) => {
   date.setAttribute('datetime', meta.date)
   date.appendChild(document.createTextNode(meta.date))
   dateContainer.appendChild(date)
-  postNode.appendChild(dateContainer)
 
+  const postNode = document.querySelector('.post')
+  if (!postNode) {
+    throw new Error("Element .post not found.")
+  }
+  postNode.appendChild(dateContainer)
   renderBlocks(document, postNode, blocks)
 
   return dom
 }
 
-const renderBlocks = (document, parentNode, blocks) => {
+const renderBlocks = (document: Document, parentNode: Element, blocks: markdown.Block[]) => {
   for (const block of blocks) {
     switch (block.type) {
       case 'heading': {
@@ -70,7 +76,7 @@ const renderBlocks = (document, parentNode, blocks) => {
       }
       case 'code_block': {
         // language label
-        if (block.props.language !== '') {
+        if (block.props.language) {
           const label = document.createElement('div')
           label.className = 'code-block__language-label'
           label.appendChild(document.createTextNode(block.props.language))
@@ -87,13 +93,19 @@ const renderBlocks = (document, parentNode, blocks) => {
       case 'inline': {
         if (['LI'].includes(parentNode.tagName)) {
           for (const segment of block.props.segments) {
-            parentNode.appendChild(inlineSegmentToElement(document, segment))
+            const element = inlineSegmentToElement(document, segment)
+            if (element) {
+              parentNode.appendChild(element)
+            }
           }
         } else {
           const paragraph = document.createElement('p')
           parentNode.appendChild(paragraph)
           for (const segment of block.props.segments) {
-            paragraph.appendChild(inlineSegmentToElement(document, segment))
+            const element = inlineSegmentToElement(document, segment)
+            if (element) {
+              paragraph.appendChild(element)
+            }
           }
         }
         break
@@ -106,9 +118,9 @@ const renderBlocks = (document, parentNode, blocks) => {
   }
 }
 
-const inlineSegmentToElement = (document, segment) => {
+const inlineSegmentToElement = (document: Document, segment: markdown.InlineSegment) => {
   switch (segment.type) {
-    case 'url': {
+    case 'link': {
       const link = document.createElement('a')
       link.setAttribute('href', segment.props.url)
       link.appendChild(document.createTextNode(segment.props.text))
@@ -123,7 +135,7 @@ const inlineSegmentToElement = (document, segment) => {
       imageLink.setAttribute('rel', 'noopener')
       imageLinkContainer.appendChild(imageLink)
       const image = document.createElement('img')
-      image.setAttribute('alt', segment.props.alt)
+      image.setAttribute('alt', segment.props.alt || "")
       image.setAttribute('src', segment.props.src)
       image.setAttribute('loading', 'lazy')
       imageLink.appendChild(image)
@@ -152,11 +164,11 @@ const inlineSegmentToElement = (document, segment) => {
   }
 }
 
-const mergeInlineBlocks = (blocks) => {
-  const merged = []
+const mergeInlineBlocks = (blocks: markdown.Block[]): markdown.Block[] => {
+  const merged: markdown.Block[] = []
   for (const block of blocks) {
     if (merged.length > 0 && merged[merged.length - 1].type === 'inline' && block.type === 'inline') {
-      const previousBlock = merged[merged.length - 1]
+      const previousBlock = merged[merged.length - 1] as markdown.InlineBlock
       const mergedSegments = previousBlock.props.segments.concat(
         [{ type: 'text', props: { text: ' ' } }],
         block.props.segments
@@ -167,8 +179,4 @@ const mergeInlineBlocks = (blocks) => {
     }
   }
   return merged
-}
-
-module.exports = {
-  render
 }
