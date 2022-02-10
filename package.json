@@ -2,8 +2,8 @@
   "scripts": {
     "lint": "eslint --ext ts,js src scripts",
     "makeSite": "npm run renderPosts && npm run makeSitemap",
-    "renderPosts": "ts-node ./scripts/renderPosts.js",
-    "makeSitemap": "ts-node ./scripts/makeSitemap.js"
+    "renderPosts": "ts-node ./scripts/renderPosts.ts",
+    "makeSitemap": "ts-node ./scripts/makeSitemap.ts"
   },
   "devDependencies": {
     "@types/jsdom": "^16.2.14",

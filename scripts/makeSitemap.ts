@@ -1,10 +1,10 @@
-const fs = require('fs')
+import fs from 'fs'
 
 const links = []
 const baseURL = 'https://iinm.github.io'
 links.push(baseURL)
 
-fs.readdirSync('./docs/posts').forEach(filename => {
+fs.readdirSync('./docs/posts').forEach((filename: string) => {
   if (!filename.endsWith('.html')) {
     return
   }
