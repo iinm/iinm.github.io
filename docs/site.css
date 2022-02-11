@@ -80,12 +80,8 @@ table {
 }
 
 th, td {
+  font-size: .9rem;
   padding: .2rem .6rem
-}
-
-th {
-  background-color: #666;
-  color: #fffffe;
 }
 
 tr:nth-child(odd) {
