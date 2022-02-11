@@ -90,6 +90,9 @@ const renderBlocks = (document: Document, parentNode: Element, blocks: Block[]) 
         parentNode.appendChild(pre)
         break
       }
+      case 'html':
+        parentNode.insertAdjacentHTML('beforeend', block.props.html)
+        break
       case 'inline': {
         if (['LI'].includes(parentNode.tagName)) {
           for (const segment of block.props.segments) {

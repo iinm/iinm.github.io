@@ -61,6 +61,13 @@ interface CodeBlock {
   }
 }
 
+interface HTMLBlock {
+  type: 'html'
+  props: {
+    html: string
+  }
+}
+
 export interface InlineBlock {
   type: 'inline'
   props: {
@@ -81,6 +88,7 @@ export type Block =
   | OrderedListBlock<ListItemBlock<Block>>
   | CodeBlock
   | InlineBlock
+  | HTMLBlock
   | EmptyLineBlock
 
 interface BlockReader {
@@ -122,7 +130,6 @@ const blockReaders: BlockReader[] = [
       return {
         block: {
           type: 'heading',
-          contents: [],
           props: {
             level: match[1].length,
             heading: match[2]
@@ -141,9 +148,7 @@ const blockReaders: BlockReader[] = [
     read: () => {
       return {
         block: {
-          type: 'horizontal_rule',
-          contents: [],
-          props: {}
+          type: 'horizontal_rule'
         },
         readLineCount: 2
       }
@@ -168,8 +173,7 @@ const blockReaders: BlockReader[] = [
       return {
         block: {
           type: 'blockquote',
-          contents: parseBlocks(blockLines),
-          props: {}
+          contents: parseBlocks(blockLines)
         },
         readLineCount: cursor - start
       }
@@ -214,8 +218,7 @@ const blockReaders: BlockReader[] = [
           type: itemStartSymbol.match(/^[-+*]/) ? 'unordered_list' : 'ordered_list',
           contents: blocks.map(blockLines => ({
             type: 'list_item',
-            contents: parseBlocks(blockLines),
-            props: {}
+            contents: parseBlocks(blockLines)
           }))
         },
         readLineCount: cursor - start
@@ -244,13 +247,39 @@ const blockReaders: BlockReader[] = [
       return {
         block: {
           type: 'code_block',
-          contents: [],
           props: {
             language: startMatch?.[1],
             code: blockLines.join('\n')
           }
         },
         readLineCount: cursor - start
+      }
+    }
+  },
+  {
+    match: (lines, start) => lines[start].match(/^<\w+/) !== null,
+    read: (lines, start) => {
+      const startMatch = lines[start].match(/^<(\w+)/)
+      if (startMatch?.length !== 2) {
+        throw new Error(`Failed to read line, ${lines[start]} as html`)
+      }
+      const tag = startMatch[1]
+
+      const endPattern = `^</ *${tag}>$`
+      let cursor = start
+      for (; cursor < lines.length; cursor++) {
+        if (lines[cursor].match(endPattern)) {
+          break
+        }
+      }
+      return {
+        block: {
+          type: 'html',
+          props: {
+            html: lines.slice(start, cursor + 1).join('\n')
+          }
+        },
+        readLineCount: cursor - start + 1
       }
     }
   },
@@ -267,7 +296,6 @@ const blockReaders: BlockReader[] = [
       return {
         block: {
           type: 'inline',
-          contents: [],
           props: {
             segments: parseInline(match[1])
           }
@@ -284,9 +312,7 @@ const blockReaders: BlockReader[] = [
     read: () => {
       return {
         block: {
-          type: 'empty_line',
-          contents: [],
-          props: {}
+          type: 'empty_line'
         },
         readLineCount: 1
       }
