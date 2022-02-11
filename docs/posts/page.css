@@ -19,6 +19,18 @@ body {
   border-bottom: .1rem solid #ddd;
 }
 
+.navigation__icon,
+.navigation__link {
+  vertical-align: middle;
+  margin-right: .2rem;
+}
+
+.navigation__icon {
+  border-radius: 50%;
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
 .loading-screen {
   position: absolute;
   top: 0;

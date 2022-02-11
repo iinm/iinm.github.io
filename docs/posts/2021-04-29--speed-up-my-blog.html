@@ -9,7 +9,8 @@
   <body>
     <nav>
       <div class="navigation">
-        <a href="..">Back to Index</a>
+        <img class="navigation__icon" src="https://avatars.githubusercontent.com/u/8685693?s=128" alt="">
+        <a class="navigation__link" href="..">back to index</a>
       </div>
     </nav>
     <section class="post"><div class="post__date"><time datetime="2021-04-29">2021-04-29</time></div><h1>このブログの表示速度改善</h1><h2>サマリー</h2><p>簡素なサイトなので油断していたが、表示速度を改善する余地があったためいくつか対策した。</p><ul><li>Webフォントをやめて、各種OSで利用できるフォントを指定</li><li>直列だったCSS、JavaScriptのGETを並列化</li><li>コンテンツをPrefetch</li><li>(おまけ) コンテンツのfetch中にローディング画面を表示して、白い画面が表示されることを防いだ。</li></ul><h2>改善前</h2><p><div class="image-link"><a href="https://user-images.githubusercontent.com/8685693/153013157-8669c86c-6e3f-49a5-a792-f35229a878fe.png" target="_blank" rel="noopener"><img alt="" src="https://user-images.githubusercontent.com/8685693/153013157-8669c86c-6e3f-49a5-a792-f35229a878fe.png" loading="lazy"></a></div></p><p>Developer toolsで通信内容を確認すると以下のことがわかります。</p><ul><li>通信サイズの大半がWebフォント。通信量、回数ともに多い。</li><li>page.css, site.cssを直列でGETしている。</li><li>main.js, markdown.js, .mdを直列でGETしている。</li></ul><h2>Step 1: Webフォントをやめる</h2><p>OSによって利用できるフォントが異なることにより、本文とコードブロックのフォントサイズのバランス等 が崩れることを懸念してWebフォントを指定していました。 しかし、想定以上にサイズが大きかったため諦めて各OSで利用できるフォントの指定に変更しました。 ※ Androidには明朝体が入っていないためゴシック体で表示されます。</p><p>before:</p><div class="code-block__language-label">css</div><pre><code>@import url('https://fonts.googleapis.com/css2?family=Lora&amp;family=Ubuntu+Mono&amp;family=Shippori+Mincho:wght@500&amp;display=swap');
