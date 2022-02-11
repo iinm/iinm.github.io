@@ -1,7 +1,7 @@
 import { parseBlocks } from './markdown'
 
 describe('markdown', () => {
-  it('detects html block', () => {
+  it('detects html', () => {
     const markdownContent = `
 <iframe src="https://iinm.github.io">
 </iframe>
@@ -26,7 +26,7 @@ describe('markdown', () => {
       {
         type: 'html',
         props: {
-          html: '<iframe src="https://iinm.github.io">\n</iframe>'
+          html: '<iframe src="https://iinm.github.io">\n</iframe>\n'
         }
       },
       {
@@ -35,15 +35,14 @@ describe('markdown', () => {
       {
         type: 'html',
         props: {
-          html: `
-<table>
+          html: `<table>
   <tr>
     <td>One</td>
     <td>Two</td>
     <td>Three</td>
   </tr>
 </table>
-`.trim()
+`
         }
       },
       {
@@ -52,12 +51,10 @@ describe('markdown', () => {
       {
         type: 'html',
         props: {
-          html: `
-<div class="parent">
+          html: `<div class="parent">
   <div class="child">
   </div>
-</div>
-`.trim()
+</div>`
         }
       }
     ])

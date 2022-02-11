@@ -87,6 +87,18 @@ const hello = () => {
 
 ![alt](https://github.com/identicons/iinm.png)
 
+## Table
+
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+
+| Left-aligned | Center-aligned | Right-aligned |
+| :---         |     :---:      |          ---: |
+| git status   | git status     | git status    |
+| git diff     | git diff       | git diff      |
+
 ## HTML
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/lRaL-8qZ0mM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>

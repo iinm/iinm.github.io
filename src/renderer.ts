@@ -90,6 +90,39 @@ const renderBlocks = (document: Document, parentNode: Element, blocks: Block[]) 
         parentNode.appendChild(pre)
         break
       }
+      case 'table': {
+        const table = document.createElement('table')
+        parentNode.appendChild(table)
+        const header = document.createElement('tr')
+        table.append(header)
+        for (const col of block.props.header) {
+          const th = document.createElement('th')
+          header.appendChild(th)
+          for (const segment of col.segments) {
+            const el = inlineSegmentToElement(document, segment)
+            if (el) {
+              th.appendChild(el)
+            }
+          }
+        }
+        for (const row of block.props.rows) {
+          const tr = document.createElement('tr')
+          table.append(tr)
+          for (let i = 0; i < row.length; i++) {
+            const col = row[i]
+            const td = document.createElement('td')
+            td.style.textAlign = block.props.align[i]
+            tr.appendChild(td)
+            for (const segment of col.segments) {
+              const el = inlineSegmentToElement(document, segment)
+              if (el) {
+                td.appendChild(el)
+              }
+            }
+          }
+        }
+        break
+      }
       case 'html':
         parentNode.insertAdjacentHTML('beforeend', block.props.html)
         break

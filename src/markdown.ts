@@ -61,6 +61,19 @@ interface CodeBlock {
   }
 }
 
+interface TableCell {
+  segments: InlineSegment[]
+}
+
+interface TableBlock {
+  type: 'table'
+  props: {
+    header: TableCell[]
+    align: ('left' | 'center' | 'right')[]
+    rows: TableCell[][]
+  }
+}
+
 interface HTMLBlock {
   type: 'html'
   props: {
@@ -88,6 +101,7 @@ export type Block =
   | OrderedListBlock<ListItemBlock<Block>>
   | CodeBlock
   | InlineBlock
+  | TableBlock
   | HTMLBlock
   | EmptyLineBlock
 
@@ -256,6 +270,58 @@ const blockReaders: BlockReader[] = [
       }
     }
   },
+  // table
+  {
+    match: (lines, start) => lines[start].match(/^\|.+\|$/) !== null,
+    read: (lines, start) => {
+      // read header
+      const parts = lines[start].split('|') // e.g., [ '', 'one', 'two', '' ]
+      const header = parts.slice(1, parts.length - 1)
+        .map((col) => ({ segments: parseInline(col.trim()) }))
+      // read align
+      const alignParts = lines[start + 1]?.split('|')?.slice(1, 1 + header.length)
+      if (alignParts?.length !== header.length) {
+        throw new Error(`Failed to read lines, ${lines.slice(start, start + 1)} as table`)
+      }
+      const align = alignParts.map((col) => {
+        const trimmed = col.trim()
+        if (trimmed.startsWith(':-') && trimmed.endsWith('-:')) {
+          return 'center'
+        }
+        if (trimmed.endsWith('-:')) {
+          return 'right'
+        }
+        return 'left'
+      })
+      // row
+      const rows: TableCell[][] = []
+      let cursor = start + 2
+      for (; cursor < lines.length; cursor++) {
+        if (lines[cursor].match(/^\|.+\|$/) === null) {
+          break
+        }
+        const parts = lines[cursor].split('|')
+        const row = parts.slice(1, 1 + header.length)
+          .map((col) => ({ segments: parseInline(col.trim()) }))
+        if (row?.length !== header.length) {
+          throw new Error(`Failed to read lines, ${lines[cursor]} as table`)
+        }
+        rows.push(row)
+      }
+      return {
+        block: {
+          type: 'table',
+          props: {
+            header,
+            align,
+            rows
+          }
+        },
+        readLineCount: cursor - start
+      }
+    }
+  },
+  // html
   {
     match: (lines, start) => lines[start].match(/^<\w+/) !== null,
     read: (lines, start) => {
@@ -269,6 +335,7 @@ const blockReaders: BlockReader[] = [
       let cursor = start
       for (; cursor < lines.length; cursor++) {
         if (lines[cursor].match(endPattern)) {
+          cursor++
           break
         }
       }
@@ -279,7 +346,7 @@ const blockReaders: BlockReader[] = [
             html: lines.slice(start, cursor + 1).join('\n')
           }
         },
-        readLineCount: cursor - start + 1
+        readLineCount: cursor - start
       }
     }
   },

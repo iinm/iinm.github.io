@@ -74,3 +74,24 @@ a:focus,
 a:active {
   text-decoration: underline;
 }
+
+table {
+  margin-bottom: 1rem;
+}
+
+th, td {
+  padding: .2rem .6rem
+}
+
+th {
+  background-color: #666;
+  color: #fffffe;
+}
+
+tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+
+iframe {
+  margin-bottom: 1rem;
+}
