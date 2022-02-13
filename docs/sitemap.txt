@@ -4,3 +4,4 @@ https://iinm.github.io/posts/2021-04-18--starting-a-tech-blog.html
 https://iinm.github.io/posts/2021-04-24--markdown-to-html.html
 https://iinm.github.io/posts/2021-04-29--speed-up-my-blog.html
 https://iinm.github.io/posts/2022-01-30--install-arch-linux.html
+https://iinm.github.io/posts/2022-02-12--hello-ssg.html
