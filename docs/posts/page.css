@@ -11,11 +11,10 @@ body {
   width: auto;
   height: auto;
   max-height: 20rem;
-  box-shadow: 0 0 .5rem #ddd;
 }
 
 .navigation {
-  padding-top: .5rem;
+  padding: .5rem 0;
   border-bottom: .1rem solid #ddd;
 }
 
@@ -75,7 +74,6 @@ body {
 
 .collapsible__content {
   margin-top: .5rem;
-  font-size: .9rem;
   max-height: 0px;
   overflow: hidden;
   transition: max-height .1s ease-in-out;
@@ -83,4 +81,10 @@ body {
 
 .collapsible__toggle:checked + .collapsible__label + .collapsible__content {
   max-height: 50rem;
+}
+
+@media (prefers-color-scheme: light) {
+  .image-link img {
+    box-shadow: 0 0 .5rem #ddd;
+  }
 }

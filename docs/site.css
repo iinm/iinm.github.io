@@ -10,8 +10,8 @@ body {
   serif
   ;
   font-weight: 500;
-  background-color: #fffffc;
-  color: #444;
+  background-color: #444;
+  color: #fffffc;
   margin: 0 auto;
   padding: 0 1rem;
 }
@@ -51,7 +51,17 @@ code {
   monospace
   ;
   font-size: .9rem;
-  background-color: #f6f6f6;
+  background-color: #3f3f3f;
+}
+
+/* Hide scrollbar */
+pre::-webkit-scrollbar {
+  display: none;
+}
+
+pre {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 blockquote {
@@ -65,7 +75,7 @@ img {
 
 a,
 a:visited {
-  color: #079;
+  color: #9ae8ff;
   text-decoration: none;
 }
 
@@ -85,9 +95,30 @@ th, td {
 }
 
 tr:nth-child(odd) {
-  background-color: #f6f6f6;
+  background-color: #505050;
 }
 
 iframe {
   margin-bottom: 1rem;
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: #fffffc;
+    color: #444;
+  }
+
+  a,
+  a:visited {
+    color: #079;
+  }
+
+  pre,
+  code {
+    background-color: #f6f6f6;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #f6f6f6;
+  }
 }
