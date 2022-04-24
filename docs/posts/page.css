@@ -75,11 +75,13 @@ body {
 }
 
 .collapsible__content {
+  margin-top: .5rem;
+  font-size: .9rem;
   max-height: 0px;
   overflow: hidden;
   transition: max-height .1s ease-in-out;
 }
 
 .collapsible__toggle:checked + .collapsible__label + .collapsible__content {
-  max-height: 14rem;
+  max-height: 50rem;
 }

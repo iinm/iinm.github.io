@@ -29,13 +29,15 @@ nvme0n1     259:0    0 238.5G  0 disk
 
 ## パッケージのインストール
 
-- KernelはLTS版のlinux-ltsを選択 [ref](https://wiki.archlinux.org/title/Kernel)
+- KernelはLTS版のlinux-ltsを選択
 - その他、最低限必要なパッケージを追加でインストール
 
 ```sh
 pacstrap /mnt base linux-lts linux-firmware \
   neovim iwd sudo intel-ucode
 ```
+
+ref. [Kernel - ArchWiki](https://wiki.archlinux.org/title/Kernel)
 
 ## Initramfs
 
@@ -102,7 +104,7 @@ passwd me
 GNOME & NetworkManagerをインストールするまではiwdを使う。
 ※ 先にNetworkManagerをインストールしてnmcliを使うでも良かったが、ライブ環境にインストールされていたiwdを初めて触ったので、使ってみたかった。
 
-iwdの設定 [ref](https://wiki.archlinux.org/title/Iwd#Optional_configuration)
+iwdの設定
 - DHCPを使うには `EnableNetworkConfiguration=True` が必要
 - DNSの設定も必要で、特に追加パッケージのインストールが不要なsystemdのものを使うことにした。
 
@@ -116,6 +118,8 @@ EnableNetworkConfiguration=True
 NameResolvingService=systemd
 ```
 
+ref. [iwd - ArchWiki](https://wiki.archlinux.org/title/Iwd#Optional_configuration)
+
 ```sh
 # GNOMEインストール後はNetworkManagerを使うのでenableにはしない
 sudo systemctl start iwd
@@ -123,8 +127,6 @@ sudo systemctl start systemd-resolved
 ```
 
 ## GNOMEのインストール
-[ref](https://wiki.archlinux.org/title/GNOME)
-
 ```sh
 # パッケージのインストール
 sudo pacman -Sy gnome gnome-terminal networkmanager
@@ -135,6 +137,8 @@ sudo systemctl enable NetworkManager
 
 sudo reboot
 ```
+
+ref. [GNOME - ArchWiki](https://wiki.archlinux.org/title/GNOME)
 
 ## フォント
 
@@ -147,8 +151,6 @@ sudo pacman -Sy noto-fonts noto-fonts-cjk noto-fonts-emoji
 
 ## AUR Helperのインストール
 
-[ref](https://github.com/Jguer/yay)
-
 ```sh
 # AURを使うには開発用パッケージが必要
 sudo pacman -Sy git base-devel
@@ -158,6 +160,8 @@ git clone https://aur.archlinux.org/yay-bin.git && cd yay-bin
 makepkg -si
 ```
 
+ref. [yay](https://github.com/Jguer/yay)
+
 ## ブラウザ (Google Chrome)
 
 インストール
@@ -165,15 +169,15 @@ makepkg -si
 yay -Sy google-chrome
 ```
 
-画面共有できるようにする [ref](https://wiki.archlinux.org/title/PipeWire#WebRTC_screen_sharing)
+画面共有できるようにする
 ```sh
 sudo pacman -Sy xdg-desktop-portal xdg-desktop-portal-gnome
 ```
 [chrome://flags/#enable-webrtc-pipewire-capturer](chrome://flags/#enable-webrtc-pipewire-capturer) を有効化
 
-## 日本語入力 (Mozc)
+ref. [PipeWire - ArchWiki](https://wiki.archlinux.org/title/PipeWire#WebRTC_screen_sharing)
 
-[ref](https://wiki.archlinux.org/title/Fcitx5)
+## 日本語入力 (Mozc)
 
 ```sh
 sudo pacman -Sy fcitx5-im fcitx5-mozc
@@ -187,3 +191,5 @@ GTK_IM_MODULE=fcitx
 QT_IM_MODULE=fcitx
 XMODIFIERS=@im=fcitx
 ```
+
+ref. [Fcitx5 - ArchWiki](https://wiki.archlinux.org/title/Fcitx5)
