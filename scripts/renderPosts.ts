@@ -19,7 +19,8 @@ fs.readdirSync('./posts').forEach((filename: string) => {
     ogp: {
       'og:url': `https://iinm.github.io/posts/${filename.replace('.md', '.html')}`,
       'og:type': 'article',
-      'og:image': 'https://avatars.githubusercontent.com/u/8685693'
+      'og:image': 'https://avatars.githubusercontent.com/u/8685693',
+      'og:site_name': '/proc/iinm/fd/2'
     }
   }
 
