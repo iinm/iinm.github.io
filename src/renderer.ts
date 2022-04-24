@@ -1,4 +1,5 @@
 import { JSDOM } from 'jsdom'
+import { cyrb53 } from './cyrb53'
 import { Block, InlineBlock, InlineSegment, parseBlocks } from './markdown'
 
 interface Metadata {
@@ -24,15 +25,48 @@ export const render = (template: string, markdownContent: string, meta: Metadata
   dateContainer.className = 'post__date'
   const date = document.createElement('time')
   date.setAttribute('datetime', meta.date)
-  date.appendChild(document.createTextNode(meta.date))
-  dateContainer.appendChild(date)
+  date.append(meta.date)
+  dateContainer.append(date)
 
+  // Render post
   const postNode = document.querySelector('.post')
   if (!postNode) {
     throw new Error('Element .post not found.')
   }
-  postNode.appendChild(dateContainer)
+  postNode.append(dateContainer)
   renderBlocks(document, postNode, blocks)
+
+  // Insert TOC
+  const tocNode = document.createElement('section')
+  tocNode.className = 'collapsible'
+  const tocToggleInput = document.createElement('input')
+  tocToggleInput.className = 'collapsible__toggle'
+  tocToggleInput.setAttribute('id', 'toc-toggle')
+  tocToggleInput.setAttribute('type', 'checkbox')
+  tocToggleInput.setAttribute('checked', '')
+  tocNode.append(tocToggleInput)
+  const tocToggleLabel = document.createElement('label')
+  tocToggleLabel.className = 'collapsible__label'
+  tocToggleLabel.setAttribute('for', 'toc-toggle')
+  tocToggleLabel.append('Table of contents')
+  tocNode.append(tocToggleLabel)
+  const tocUl = document.createElement('ul')
+  tocUl.className = 'collapsible__content'
+  tocNode.append(tocUl)
+  const headings = blocks.filter((b) => b.type === 'heading' && b.props.level === 2)
+  for (const heading of headings) {
+    if (heading.type === 'heading') {
+      const li = document.createElement('li')
+      tocUl.append(li)
+      const a = document.createElement('a')
+      const id = makeId(heading.props.heading)
+      a.setAttribute('href', `#${id}`)
+      a.append(heading.props.heading)
+      li.append(a)
+    }
+  }
+  const titleNode = document.querySelector('h1')
+  postNode.insertBefore(tocNode, titleNode.nextSibling)
 
   return dom
 }
@@ -42,8 +76,9 @@ const renderBlocks = (document: Document, parentNode: Element, blocks: Block[]) 
     switch (block.type) {
       case 'heading': {
         const heading = document.createElement(`h${block.props.level}`)
-        heading.append(document.createTextNode(block.props.heading))
-        parentNode.appendChild(heading)
+        heading.setAttribute('id', `${makeId(block.props.heading)}`)
+        heading.append(block.props.heading)
+        parentNode.append(heading)
         break
       }
       case 'horizontal_rule': {
@@ -53,25 +88,25 @@ const renderBlocks = (document: Document, parentNode: Element, blocks: Block[]) 
       case 'blockquote': {
         const blockquote = document.createElement('blockquote')
         renderBlocks(document, blockquote, block.contents)
-        parentNode.appendChild(blockquote)
+        parentNode.append(blockquote)
         break
       }
       case 'unordered_list': {
         const ulist = document.createElement('ul')
         renderBlocks(document, ulist, block.contents)
-        parentNode.appendChild(ulist)
+        parentNode.append(ulist)
         break
       }
       case 'ordered_list': {
         const olist = document.createElement('ol')
         renderBlocks(document, olist, block.contents)
-        parentNode.appendChild(olist)
+        parentNode.append(olist)
         break
       }
       case 'list_item': {
         const item = document.createElement('li')
         renderBlocks(document, item, block.contents)
-        parentNode.appendChild(item)
+        parentNode.append(item)
         break
       }
       case 'code_block': {
@@ -79,29 +114,29 @@ const renderBlocks = (document: Document, parentNode: Element, blocks: Block[]) 
         if (block.props.language) {
           const label = document.createElement('div')
           label.className = 'code-block__language-label'
-          label.appendChild(document.createTextNode(block.props.language))
-          parentNode.appendChild(label)
+          label.append(block.props.language)
+          parentNode.append(label)
         }
         // pre, code
         const pre = document.createElement('pre')
         const code = document.createElement('code')
-        code.append(document.createTextNode(block.props.code))
-        pre.appendChild(code)
-        parentNode.appendChild(pre)
+        code.append(block.props.code)
+        pre.append(code)
+        parentNode.append(pre)
         break
       }
       case 'table': {
         const table = document.createElement('table')
-        parentNode.appendChild(table)
+        parentNode.append(table)
         const header = document.createElement('tr')
         table.append(header)
         for (const col of block.props.header) {
           const th = document.createElement('th')
-          header.appendChild(th)
+          header.append(th)
           for (const segment of col.segments) {
             const el = inlineSegmentToElement(document, segment)
             if (el) {
-              th.appendChild(el)
+              th.append(el)
             }
           }
         }
@@ -112,11 +147,11 @@ const renderBlocks = (document: Document, parentNode: Element, blocks: Block[]) 
             const col = row[i]
             const td = document.createElement('td')
             td.style.textAlign = block.props.align[i]
-            tr.appendChild(td)
+            tr.append(td)
             for (const segment of col.segments) {
               const el = inlineSegmentToElement(document, segment)
               if (el) {
-                td.appendChild(el)
+                td.append(el)
               }
             }
           }
@@ -131,16 +166,16 @@ const renderBlocks = (document: Document, parentNode: Element, blocks: Block[]) 
           for (const segment of block.props.segments) {
             const element = inlineSegmentToElement(document, segment)
             if (element) {
-              parentNode.appendChild(element)
+              parentNode.append(element)
             }
           }
         } else {
           const paragraph = document.createElement('p')
-          parentNode.appendChild(paragraph)
+          parentNode.append(paragraph)
           for (const segment of block.props.segments) {
             const element = inlineSegmentToElement(document, segment)
             if (element) {
-              paragraph.appendChild(element)
+              paragraph.append(element)
             }
           }
         }
@@ -159,7 +194,7 @@ const inlineSegmentToElement = (document: Document, segment: InlineSegment) => {
     case 'link': {
       const link = document.createElement('a')
       link.setAttribute('href', segment.props.url)
-      link.appendChild(document.createTextNode(segment.props.text))
+      link.append(segment.props.text)
       return link
     }
     case 'image': {
@@ -169,27 +204,27 @@ const inlineSegmentToElement = (document: Document, segment: InlineSegment) => {
       imageLink.setAttribute('href', segment.props.src)
       imageLink.setAttribute('target', '_blank')
       imageLink.setAttribute('rel', 'noopener')
-      imageLinkContainer.appendChild(imageLink)
+      imageLinkContainer.append(imageLink)
       const image = document.createElement('img')
       image.setAttribute('alt', segment.props.alt || '')
       image.setAttribute('src', segment.props.src)
       image.setAttribute('loading', 'lazy')
-      imageLink.appendChild(image)
+      imageLink.append(image)
       return imageLinkContainer
     }
     case 'bold': {
       const bold = document.createElement('b')
-      bold.appendChild(document.createTextNode(segment.props.text))
+      bold.append(segment.props.text)
       return bold
     }
     case 'italic': {
       const italic = document.createElement('em')
-      italic.appendChild(document.createTextNode(segment.props.text))
+      italic.append(segment.props.text)
       return italic
     }
     case 'code': {
       const code = document.createElement('code')
-      code.appendChild(document.createTextNode(segment.props.text))
+      code.append(segment.props.text)
       return code
     }
     case 'text': {
@@ -216,3 +251,5 @@ const mergeInlineBlocks = (blocks: Block[]): Block[] => {
   }
   return merged
 }
+
+const makeId = cyrb53

@@ -53,3 +53,33 @@ body {
 .post__date + h1 {
   margin-top: 0;
 }
+
+.collapsible__toggle {
+  display: none;
+}
+
+.collapsible__label {
+  font-weight: bold;
+  display: inline-block;
+}
+
+.collapsible__label::before {
+  content: "▷";
+  display: inline-block;
+  margin-right: .5rem;
+  transition: transform .1s ease-out;
+}
+
+.collapsible__toggle:checked + .collapsible__label::before {
+  transform: rotate(90deg);
+}
+
+.collapsible__content {
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height .1s ease-in-out;
+}
+
+.collapsible__toggle:checked + .collapsible__label + .collapsible__content {
+  max-height: 14rem;
+}
