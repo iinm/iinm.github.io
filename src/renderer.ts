@@ -2,8 +2,11 @@ import { JSDOM } from 'jsdom'
 import { cyrb53 } from './cyrb53'
 import { Block, InlineBlock, InlineSegment, parseBlocks } from './markdown'
 
+type OGPMetadata = Record<string, string>
+
 interface Metadata {
   date: string
+  ogp?: OGPMetadata
 }
 
 export const render = (template: string, markdownContent: string, meta: Metadata) => {
@@ -14,10 +17,24 @@ export const render = (template: string, markdownContent: string, meta: Metadata
     parseBlocks(markdownContent.split('\n'))
   )
 
+  // set OGP metadate
+  for (const prop of Object.keys(meta.ogp || {})) {
+    const metaNode = document.createElement('meta')
+    metaNode.setAttribute('property', prop)
+    metaNode.setAttribute('content', meta.ogp[prop])
+    document.head.append(metaNode)
+  }
+
   // Set title
   const titleBlock = blocks.find(block => block.type === 'heading')
   if (titleBlock?.type === 'heading') {
     document.title = String(titleBlock.props.heading)
+
+    // ogp
+    const ogpMetaTitle = document.createElement('meta')
+    ogpMetaTitle.setAttribute('property', 'og:title')
+    ogpMetaTitle.setAttribute('content', titleBlock.props.heading)
+    document.head.append(ogpMetaTitle)
   }
 
   // Set date
