@@ -270,7 +270,7 @@ const MarkdownContents = ({ blocks, parentTag }) => {
           for (const segment of block.props.segments) {
             const node = MarkdownSegment(segment);
             if (node) {
-              nodes.push();
+              nodes.push(node);
             }
           }
         } else {

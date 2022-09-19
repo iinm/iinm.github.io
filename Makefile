@@ -9,6 +9,7 @@ run:
 .PHONY: lint
 lint:
 	npx eslint . --fix
+	npx tsc --noEmit --allowJs
 
 .PHONY: site
 site: $(POSTS) sitemap.txt;
