@@ -3,12 +3,8 @@ html {
 }
 
 body {
-  font-family:
-  'Noto Serif CJK JP',    /* for Ubuntu */
-  'Hiragino Mincho ProN', /* for macOS */
-  'Yu Mincho',            /* for Windows */
-  serif
-  ;
+  font-family: "Noto Serif CJK JP", /* for Ubuntu */ "Hiragino Mincho ProN",
+    /* for macOS */ "Yu Mincho", /* for Windows */ serif;
   font-weight: 500;
   background-color: #444;
   color: #fffffc;
@@ -16,7 +12,8 @@ body {
   padding: 0 1rem;
 }
 
-h1, h2 {
+h1,
+h2 {
   font-weight: 600;
 }
 
@@ -28,29 +25,26 @@ h2 {
   font-size: 1.3rem;
 }
 
-ul, ol {
+ul,
+ol {
   padding: 0 0 0 2rem;
 }
 
 pre,
 blockquote {
-  border-left: .2rem solid #ddd;
+  border-left: 0.2rem solid #ddd;
 }
 
 pre {
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
   line-height: 1.3;
   overflow-x: scroll;
 }
 
 pre,
 code {
-  font-family:
-  Monaco,        /* for macOS */
-  Consolas,      /* for Windows */
-  monospace
-  ;
-  font-size: .9rem;
+  font-family: Monaco, /* for macOS */ Consolas, /* for Windows */ monospace;
+  font-size: 0.9rem;
   background-color: #3f3f3f;
 }
 
@@ -66,7 +60,7 @@ pre {
 
 blockquote {
   margin: 0;
-  padding: 0 0 0 .5rem;
+  padding: 0 0 0 0.5rem;
 }
 
 img {
@@ -89,9 +83,10 @@ table {
   margin-bottom: 1rem;
 }
 
-th, td {
-  font-size: .9rem;
-  padding: .2rem .6rem
+th,
+td {
+  font-size: 0.9rem;
+  padding: 0.2rem 0.6rem;
 }
 
 tr:nth-child(odd) {

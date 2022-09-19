@@ -14,14 +14,14 @@ body {
 }
 
 .navigation {
-  padding: .5rem 0;
-  border-bottom: .1rem solid #ddd;
+  padding: 0.5rem 0;
+  border-bottom: 0.1rem solid #ddd;
 }
 
 .navigation__icon,
 .navigation__link {
   vertical-align: middle;
-  margin-right: .2rem;
+  margin-right: 0.2rem;
 }
 
 .navigation__icon {
@@ -32,11 +32,11 @@ body {
 
 .code-block__language-label {
   display: inline-block;
-  padding: .1rem .3rem;
+  padding: 0.1rem 0.3rem;
   background-color: #666;
   color: #fffffe;
-  font-size: .8rem;
-  font-family: 'Ubuntu Mono', monospace;
+  font-size: 0.8rem;
+  font-family: "Ubuntu Mono", monospace;
   font-weight: 600;
 }
 
@@ -45,8 +45,8 @@ body {
 }
 
 .post__date {
-  margin-top: .7rem;
-  font-size: .9rem;
+  margin-top: 0.7rem;
+  font-size: 0.9rem;
 }
 
 .post__date + h1 {
@@ -61,11 +61,17 @@ body {
   display: inline-block;
 }
 
+.collapsible__label:hover,
+.collapsible__label:focus,
+.collapsible__label:active {
+  text-decoration: underline;
+}
+
 .collapsible__label::before {
-  content: "▷";
+  content: ">";
   display: inline-block;
-  margin-right: .5rem;
-  transition: transform .1s ease-out;
+  margin-right: 0.5rem;
+  transition: transform 0.1s ease-out;
 }
 
 .collapsible__toggle:checked + .collapsible__label::before {
@@ -73,10 +79,10 @@ body {
 }
 
 .collapsible__content {
-  margin-top: .5rem;
+  margin-top: 0.5rem;
   max-height: 0px;
   overflow: hidden;
-  transition: max-height .1s ease-in-out;
+  transition: max-height 0.1s ease-in-out;
 }
 
 .collapsible__toggle:checked + .collapsible__label + .collapsible__content {
@@ -85,6 +91,6 @@ body {
 
 @media (prefers-color-scheme: light) {
   .image-link img {
-    box-shadow: 0 0 .5rem #ddd;
+    box-shadow: 0 0 0.5rem #ddd;
   }
 }
