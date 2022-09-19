@@ -1,24 +1,25 @@
 /** @typedef {import("../../lib/markdown.type").Block} MarkdownBlock */
+/** @typedef {import("../../lib/markdown.type").HeadingBlock} HeadingBlock */
 /** @typedef {import("../../lib/markdown.type").InlineSegment} InlineSegment */
 /** @typedef {import("../../lib/dom.type").VirtualDomNode} VirtualDomNode */
 
 import * as hash from "../../lib/hash.js";
 
 /**
- * @typedef {Object} PageMetadata
+ * @typedef {object} PageMetadata
  * @property {string} title
  * @property {string} date
- * @property {Object.<string,string>} ogp
+ * @property {Object<string, string>} ogp
  */
 
 /**
- * @typedef {Object} MetaContentsProps
+ * @typedef {object} MetaContentsProps
  * @property {PageMetadata} metadata
  */
 
 /**
  * @param {MetaContentsProps} props
- * @returns
+ * @returns {VirtualDomNode[]}
  */
 export const MetaContents = ({ metadata }) => {
   return [
@@ -37,13 +38,14 @@ export const MetaContents = ({ metadata }) => {
 };
 
 /**
- * @typedef {Object} PostProps
+ * @typedef {object} PostProps
  * @property {MarkdownBlock[]} markdownBlocks
  * @property {PageMetadata} metadata
  */
 
 /**
  * @param {PostProps} props
+ * @returns {VirtualDomNode[]}
  */
 export const Post = ({ markdownBlocks, metadata }) => {
   const contents = MarkdownContents({ blocks: markdownBlocks });
@@ -67,6 +69,13 @@ export const Post = ({ markdownBlocks, metadata }) => {
   ];
 };
 
+/** @typedef {{ markdownBlocks: MarkdownBlock[] }} TocProps */
+
+/**
+ *
+ * @param {TocProps} param0
+ * @returns {VirtualDomNode}
+ */
 const Toc = ({ markdownBlocks }) => {
   return {
     tag: "section",
@@ -96,33 +105,40 @@ const Toc = ({ markdownBlocks }) => {
           .filter(
             (block) => block.type === "heading" && block.props.level === 2
           )
-          .map((block) => ({
-            tag: "li",
-            children: [
-              {
-                tag: "a",
-                attr: {
-                  href: `#${hash.cyrb53(block.props.heading)}`,
+          .map((block) => {
+            const headingBlock = /** @type {HeadingBlock} */ (block);
+            return {
+              tag: "li",
+              children: [
+                {
+                  tag: "a",
+                  attr: {
+                    href: `#${hash.cyrb53(headingBlock.props.heading)}`,
+                  },
+                  children: [
+                    { tag: "*text", text: headingBlock.props.heading },
+                  ],
                 },
-                children: [{ tag: "*text", text: block.props.heading }],
-              },
-            ],
-          })),
+              ],
+            };
+          }),
       },
     ],
   };
 };
 
 /**
- * @typedef {Object} MarkdownContentsProps
+ * @typedef {object} MarkdownContentsProps
  * @property {MarkdownBlock[]} blocks
  * @property {string} [parentTag]
  */
 
 /**
  * @param {MarkdownContentsProps} props
+ * @returns {VirtualDomNode[]}
  */
 const MarkdownContents = ({ blocks, parentTag }) => {
+  /** @type {VirtualDomNode[]} */
   const nodes = [];
   for (const block of blocks) {
     switch (block.type) {
@@ -130,7 +146,7 @@ const MarkdownContents = ({ blocks, parentTag }) => {
         nodes.push({
           tag: `h${block.props.level}`,
           attr: {
-            id: hash.cyrb53(block.props.heading),
+            id: String(hash.cyrb53(block.props.heading)),
           },
           children: [
             {
@@ -218,24 +234,28 @@ const MarkdownContents = ({ blocks, parentTag }) => {
       case "table": {
         nodes.push({
           tag: "table",
-          children: [
-            // header
-            {
-              tag: "tr",
-              children: block.props.header.map(({ segments }) => ({
-                tag: "th",
-                children: segments.map(MarkdownSegment),
+          children: /** @type {VirtualDomNode[]} */ (
+            [
+              // header
+              {
+                tag: "tr",
+                children: block.props.header.map(({ segments }) => ({
+                  tag: "th",
+                  children: segments.map(MarkdownSegment).filter((s) => s),
+                })),
+              },
+              ...block.props.rows.map((row) => ({
+                tag: "tr",
+                children: new Array(row.length).fill(0).map((_, index) => ({
+                  tag: "td",
+                  style: { textAlign: block.props.align[index] },
+                  children: row[index].segments
+                    .map(MarkdownSegment)
+                    .filter((s) => s),
+                })),
               })),
-            },
-            ...block.props.rows.map((row) => ({
-              tag: "tr",
-              children: new Array(row.length).fill(0).map((_, index) => ({
-                tag: "td",
-                style: { textAlign: block.props.align[index] },
-                children: row[index].segments.map(MarkdownSegment),
-              })),
-            })),
-          ],
+            ].filter((s) => s)
+          ),
         });
         break;
       }
@@ -248,12 +268,17 @@ const MarkdownContents = ({ blocks, parentTag }) => {
       case "inline": {
         if (parentTag && ["li"].includes(parentTag)) {
           for (const segment of block.props.segments) {
-            nodes.push(MarkdownSegment(segment));
+            const node = MarkdownSegment(segment);
+            if (node) {
+              nodes.push();
+            }
           }
         } else {
           nodes.push({
             tag: "p",
-            children: block.props.segments.map(MarkdownSegment),
+            children: /** @type {VirtualDomNode[]} */ (
+              block.props.segments.map(MarkdownSegment).filter((s) => s)
+            ),
           });
         }
         break;

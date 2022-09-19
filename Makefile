@@ -6,6 +6,10 @@ POSTS = $(shell find posts/data -name '*.md' | xargs -n 1 basename | sed -E 's,(
 run:
 	python3 -m http.server
 
+.PHONY: lint
+lint:
+	npx eslint . --fix
+
 .PHONY: site
 site: $(POSTS) sitemap.txt;
 
