@@ -1,11 +1,11 @@
-<!DOCTYPE html><html lang="ja"><head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+<!DOCTYPE html>
+<html lang="ja"><head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="https://avatars.githubusercontent.com/u/8685693?s=48" type="image/x-icon">
     <link rel="stylesheet" href="/site.css" type="text/css" media="all">
     <link rel="stylesheet" href="page.css" type="text/css" media="all">
-    <title>Arch Linux インストールメモ</title>
-  <meta property="og:url" content="https://iinm.github.io/posts/2022-01-30--install-arch-linux.html"><meta property="og:type" content="article"><meta property="og:image" content="https://avatars.githubusercontent.com/u/8685693"><meta property="og:site_name" content="/proc/iinm/fd/2"><meta property="og:title" content="Arch Linux インストールメモ"></head>
+  <title>Arch Linux インストールメモ</title><meta property="og:url" content="https://iinm.github.io/posts/2022-01-30--install-arch-linux.html"><meta property="og:type" content="article"><meta property="og:title" content="Arch Linux インストールメモ"><meta property="og:image" content="https://avatars.githubusercontent.com/u/8685693"><meta property="og:site_name" content="/proc/iinm/fd/2"></head>
   <body>
     <nav>
       <div class="navigation">
@@ -13,7 +13,7 @@
         <a class="navigation__link" href="..">back to index</a>
       </div>
     </nav>
-    <section class="post"><div class="post__date"><time datetime="2022-01-30">2022-01-30</time></div><h1 id="268345971243790">Arch Linux インストールメモ</h1><section class="collapsible"><input class="collapsible__toggle" id="toc-toggle" type="checkbox" checked=""><label class="collapsible__label" for="toc-toggle">Table of contents</label><ul class="collapsible__content"><li><a href="#5001208425483745">パーティショニング</a></li><li><a href="#1184471389249843">パッケージのインストール</a></li><li><a href="#5613699024055698">Initramfs</a></li><li><a href="#2313109497199640">ブートローダー</a></li><li><a href="#8092289186315226">Swapfile追加</a></li><li><a href="#867166261171560">ユーザ作成</a></li><li><a href="#7708166056086401">Wifi設定</a></li><li><a href="#972953017730934">GNOMEのインストール</a></li><li><a href="#3240397808338624">フォント</a></li><li><a href="#6049208232854562">AUR Helperのインストール</a></li><li><a href="#7561743398933804">ブラウザ (Google Chrome)</a></li><li><a href="#8960828340983734">日本語入力 (Mozc)</a></li></ul></section><p>Arch Linuxのインストールから、基本的なデスクトップ環境、Webブラウザと日本語入力をインストールするまでのメモです。 基本的には <a href="https://wiki.archlinux.org/title/installation_guide">Installation Guide</a> の流れの通りですが、今後のアップデートで問題が発生したときに対応できるように設定した内容を残すことが目的です。 (特に考えることがなかった部分は省略します。)</p><ul><li>ハードウェア: ThinkPad T490s</li><li>インストールに使用したイメージ: <a href="http://ftp.jaist.ac.jp/pub/Linux/ArchLinux/iso/2022.01.01/">archlinux-2022.01.01-x86_64.iso</a></li><li>デュアルブート: なし</li><li>Desktop環境: GNOME</li></ul><hr><p>ここからはライブ環境での操作</p><h2 id="5001208425483745">パーティショニング</h2><ul><li>EFI用とroot用の2つに分割</li><li>後でswapfileを追加するのでswap用パーティションはなし</li><li>rootファイルシステムは <a href="https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition">LUKS on a partition</a> の方法で暗号化<ul><li><code>cryptsetup open /dev/nvme0n1p2 root</code> とすると <code>/dev/mapper/root</code> を通して暗号化されたvolumeに読み書きできるようになる。</li></ul></li></ul><pre><code>NAME        MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
+    <section class="post"><div class="post__date"><data datatime="2022-01-30">2022-01-30</data></div><h1 id="268345971243790">Arch Linux インストールメモ</h1><p>Arch Linuxのインストールから、基本的なデスクトップ環境、Webブラウザと日本語入力をインストールするまでのメモです。 基本的には <a href="https://wiki.archlinux.org/title/installation_guide">Installation Guide</a> の流れの通りですが、今後のアップデートで問題が発生したときに対応できるように設定した内容を残すことが目的です。 (特に考えることがなかった部分は省略します。)</p><ul><li>ハードウェア: ThinkPad T490s</li><li>インストールに使用したイメージ: <a href="http://ftp.jaist.ac.jp/pub/Linux/ArchLinux/iso/2022.01.01/">archlinux-2022.01.01-x86_64.iso</a></li><li>デュアルブート: なし</li><li>Desktop環境: GNOME</li></ul><hr><p>ここからはライブ環境での操作</p><section class="collapsible"><input class="collapsible__toggle" id="toc-toggle" type="checkbox" checked=""><label class="collapsible__label" for="toc-toggle">Table of Contents</label><ul class="collapsible__content"><li><a href="#5001208425483745">パーティショニング</a></li><li><a href="#1184471389249843">パッケージのインストール</a></li><li><a href="#5613699024055698">Initramfs</a></li><li><a href="#2313109497199640">ブートローダー</a></li><li><a href="#8092289186315226">Swapfile追加</a></li><li><a href="#867166261171560">ユーザ作成</a></li><li><a href="#7708166056086401">Wifi設定</a></li><li><a href="#972953017730934">GNOMEのインストール</a></li><li><a href="#3240397808338624">フォント</a></li><li><a href="#6049208232854562">AUR Helperのインストール</a></li><li><a href="#7561743398933804">ブラウザ (Google Chrome)</a></li><li><a href="#8960828340983734">日本語入力 (Mozc)</a></li></ul></section><h2 id="5001208425483745">パーティショニング</h2><ul><li>EFI用とroot用の2つに分割</li><li>後でswapfileを追加するのでswap用パーティションはなし</li><li>rootファイルシステムは <a href="https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition">LUKS on a partition</a> の方法で暗号化<ul><li><code>cryptsetup open /dev/nvme0n1p2 root</code> とすると <code>/dev/mapper/root</code> を通して暗号化されたvolumeに読み書きできるようになる。</li></ul></li></ul><pre><code>NAME        MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
 nvme0n1     259:0    0 238.5G  0 disk
 ├─nvme0n1p1 259:1    0   512M  0 part  /boot
 └─nvme0n1p2 259:2    0   238G  0 part
@@ -62,6 +62,7 @@ makepkg -si</code></pre><p>ref. <a href="https://github.com/Jguer/yay">yay</a></
 GTK_IM_MODULE=fcitx
 QT_IM_MODULE=fcitx
 XMODIFIERS=@im=fcitx</code></pre><p>ref. <a href="https://wiki.archlinux.org/title/Fcitx5">Fcitx5 - ArchWiki</a></p></section>
+    
   
 
 </body></html>
