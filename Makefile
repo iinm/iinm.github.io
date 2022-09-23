@@ -6,11 +6,6 @@ POSTS = $(shell find posts/data -name '*.md' | xargs -n 1 basename | sed -E 's,(
 run:
 	python3 -m http.server
 
-.PHONY: lint
-lint:
-	npx eslint . --fix
-	npx tsc --noEmit --allowJs
-
 .PHONY: site
 site: $(POSTS) sitemap.txt;
 
@@ -22,7 +17,6 @@ sitemap.txt: index.html
 		| xargs -n 1 basename \
 		| xargs -I {} echo $(BASE_URL)/posts/{} \
 		>> sitemap.txt
-
 
 posts/%.html: posts/data/%.md
 	google-chrome-stable --headless --disable-gpu --disable-software-rasterizer \
