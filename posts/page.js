@@ -57,7 +57,7 @@ const metadata = {
 dom.write(MetaContents({ metadata }), document.head);
 dom.write(
   Post({ markdownBlocks, metadata }),
-  /** @type {HTMLElement} */ (document.querySelector(".post"))
+  /** @type {HTMLElement} */(document.querySelector(".post"))
 );
 
 /** @type {HTMLElement} */ (document.querySelector("#render-script")).remove();

@@ -3,8 +3,13 @@ html {
 }
 
 body {
-  font-family: "Noto Serif CJK JP", /* for Ubuntu */ "Hiragino Mincho ProN",
-    /* for macOS */ "Yu Mincho", /* for Windows */ serif;
+  font-family: "Noto Serif CJK JP",
+    /* for Ubuntu */
+    "Hiragino Mincho ProN",
+    /* for macOS */
+    "Yu Mincho",
+    /* for Windows */
+    serif;
   font-weight: 500;
   background-color: #444;
   color: #fffffc;
@@ -43,7 +48,11 @@ pre {
 
 pre,
 code {
-  font-family: Monaco, /* for macOS */ Consolas, /* for Windows */ monospace;
+  font-family: Monaco,
+    /* for macOS */
+    Consolas,
+    /* for Windows */
+    monospace;
   font-size: 0.9rem;
   background-color: #3f3f3f;
 }
@@ -54,8 +63,10 @@ pre::-webkit-scrollbar {
 }
 
 pre {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 blockquote {
