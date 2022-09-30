@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="ja"><head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <link rel="shortcut icon" href="https://avatars.githubusercontent.com/u/8685693?s=48" type="image/x-icon">
-    <link rel="stylesheet" href="/site.css" type="text/css" media="all">
-    <link rel="stylesheet" href="page.css" type="text/css" media="all">
-  <title>mitmproxyの使い方メモ</title><meta property="og:url" content="https://iinm.github.io/posts/2022-02-23--mitmproxy-cheat-sheat.html"><meta property="og:type" content="article"><meta property="og:title" content="mitmproxyの使い方メモ"><meta property="og:image" content="https://avatars.githubusercontent.com/u/8685693"><meta property="og:site_name" content="/proc/iinm/fd/2"></head>
-  <body>
-    <nav>
-      <div class="navigation">
-        <img class="navigation__icon" src="https://avatars.githubusercontent.com/u/8685693?s=128" alt="">
-        <a class="navigation__link" href="..">back to index</a>
-      </div>
-    </nav>
-    <section class="post"><div class="post__date"><data datatime="2022-02-23">2022-02-23</data></div><h1 id="5931102809926084">mitmproxyの使い方メモ</h1><section class="collapsible"><input class="collapsible__toggle" id="toc-toggle" type="checkbox" checked=""><label class="collapsible__label" for="toc-toggle">Table of Contents</label><ul class="collapsible__content"><li><a href="#2947704438541607">mitmproxyとは</a></li><li><a href="#2053567778255975">mitmproxyのインストールと起動</a></li><li><a href="#3035882808695628">証明書とプロキシの設定 (Android)</a></li><li><a href="#3533700851472865">証明書とプロキシの設定 (Archlinux / GNOME)</a></li><li><a href="#8505787095285423">mitmproxyの操作方法</a></li><li><a href="#776088322239432">ショートカットの設定</a></li><li><a href="#3354058958381759">通信内容を書き換える</a></li></ul></section><h2 id="2947704438541607">mitmproxyとは</h2><p>HTTP(S)のプロキシで、通信内容を覗いたり内容を書き換えることができます。</p><p>ref. <a href="https://mitmproxy.org/">mitmproxy</a></p><h2 id="2053567778255975">mitmproxyのインストールと起動</h2><p>ref. <a href="https://docs.mitmproxy.org/stable/overview-installation/">Installation - mitmproxy docs</a></p><div class="code-block__language-label">sh</div><pre><code># macOS
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="https://avatars.githubusercontent.com/u/8685693?s=48" type="image/x-icon">
+  <link rel="stylesheet" href="/site.css" type="text/css" media="all">
+  <link rel="stylesheet" href="page.css" type="text/css" media="all">
+<title>mitmproxyの使い方メモ</title><meta property="og:url" content="https://iinm.github.io/posts/2022-02-23--mitmproxy-cheat-sheat.html"><meta property="og:type" content="article"><meta property="og:title" content="mitmproxyの使い方メモ"><meta property="og:image" content="https://avatars.githubusercontent.com/u/8685693"><meta property="og:site_name" content="iinm"></head>
+
+<body>
+  <nav>
+    <div class="navigation">
+      <img class="navigation__icon" src="https://avatars.githubusercontent.com/u/8685693?s=128" alt="">
+      <a class="navigation__link" href="..">back to index</a>
+    </div>
+  </nav>
+  <section class="post"><div class="post__date"><data datatime="2022-02-23">2022-02-23</data></div><h1 id="5931102809926084">mitmproxyの使い方メモ</h1><section class="collapsible"><input class="collapsible__toggle" id="toc-toggle" type="checkbox" checked=""><label class="collapsible__label" for="toc-toggle">Table of Contents</label><ul class="collapsible__content"><li><a href="#2947704438541607">mitmproxyとは</a></li><li><a href="#2053567778255975">mitmproxyのインストールと起動</a></li><li><a href="#3035882808695628">証明書とプロキシの設定 (Android)</a></li><li><a href="#3533700851472865">証明書とプロキシの設定 (Archlinux / GNOME)</a></li><li><a href="#8505787095285423">mitmproxyの操作方法</a></li><li><a href="#776088322239432">ショートカットの設定</a></li><li><a href="#3354058958381759">通信内容を書き換える</a></li></ul></section><h2 id="2947704438541607">mitmproxyとは</h2><p>HTTP(S)のプロキシで、通信内容を覗いたり内容を書き換えることができます。</p><p>ref. <a href="https://mitmproxy.org/">mitmproxy</a></p><h2 id="2053567778255975">mitmproxyのインストールと起動</h2><p>ref. <a href="https://docs.mitmproxy.org/stable/overview-installation/">Installation - mitmproxy docs</a></p><div class="code-block__language-label">sh</div><pre><code># macOS
 brew install mitmproxy
 
 # or Arch Linux
@@ -37,7 +38,7 @@ class ClientHintsOverride:
         flow.request.headers["sec-ch-ua-platform-version"] = "10"
 
 addons = [ClientHintsOverride()]</code></pre><div class="code-block__language-label">sh</div><pre><code>mitmproxy -s ./client_hints_override.py</code></pre><p>ref. <a href="https://lucaslegname.github.io/mitmproxy/2020/11/04/mitmproxy-scripts.html">Creating scripts for mitmproxy - Bad Gateway</a></p></section>
-    
   
+
 
 </body></html>

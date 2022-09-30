@@ -17,7 +17,7 @@ This **is** bold.
 
 This**is**bold.
 
-This *is* italic.
+This _is_ italic.
 
 This*is*italic.
 
@@ -39,7 +39,7 @@ This*is*italic.
 > - two
 > - three
 >
-> May the **Force** be with *you*.
+> May the **Force** be with _you_.
 
 ## Lists
 
@@ -89,17 +89,17 @@ const hello = () => {
 
 ## Table
 
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
+| First Header | Second Header |
+| ------------ | ------------- |
+| Content Cell | Content Cell  |
+| Content Cell | Content Cell  |
 
 | Left-aligned | Center-aligned | Right-aligned |
-| :---         |     :---:      |          ---: |
-| git status   | git status     | git status    |
-| git diff     | git diff       | git diff      |
+| :----------- | :------------: | ------------: |
+| git status   |   git status   |    git status |
+| git diff     |    git diff    |      git diff |
 
 ## HTML
 
-<iframe width="100%" src="https://www.youtube.com/embed/lRaL-8qZ0mM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+<iframe src="https://www.youtube.com/embed/lRaL-8qZ0mM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>

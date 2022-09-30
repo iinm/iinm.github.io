@@ -50,7 +50,7 @@ const metadata = {
     "og:type": "article",
     "og:title": pageTitle,
     "og:image": "https://avatars.githubusercontent.com/u/8685693",
-    "og:site_name": "/proc/iinm/fd/2",
+    "og:site_name": "iinm",
   },
 };
 

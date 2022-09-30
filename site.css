@@ -1,20 +1,37 @@
+:root {
+  --bg-color: #444;
+  --font-color: #fffffc;
+  --primary-color: #9ae8ff;
+  --code-bg-color: #3f3f3f;
+  --border-color: #ddd;
+  --table-row-primary-bg-color: #505050;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-color: #fffffc;
+    --font-color: #444;
+    --primary-color: #079;
+    --code-bg-color: #f6f6f6;
+    --table-row-primary-bg-color: #f6f6f6;
+  }
+}
+
 html {
   font-size: 17px;
 }
 
 body {
+  /* for Ubuntu */
   font-family: "Noto Serif CJK JP",
-    /* for Ubuntu */
-    "Hiragino Mincho ProN",
     /* for macOS */
-    "Yu Mincho",
+    "Hiragino Mincho ProN",
     /* for Windows */
+    "Yu Mincho",
     serif;
   font-weight: 500;
-  background-color: #444;
-  color: #fffffc;
-  margin: 0 auto;
-  padding: 0 1rem;
+  background-color: var(--bg-color);
+  color: var(--font-color);
 }
 
 h1,
@@ -30,6 +47,10 @@ h2 {
   font-size: 1.3rem;
 }
 
+hr {
+  border-top: 0.05rem solid var(--border-color);
+}
+
 ul,
 ol {
   padding: 0 0 0 2rem;
@@ -37,7 +58,7 @@ ol {
 
 pre,
 blockquote {
-  border-left: 0.2rem solid #ddd;
+  border-left: 0.2rem solid var(--border-color);
 }
 
 pre {
@@ -48,13 +69,13 @@ pre {
 
 pre,
 code {
+  /* for macOS */
   font-family: Monaco,
-    /* for macOS */
-    Consolas,
     /* for Windows */
+    Consolas,
     monospace;
   font-size: 0.9rem;
-  background-color: #3f3f3f;
+  background-color: var(--code-bg-color);
 }
 
 /* Hide scrollbar */
@@ -63,10 +84,10 @@ pre::-webkit-scrollbar {
 }
 
 pre {
-  -ms-overflow-style: none;
   /* IE and Edge */
-  scrollbar-width: none;
+  -ms-overflow-style: none;
   /* Firefox */
+  scrollbar-width: none;
 }
 
 blockquote {
@@ -80,7 +101,7 @@ img {
 
 a,
 a:visited {
-  color: #9ae8ff;
+  color: var(--primary-color);
   text-decoration: none;
 }
 
@@ -101,30 +122,5 @@ td {
 }
 
 tr:nth-child(odd) {
-  background-color: #505050;
-}
-
-iframe {
-  margin-bottom: 1rem;
-}
-
-@media (prefers-color-scheme: light) {
-  body {
-    background-color: #fffffc;
-    color: #444;
-  }
-
-  a,
-  a:visited {
-    color: #079;
-  }
-
-  pre,
-  code {
-    background-color: #f6f6f6;
-  }
-
-  tr:nth-child(odd) {
-    background-color: #f6f6f6;
-  }
+  background-color: var(--table-row-primary-bg-color);
 }

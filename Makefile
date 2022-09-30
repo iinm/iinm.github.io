@@ -9,7 +9,7 @@ run:
 .PHONY: site
 site: $(POSTS) sitemap.txt;
 
-sitemap.txt: index.html
+sitemap.txt:
 	echo $(BASE_URL) > sitemap.txt
 	find posts -maxdepth 1 -name '*.html' \
 		| grep -v 'page.html' \

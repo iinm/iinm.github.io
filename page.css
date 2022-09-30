@@ -1,3 +1,8 @@
+body {
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
 .page-header__icon,
 .page-header__title {
   display: inline-block;
