@@ -25,7 +25,7 @@ export const MetaContents = ({ metadata }) => {
   return [
     {
       tag: "title",
-      children: [{ tag: "*text", text: metadata.title }],
+      children: [{ tag: "text*", text: metadata.title }],
     },
     ...Object.entries(metadata.ogp).map(([property, content]) => ({
       tag: "meta",
@@ -61,7 +61,7 @@ export const Post = ({ markdownBlocks, metadata }) => {
         {
           tag: "data",
           attr: { datatime: metadata.date },
-          children: [{ tag: "*text", text: metadata.date }],
+          children: [{ tag: "text*", text: metadata.date }],
         },
       ],
     },
@@ -96,7 +96,7 @@ const Toc = ({ markdownBlocks }) => {
         attr: {
           for: "toc-toggle",
         },
-        children: [{ tag: "*text", text: "Table of Contents" }],
+        children: [{ tag: "text*", text: "Table of Contents" }],
       },
       {
         tag: "ul",
@@ -116,7 +116,7 @@ const Toc = ({ markdownBlocks }) => {
                     href: `#${hash.cyrb53(headingBlock.props.heading)}`,
                   },
                   children: [
-                    { tag: "*text", text: headingBlock.props.heading },
+                    { tag: "text*", text: headingBlock.props.heading },
                   ],
                 },
               ],
@@ -150,7 +150,7 @@ const MarkdownContents = ({ blocks, parentTag }) => {
           },
           children: [
             {
-              tag: "*text",
+              tag: "text*",
               text: block.props.heading,
             },
           ],
@@ -208,7 +208,7 @@ const MarkdownContents = ({ blocks, parentTag }) => {
             className: "code-block__language-label",
             children: [
               {
-                tag: "*text",
+                tag: "text*",
                 text: block.props.language,
               },
             ],
@@ -222,7 +222,7 @@ const MarkdownContents = ({ blocks, parentTag }) => {
               tag: "code",
               children: [
                 {
-                  tag: "*text",
+                  tag: "text*",
                   text: block.props.code,
                 },
               ],
@@ -261,7 +261,7 @@ const MarkdownContents = ({ blocks, parentTag }) => {
       }
       case "html":
         nodes.push({
-          tag: "*html",
+          tag: "html*",
           html: block.props.html,
         });
         break;
@@ -306,7 +306,7 @@ const MarkdownSegment = (segment) => {
         },
         children: [
           {
-            tag: "*text",
+            tag: "text*",
             text: segment.props.text,
           },
         ],
@@ -343,7 +343,7 @@ const MarkdownSegment = (segment) => {
         tag: "b",
         children: [
           {
-            tag: "*text",
+            tag: "text*",
             text: segment.props.text,
           },
         ],
@@ -354,7 +354,7 @@ const MarkdownSegment = (segment) => {
         tag: "em",
         children: [
           {
-            tag: "*text",
+            tag: "text*",
             text: segment.props.text,
           },
         ],
@@ -365,7 +365,7 @@ const MarkdownSegment = (segment) => {
         tag: "code",
         children: [
           {
-            tag: "*text",
+            tag: "text*",
             text: segment.props.text,
           },
         ],
@@ -373,7 +373,7 @@ const MarkdownSegment = (segment) => {
     }
     case "text": {
       return {
-        tag: "*text",
+        tag: "text*",
         text: segment.props.text,
       };
     }
