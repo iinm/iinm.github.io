@@ -15,13 +15,16 @@ help:
 .PHONY: run
 ## run | run web server
 run:
+	$(info --- $@)
 	python3 -m http.server
 
 .PHONY: site
 ## site | generate site
-site: $(POSTS) sitemap.txt;
+site: $(POSTS) sitemap.txt
+	$(info --- $@)
 
 sitemap.txt:
+	$(info --- $@)
 	echo $(BASE_URL) > sitemap.txt
 	find posts -maxdepth 1 -name '*.html' \
 		| grep -v 'page.html' \
@@ -31,6 +34,7 @@ sitemap.txt:
 		>> sitemap.txt
 
 posts/%.html: posts/data/%.md
+	$(info --- $@)
 	google-chrome-stable --headless --disable-gpu --disable-software-rasterizer \
 		--virtual-time-budget=5000 \
 		--dump-dom \
@@ -40,6 +44,8 @@ posts/%.html: posts/data/%.md
 .PHONY: clean
 ## clean | delete generated files
 clean:
+	$(info --- $@)
+	rm sitemap.txt
 	find posts -maxdepth 1 -name '*.html' \
 		| grep -v 'page.html' \
 		| xargs rm
