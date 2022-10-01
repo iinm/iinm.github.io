@@ -1,59 +1,10 @@
-/** @typedef {import("../../lib/markdown.type").Block} MarkdownBlock */
-/** @typedef {import("../../lib/markdown.type").HeadingBlock} HeadingBlock */
-/** @typedef {import("../../lib/markdown.type").InlineSegment} InlineSegment */
-/** @typedef {import("../../lib/dom.type").VirtualDomNode} VirtualDomNode */
+/** @typedef {import("../lib/markdown.type").Block} MarkdownBlock */
+/** @typedef {import("../lib/markdown.type").HeadingBlock} HeadingBlock */
+/** @typedef {import("../lib/markdown.type").InlineSegment} InlineSegment */
+/** @typedef {import("../lib/dom.type").VirtualDomNode} VirtualDomNode */
 
-import { h, t } from "../../lib/dom.js";
-import * as hash from "../../lib/hash.js";
-
-/**
- * @typedef {object} PageMetadata
- * @property {string} title
- * @property {string} date
- * @property {Object<string, string>} ogp
- */
-
-/**
- * @typedef {object} MetaContentsProps
- * @property {PageMetadata} metadata
- */
-
-/**
- * @param {MetaContentsProps} props
- * @returns {VirtualDomNode[]}
- */
-export const MetaContents = ({ metadata }) => {
-  return [
-    h("title", {}, t(metadata.title)),
-    ...Object.entries(metadata.ogp).map(([property, content]) => h("meta", {
-      property,
-      content,
-    })),
-  ];
-};
-
-/**
- * @typedef {object} PostProps
- * @property {MarkdownBlock[]} markdownBlocks
- * @property {PageMetadata} metadata
- */
-
-/**
- * @param {PostProps} props
- * @returns {VirtualDomNode[]}
- */
-export const Post = ({ markdownBlocks, metadata }) => {
-  const contents = MarkdownContents({ blocks: markdownBlocks });
-  const toc = Toc({ markdownBlocks });
-  const tocPosition = contents.findIndex((node) => node.tag === "h2");
-  contents.splice(tocPosition, 0, toc);
-
-  return [
-    h("div", { cls: "post__date" },
-      h("date", { datetime: metadata.date }, t(metadata.date))),
-    ...contents,
-  ];
-};
+import { h, t } from "../lib/dom.js";
+import { cyrb53 } from "../lib/hash.js";
 
 /** @typedef {{ markdownBlocks: MarkdownBlock[] }} TocProps */
 
@@ -62,7 +13,7 @@ export const Post = ({ markdownBlocks, metadata }) => {
  * @param {TocProps} param0
  * @returns {VirtualDomNode}
  */
-const Toc = ({ markdownBlocks }) => {
+export const MarkdownContentToc = ({ markdownBlocks }) => {
   return h("section",
     { cls: "collapsible" },
     h("input", {
@@ -88,7 +39,7 @@ const Toc = ({ markdownBlocks }) => {
           const headingBlock = /** @type {HeadingBlock} */ (block);
           return h("li", {},
             h("a", {
-              href: `#${hash.cyrb53(headingBlock.props.heading)}`,
+              href: `#${cyrb53(headingBlock.props.heading)}`,
             },
               t(headingBlock.props.heading),
             ),
@@ -108,7 +59,7 @@ const Toc = ({ markdownBlocks }) => {
  * @param {MarkdownContentsProps} props
  * @returns {VirtualDomNode[]}
  */
-const MarkdownContents = ({ blocks, parentTag }) => {
+export const MarkdownContents = ({ blocks, parentTag }) => {
   /** @type {VirtualDomNode[]} */
   const nodes = [];
   for (const block of blocks) {
@@ -116,7 +67,7 @@ const MarkdownContents = ({ blocks, parentTag }) => {
       case "heading": {
         nodes.push(h(
           `h${block.props.level}`,
-          { id: String(hash.cyrb53(block.props.heading)) },
+          { id: String(cyrb53(block.props.heading)) },
           t(block.props.heading),
         ));
         break;

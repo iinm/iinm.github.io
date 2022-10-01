@@ -2,7 +2,7 @@
 
 import * as markdown from "../lib/markdown.js";
 import * as dom from "../lib/dom.js";
-import { MetaContents, Post } from "./components/index.js";
+import { MetaContents, Post } from "./components/post.js";
 
 const basePath = location.pathname.split("/").slice(0, -1).join("/");
 const pagePath = location.search
