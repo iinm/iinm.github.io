@@ -3,6 +3,7 @@
 /** @typedef {import("../../lib/markdown.type").InlineSegment} InlineSegment */
 /** @typedef {import("../../lib/dom.type").VirtualDomNode} VirtualDomNode */
 
+import { h, t } from "../../lib/dom.js";
 import * as hash from "../../lib/hash.js";
 
 /**
@@ -23,16 +24,10 @@ import * as hash from "../../lib/hash.js";
  */
 export const MetaContents = ({ metadata }) => {
   return [
-    {
-      tag: "title",
-      children: [{ tag: "text*", text: metadata.title }],
-    },
-    ...Object.entries(metadata.ogp).map(([property, content]) => ({
-      tag: "meta",
-      attr: {
-        property,
-        content,
-      },
+    h("title", {}, t(metadata.title)),
+    ...Object.entries(metadata.ogp).map(([property, content]) => h("meta", {
+      property,
+      content,
     })),
   ];
 };
@@ -54,17 +49,8 @@ export const Post = ({ markdownBlocks, metadata }) => {
   contents.splice(tocPosition, 0, toc);
 
   return [
-    {
-      tag: "div",
-      className: "post__date",
-      children: [
-        {
-          tag: "data",
-          attr: { datatime: metadata.date },
-          children: [{ tag: "text*", text: metadata.date }],
-        },
-      ],
-    },
+    h("div", { cls: "post__date" },
+      h("date", { datetime: metadata.date }, t(metadata.date))),
     ...contents,
   ];
 };
@@ -77,54 +63,39 @@ export const Post = ({ markdownBlocks, metadata }) => {
  * @returns {VirtualDomNode}
  */
 const Toc = ({ markdownBlocks }) => {
-  return {
-    tag: "section",
-    className: "collapsible",
-    children: [
-      {
-        tag: "input",
-        className: "collapsible__toggle",
-        attr: {
-          id: "toc-toggle",
-          type: "checkbox",
-          checked: "",
-        },
-      },
-      {
-        tag: "label",
-        className: "collapsible__label",
-        attr: {
-          for: "toc-toggle",
-        },
-        children: [{ tag: "text*", text: "Table of Contents" }],
-      },
-      {
-        tag: "ul",
-        className: "collapsible__content",
-        children: markdownBlocks
-          .filter(
-            (block) => block.type === "heading" && block.props.level === 2
-          )
-          .map((block) => {
-            const headingBlock = /** @type {HeadingBlock} */ (block);
-            return {
-              tag: "li",
-              children: [
-                {
-                  tag: "a",
-                  attr: {
-                    href: `#${hash.cyrb53(headingBlock.props.heading)}`,
-                  },
-                  children: [
-                    { tag: "text*", text: headingBlock.props.heading },
-                  ],
-                },
-              ],
-            };
-          }),
-      },
-    ],
-  };
+  return h("section",
+    { cls: "collapsible" },
+    h("input", {
+      cls: "collapsible__toggle",
+      id: "toc-toggle",
+      type: "checkbox",
+      checked: "",
+    }),
+    h("label", {
+      cls: "collapsible__label",
+      for: "toc-toggle",
+    },
+      t("Table of Contents")
+    ),
+    h("ul", {
+      cls: "collapsible__content",
+    },
+      ...markdownBlocks
+        .filter(
+          (block) => block.type === "heading" && block.props.level === 2
+        )
+        .map((block) => {
+          const headingBlock = /** @type {HeadingBlock} */ (block);
+          return h("li", {},
+            h("a", {
+              href: `#${hash.cyrb53(headingBlock.props.heading)}`,
+            },
+              t(headingBlock.props.heading),
+            ),
+          );
+        }),
+    ),
+  )
 };
 
 /**
@@ -143,120 +114,78 @@ const MarkdownContents = ({ blocks, parentTag }) => {
   for (const block of blocks) {
     switch (block.type) {
       case "heading": {
-        nodes.push({
-          tag: `h${block.props.level}`,
-          attr: {
-            id: String(hash.cyrb53(block.props.heading)),
-          },
-          children: [
-            {
-              tag: "text*",
-              text: block.props.heading,
-            },
-          ],
-        });
+        nodes.push(h(
+          `h${block.props.level}`,
+          { id: String(hash.cyrb53(block.props.heading)) },
+          t(block.props.heading),
+        ));
         break;
       }
       case "horizontal_rule": {
-        nodes.push({
-          tag: "hr",
-        });
+        nodes.push(h("hr", {}));
         break;
       }
       case "blockquote": {
-        nodes.push({
-          tag: "blockquote",
-          children: MarkdownContents({ blocks: block.contents }),
-        });
+        nodes.push(h("blockquote", {},
+          ...MarkdownContents({ blocks: block.contents }),
+        ));
         break;
       }
       case "unordered_list": {
-        nodes.push({
-          tag: "ul",
-          children: MarkdownContents({
+        nodes.push(h("ul", {},
+          ...MarkdownContents({
             blocks: block.contents,
             parentTag: "ul",
-          }),
-        });
+          })
+        ));
         break;
       }
       case "ordered_list": {
-        nodes.push({
-          tag: "ol",
-          children: MarkdownContents({
+        nodes.push(h("ol", {},
+          ...MarkdownContents({
             blocks: block.contents,
             parentTag: "ol",
           }),
-        });
+        ));
         break;
       }
       case "list_item": {
-        nodes.push({
-          tag: "li",
-          children: MarkdownContents({
+        nodes.push(h("li", {},
+          ...MarkdownContents({
             blocks: block.contents,
             parentTag: "li",
           }),
-        });
+        ));
         break;
       }
       case "code_block": {
         // language label
         if (block.props.language) {
-          nodes.push({
-            tag: "div",
-            className: "code-block__language-label",
-            children: [
-              {
-                tag: "text*",
-                text: block.props.language,
-              },
-            ],
-          });
+          nodes.push(h("div", { cls: "code-block__language-label" },
+            t(block.props.language),
+          ));
         }
         // pre, code
-        nodes.push({
-          tag: "pre",
-          children: [
-            {
-              tag: "code",
-              children: [
-                {
-                  tag: "text*",
-                  text: block.props.code,
-                },
-              ],
-            },
-          ],
-        });
+        nodes.push(h("pre", {}, h("code", {}, t(block.props.code))));
         break;
       }
       case "table": {
-        nodes.push({
-          tag: "table",
-          children: /** @type {VirtualDomNode[]} */ (
-            [
-              // header
-              {
-                tag: "tr",
-                children: block.props.header.map(({ segments }) => ({
-                  tag: "th",
-                  children: segments.map(MarkdownSegment).filter((s) => s),
-                })),
-              },
-              ...block.props.rows.map((row) => ({
-                tag: "tr",
-                children: new Array(row.length).fill(0).map((_, index) => ({
-                  tag: "td",
-                  style: { textAlign: block.props.align[index] },
-                  children: row[index].segments
-                    .map(MarkdownSegment)
-                    .filter((s) => s),
-                })),
-              })),
-            ].filter((s) => s)
+        nodes.push(h("table", {},
+          // header
+          h("tr", {},
+            ...block.props.header.map(({ segments }) => (h("th", {},
+              // @ts-ignore
+              ...segments.map(MarkdownSegment).filter((s) => s),
+            ))),
           ),
-        });
+          ...block.props.rows.map((row) => h("tr", {},
+            ...(new Array(row.length).fill(0).map((_, index) => h("td",
+              { style: { textAlign: block.props.align[index] } },
+              // @ts-ignore
+              ...row[index].segments.map(MarkdownSegment).filter((s) => s),
+            )))
+          )),
+        ));
         break;
       }
       case "html":
@@ -274,12 +203,10 @@ const MarkdownContents = ({ blocks, parentTag }) => {
             }
           }
         } else {
-          nodes.push({
-            tag: "p",
-            children: /** @type {VirtualDomNode[]} */ (
-              block.props.segments.map(MarkdownSegment).filter((s) => s)
-            ),
-          });
+          nodes.push(h("p", {},
+            // @ts-ignore
+            ...block.props.segments.map(MarkdownSegment).filter((s) => s)
+          ));
         }
         break;
       }
@@ -299,83 +226,39 @@ const MarkdownContents = ({ blocks, parentTag }) => {
 const MarkdownSegment = (segment) => {
   switch (segment.type) {
     case "link": {
-      return {
-        tag: "a",
-        attr: {
-          href: segment.props.url,
-        },
-        children: [
-          {
-            tag: "text*",
-            text: segment.props.text,
-          },
-        ],
-      };
+      return h("a", {
+        href: segment.props.url,
+      },
+        t(segment.props.text),
+      );
     }
     case "image": {
-      return {
-        tag: "div",
-        className: "image-link",
-        children: [
-          {
-            tag: "a",
-            attr: {
-              href: segment.props.src,
-              target: "_blank",
-              rel: "noopener",
-            },
-            children: [
-              {
-                tag: "img",
-                attr: {
-                  src: segment.props.src,
-                  alt: segment.props.alt || "",
-                  loading: "lazy",
-                },
-              },
-            ],
-          },
-        ],
-      };
+      return h("div",
+        { cls: "image-link" },
+        h("a", {
+          href: segment.props.src,
+          target: "_blank",
+          rel: "noopener",
+        },
+          h("img", {
+            src: segment.props.src,
+            alt: segment.props.alt || "",
+            loading: "lazy",
+          }),
+        ),
+      );
     }
     case "bold": {
-      return {
-        tag: "b",
-        children: [
-          {
-            tag: "text*",
-            text: segment.props.text,
-          },
-        ],
-      };
+      return h("b", {}, t(segment.props.text));
     }
     case "italic": {
-      return {
-        tag: "em",
-        children: [
-          {
-            tag: "text*",
-            text: segment.props.text,
-          },
-        ],
-      };
+      return h("em", {}, t(segment.props.text));
     }
     case "code": {
-      return {
-        tag: "code",
-        children: [
-          {
-            tag: "text*",
-            text: segment.props.text,
-          },
-        ],
-      };
+      return h("code", {}, t(segment.props.text));
     }
     case "text": {
-      return {
-        tag: "text*",
-        text: segment.props.text,
-      };
+      return t(segment.props.text);
     }
     default:
       console.warn("Cannot render segment:", segment);
