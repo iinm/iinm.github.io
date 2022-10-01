@@ -60,4 +60,4 @@ dom.write(
   /** @type {HTMLElement} */(document.querySelector(".post"))
 );
 
-/** @type {HTMLElement} */ (document.querySelector("#render-script")).remove();
+/** @type {HTMLElement} */ (document.querySelector("#renderer-script")).remove();

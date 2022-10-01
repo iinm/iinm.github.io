@@ -27,7 +27,7 @@ sitemap.txt:
 	$(info --- $@)
 	echo $(BASE_URL) > sitemap.txt
 	find posts -maxdepth 1 -name '*.html' \
-		| grep -v 'page.html' \
+		| grep -v 'post.html' \
 		| sort \
 		| xargs -n 1 basename \
 		| xargs -I {} echo $(BASE_URL)/posts/{} \
@@ -38,7 +38,7 @@ posts/%.html: posts/data/%.md
 	google-chrome-stable --headless --disable-gpu --disable-software-rasterizer \
 		--virtual-time-budget=5000 \
 		--dump-dom \
-		'$(LOCAL_BASE_URL)/posts/page.html?path=$(shell basename $@)' \
+		'$(LOCAL_BASE_URL)/posts/post.html?path=$(shell basename $@)' \
 		> posts/$(shell basename $@)
 
 .PHONY: clean
@@ -47,5 +47,5 @@ clean:
 	$(info --- $@)
 	rm sitemap.txt
 	find posts -maxdepth 1 -name '*.html' \
-		| grep -v 'page.html' \
+		| grep -v 'post.html' \
 		| xargs rm
