@@ -27,13 +27,8 @@
   <header>
     <img class="page-header__icon" src="https://avatars.githubusercontent.com/u/8685693?s=128" alt="" />
     <!-- <h1 class="page-header__title"></h1> -->
-    <nav class="page-header__nav">
-      <a href="#blog" class="nav__item">blog</a>
-      <a href="#scraps" class="nav__item">scraps</a>
-      <a href="#about" class="nav__item">about</a>
-    </nav>
   </header>
-  <section id="blog">
+  <section>
     <ul class="posts">
       <li class="posts__item">
         <div class="posts__date">
@@ -73,31 +68,6 @@
       </li>
     </ul>
   </section>
-  <section id="scraps" style="display: none; margin-top: 1rem;">
-    WIP
-  </section>
-  <section id="about" style="display: none; margin-top: 1rem;">
-    WIP
-  </section>
-
-  <script type="module">
-    const contents = {
-      blog: document.querySelector("#blog"),
-      scraps: document.querySelector("#scraps"),
-      about: document.querySelector("#about"),
-    };
-    const showSection = (hash) => {
-      for (const [key, element] of Object.entries(contents)) {
-        if (hash === `#${key}`) {
-          element.style.display = "block";
-        } else {
-          element.style.display = "none";
-        }
-      }
-    };
-    window.addEventListener("hashchange", () => showSection(location.hash));
-    showSection(location.hash || "#blog");
-  </script>
 </body>
 
 </html>

@@ -5,8 +5,7 @@ body {
 }
 
 .page-header__icon,
-.page-header__title,
-.page-header__nav {
+.page-header__title {
   display: inline-block;
   vertical-align: middle;
   margin: 0.7rem 0.3rem 0 0;
@@ -16,18 +15,6 @@ body {
   border-radius: 50%;
   width: 2.5rem;
   height: 2.5rem;
-}
-
-.page-header__nav {
-  padding: 0.7rem 0;
-  /* border-bottom: 0.1rem solid #ddd; */
-}
-
-.nav__item,
-.nav__item:visited {
-  margin: 0 .5rem;
-  color: var(--font-color);
-  text-decoration: none;
 }
 
 .posts {
