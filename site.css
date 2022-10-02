@@ -75,6 +75,7 @@ code {
     Consolas,
     monospace;
   font-size: 0.9rem;
+  line-height: 1.4;
   background-color: var(--code-bg-color);
 }
 
