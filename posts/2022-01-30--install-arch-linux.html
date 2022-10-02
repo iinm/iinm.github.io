@@ -31,10 +31,10 @@ chmod 600 /swapfile
 mkswap /swapfile
 swapon /swapfile</code></pre><pre><code># /etc/fstab
 
-/swapfile none swap defaults 0 0</code></pre><h2 id="867166261171560">ユーザ作成</h2><div class="code-block__language-label">sh</div><pre><code># sudoが使えるようにwheel groupに追加しておく
+/swapfile none swap defaults 0 0</code></pre><h2 id="867166261171560">ユーザ作成</h2><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># sudoが使えるようにwheel groupに追加しておく</span>
 useradd -m -g wheel me
 
-# パスワード設定
+<span class="code--comment"># パスワード設定</span>
 passwd me</code></pre><div class="code-block__language-label">conf</div><pre><code># /etc/sudoers ( edit by command 'EDITOR=nvim visudo' )
 %wheel ALL=(ALL) ALL</code></pre><hr><p>ここからは追加した一般ユーザによる操作</p><h2 id="6483976390450512">Wifi 設定</h2><p>GNOME &amp; NetworkManager をインストールするまでは iwd を使う。 ※ 先に NetworkManager をインストールして nmcli を使うでも良かったが、ライブ環境にインストールされていた iwd を初めて触ったので、使ってみたかった。</p><p>iwd の設定</p><ul><li>DHCP を使うには <code>EnableNetworkConfiguration=True</code> が必要</li><li>DNS の設定も必要で、特に追加パッケージのインストールが不要な systemd のものを使うことにした。</li></ul><div class="code-block__language-label">conf</div><pre><code># /etc/iwd/main.conf
 
@@ -42,19 +42,19 @@ passwd me</code></pre><div class="code-block__language-label">conf</div><pre><co
 EnableNetworkConfiguration=True
 
 [Network]
-NameResolvingService=systemd</code></pre><p>ref. <a href="https://wiki.archlinux.org/title/Iwd#Optional_configuration">iwd - ArchWiki</a></p><div class="code-block__language-label">sh</div><pre><code># GNOMEインストール後はNetworkManagerを使うのでenableにはしない
+NameResolvingService=systemd</code></pre><p>ref. <a href="https://wiki.archlinux.org/title/Iwd#Optional_configuration">iwd - ArchWiki</a></p><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># GNOMEインストール後はNetworkManagerを使うのでenableにはしない</span>
 sudo systemctl start iwd
-sudo systemctl start systemd-resolved</code></pre><h2 id="1858076102264236">GNOME のインストール</h2><div class="code-block__language-label">sh</div><pre><code># パッケージのインストール
+sudo systemctl start systemd-resolved</code></pre><h2 id="1858076102264236">GNOME のインストール</h2><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># パッケージのインストール</span>
 sudo pacman -Sy gnome gnome-terminal networkmanager
 
-# 自動起動設定
+<span class="code--comment"># 自動起動設定</span>
 sudo systemctl enable gdm
 sudo systemctl enable NetworkManager
 
-sudo reboot</code></pre><p>ref. <a href="https://wiki.archlinux.org/title/GNOME">GNOME - ArchWiki</a></p><h2 id="3240397808338624">フォント</h2><div class="code-block__language-label">sh</div><pre><code># Notoフォントをインストール
+sudo reboot</code></pre><p>ref. <a href="https://wiki.archlinux.org/title/GNOME">GNOME - ArchWiki</a></p><h2 id="3240397808338624">フォント</h2><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># Notoフォントをインストール</span>
 sudo pacman -Sy noto-fonts noto-fonts-cjk noto-fonts-emoji
 
-# その他、購入したフォントを ~/.fonts に配置</code></pre><h2 id="1068491666103540">AUR Helper のインストール</h2><div class="code-block__language-label">sh</div><pre><code># AURを使うには開発用パッケージが必要
+<span class="code--comment"># その他、購入したフォントを ~/.fonts に配置</span></code></pre><h2 id="1068491666103540">AUR Helper のインストール</h2><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># AURを使うには開発用パッケージが必要</span>
 sudo pacman -Sy git base-devel
 
 cd ~/Downloads

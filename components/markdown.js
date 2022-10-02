@@ -237,13 +237,11 @@ const MarkdownSegment = (segment) => {
 const HighlightedCodeSegments = ({ code, language }) => {
   const segments = highlightCode(code, language);
   return segments.map((segment) => {
-    switch (segment.type) {
-      case "comment":
-        return h("span", { cls: "code--comment" }, t(segment.text));
-      case "keyword":
-        return h("span", { cls: "code--keyword" }, t(segment.text));
-      default:
-        return t(segment.text);
+    if (segment.type) {
+      return h("span", {
+        cls: `code--${segment.type}`,
+      }, t(segment.text));
     }
+    return t(segment.text);
   })
 }

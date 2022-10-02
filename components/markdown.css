@@ -72,3 +72,12 @@
 .code--keyword {
   color: rgb(202, 95, 95);
 }
+
+.code--string {
+  color: rgb(95, 202, 95);
+}
+
+.code--heading {
+  color: rgb(95, 202, 202);
+  font-weight: bold;
+}
