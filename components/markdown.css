@@ -64,3 +64,11 @@
     box-shadow: 0 0 0.5rem #ddd;
   }
 }
+
+.code--comment {
+  color: #999;
+}
+
+.code--keyword {
+  color: rgb(202, 95, 95);
+}

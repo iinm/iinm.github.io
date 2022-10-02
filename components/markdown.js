@@ -5,6 +5,7 @@
 
 import { h, t } from "../lib/dom.js";
 import { cyrb53 } from "../lib/hash.js";
+import { highlightCode } from "../lib/code-highlight.js";
 
 /** @typedef {{ markdownBlocks: MarkdownBlock[] }} TocProps */
 
@@ -117,7 +118,14 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
           ));
         }
         // pre, code
-        nodes.push(h("pre", {}, h("code", {}, t(block.props.code))));
+        nodes.push(h("pre", {},
+          h("code", {},
+            ...HighlightedCodeSegments({
+              code: block.props.code,
+              language: block.props.language
+            })
+          )
+        ));
         break;
       }
       case "table": {
@@ -215,3 +223,27 @@ const MarkdownSegment = (segment) => {
       console.warn("Cannot render segment:", segment);
   }
 };
+
+/**
+ * @typedef {object} HighlightedCodeSegmentsProps
+ * @property {string} code
+ * @property {string} [language]
+ */
+
+/**
+ * @param {HighlightedCodeSegmentsProps} props
+ * @returns {VirtualDomNode[]}
+ */
+const HighlightedCodeSegments = ({ code, language }) => {
+  const segments = highlightCode(code, language);
+  return segments.map((segment) => {
+    switch (segment.type) {
+      case "comment":
+        return h("span", { cls: "code--comment" }, t(segment.text));
+      case "keyword":
+        return h("span", { cls: "code--keyword" }, t(segment.text));
+      default:
+        return t(segment.text);
+    }
+  })
+}
