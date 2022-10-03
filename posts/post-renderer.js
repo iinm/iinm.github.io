@@ -1,61 +1,49 @@
 /** @typedef {import("../lib/markdown.type").HeadingBlock} HeadingBlock */
 
-import * as markdown from "../lib/markdown.js";
-import * as dom from "../lib/dom.js";
+import { firstHeadingAsString, firstParagraphAsString, parseMarkdown } from "../lib/markdown.js";
+import { writeVirtualDom } from "../lib/dom.js";
 import { MetaContents, Post } from "./components/post.js";
 
-const basePath = location.pathname.split("/").slice(0, -1).join("/");
+const basePath = location.pathname.split("/").slice(0, -1).join("/"); // "/posts"
 const pagePath = location.search
   .slice(1) // remove '?'
   .split("&")
   .map((pair) => pair.split("="))
-  .find(([key]) => key === "path")?.[1];
+  .find(([key]) => key === "path")?.[1]; // yyyy-MM-dd--<title>.html
 const pageName = pagePath?.split("/").slice(-1)[0].replace(".html", "");
-
-// const metadataPath = `${basePath}/data/${pageName}.metadata.json`
 const contentPath = `${basePath}/data/${pageName}.md`;
 
-const [contentResponse] = await Promise.all([
-  // fetch(metadataPath),
-  fetch(contentPath),
-]);
-
+// fetch content
+const contentResponse = await fetch(contentPath);
 if (!contentResponse.ok) {
   throw new Error("Failed to fetch content");
 }
+const markdownContent = await contentResponse.text();
 
-const [markdownContent] = await Promise.all([
-  // metadataResponse.text(),
-  contentResponse.text(),
-]);
+// parse content
+const markdownBlocks = parseMarkdown(markdownContent);
 
-const markdownBlocks = markdown.parse(markdownContent);
-
-const date = pagePath?.match(/^\d{4}-\d{2}-\d{2}/)?.[0];
-if (!date) {
-  throw new Error(`Cannot get date from filename, ${pagePath}`);
-}
-
-const titleBlock = markdownBlocks.find((block) => block.type === "heading");
-if (!titleBlock) {
-  throw new Error(`Cannot find title block in ${pagePath}`);
-}
-const pageTitle = /** @type {HeadingBlock} */ (titleBlock).props.heading;
-
+// metadata
+const date = pagePath?.match(/^\d{4}-\d{2}-\d{2}/)?.[0] || "";
+const pageTitle = firstHeadingAsString(markdownBlocks) || "";
+const description = firstParagraphAsString(markdownBlocks) || "";
 const metadata = {
   title: pageTitle,
   date,
+  description: description,
   ogp: {
     "og:url": `https://iinm.github.io/posts/${pagePath}`,
     "og:type": "article",
     "og:title": pageTitle,
+    "og:description": description,
     "og:image": "https://avatars.githubusercontent.com/u/8685693",
-    "og:site_name": "iinm",
+    "og:site_name": "iinm.github.io",
   },
 };
 
-dom.write(MetaContents({ metadata }), document.head);
-dom.write(
+// render
+writeVirtualDom(MetaContents({ metadata }), document.head);
+writeVirtualDom(
   Post({ markdownBlocks, metadata }),
   /** @type {HTMLElement} */(document.querySelector(".post"))
 );

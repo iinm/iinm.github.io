@@ -1,10 +1,6 @@
 # mitmproxyの使い方
 
-## mitmproxyとは
-
-HTTP(S)のプロキシで、通信内容を覗いたり内容を書き換えることができます。
-
-ref. [mitmproxy](https://mitmproxy.org/)
+アプリケーションのデバッグ時に通信内容を覗いたり、テスト時にリクエスト内容を書き換えるのに便利なmitmproxyの使い方のメモです。
 
 ## mitmproxyのインストールと起動
 

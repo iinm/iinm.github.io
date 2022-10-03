@@ -9,6 +9,7 @@ import { h, t } from "../../lib/dom.js";
 /**
  * @typedef {object} PageMetadata
  * @property {string} title
+ * @property {string} description
  * @property {string} date
  * @property {Object<string, string>} ogp
  */
@@ -25,6 +26,7 @@ import { h, t } from "../../lib/dom.js";
 export const MetaContents = ({ metadata }) => {
   return [
     h("title", {}, t(metadata.title)),
+    h("meta", { name: "description", content: metadata.description }),
     ...Object.entries(metadata.ogp).map(([property, content]) => h("meta", {
       property,
       content,
