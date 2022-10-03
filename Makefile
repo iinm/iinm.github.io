@@ -46,6 +46,6 @@ posts/%.html: posts/data/%.md
 clean:
 	$(info --- $@)
 	rm sitemap.txt
-	find posts -maxdepth 1 -name '*.html' \
-		| grep -v 'post.html' \
+	find posts/data -name '*.md' \
+		| xargs -n 1 basename | sed -E 's,(.+)\.md,posts/\1.html,g' \
 		| xargs rm
