@@ -32,7 +32,6 @@ before:
 
 body {
   font-family: 'Lora', 'Shippori Mincho', serif;
-  ...
 }
 ```
 
@@ -46,6 +45,7 @@ body {
   'Yu Mincho',            /* for Windows */
   serif
   ;
+}
 ```
 
 
@@ -105,7 +105,7 @@ JavaScriptとMarkdownのGETリクエストはどうしても直列になって�
 参考：[Preloading modules](https://developers.google.com/web/updates/2017/12/modulepreload)
 
 ```html
-<! -- index.html -->
+<!-- index.html -->
 <!-- Prefetch latest post -->
 <link rel="prefetch" href="posts/?post=2021-04-24--markdown-to-html">
 <link rel="prefetch" href="posts/2021-04-24--markdown-to-html.md">
