@@ -15,7 +15,7 @@ const pagePath = location.search
   .map((pair) => pair.split("="))
   .find(([key]) => key === "path")?.[1]; // yyyy-MM-dd--<title>.html
 const pageName = pagePath?.split("/").slice(-1)[0].replace(".html", "");
-const contentPath = `${basePath}/data/${pageName}.md`;
+const contentPath = `${basePath}/source/${pageName}.md`;
 
 // fetch content
 const contentResponse = await fetch(contentPath);

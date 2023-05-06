@@ -2,7 +2,7 @@
 
 BASE_URL := https://iinm.github.io
 LOCAL_BASE_URL := http://127.0.0.1:8000
-POSTS = $(shell find posts/data -name '*.md' | xargs -n 1 basename | sed -E 's,(.+)\.md,posts/\1.html,g')
+POSTS = $(shell find posts/source -name '*.md' | xargs -n 1 basename | sed -E 's,(.+)\.md,posts/\1.html,g')
 
 .PHONY: help
 ## help | show help
@@ -33,7 +33,7 @@ sitemap.txt:
 		| xargs -I {} echo $(BASE_URL)/posts/{} \
 		>> sitemap.txt
 
-posts/%.html: posts/data/%.md
+posts/%.html: posts/source/%.md
 	$(info --- $@)
 	google-chrome-stable --headless --disable-gpu --disable-software-rasterizer \
 		--virtual-time-budget=5000 \
@@ -46,6 +46,6 @@ posts/%.html: posts/data/%.md
 clean:
 	$(info --- $@)
 	rm sitemap.txt
-	find posts/data -name '*.md' \
+	find posts/source -name '*.md' \
 		| xargs -n 1 basename | sed -E 's,(.+)\.md,posts/\1.html,g' \
 		| xargs rm
