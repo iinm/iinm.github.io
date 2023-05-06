@@ -1,34 +1,32 @@
 <!DOCTYPE html>
 <html lang="ja">
+  <head>
+    <title>404</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/site.css" rel="stylesheet" />
+    <style>
+      .error-screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        line-height: 95vh;
+        text-align: center;
+      }
 
-<head>
-  <title>404</title>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="/site.css" rel="stylesheet" />
-  <style>
-    .error-screen {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100vh;
-      width: 100vw;
-      line-height: 95vh;
-      text-align: center;
-    }
+      .error-screen__status-code {
+        display: inline-block;
+        font-size: 5rem;
+        margin: 0;
+      }
+    </style>
+  </head>
 
-    .error-screen__status-code {
-      display: inline-block;
-      font-size: 5rem;
-      margin: 0;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="error-screen">
-    <p class="error-screen__status-code">404</p>
-  </div>
-</body>
-
+  <body>
+    <div class="error-screen">
+      <p class="error-screen__status-code">404</p>
+    </div>
+  </body>
 </html>

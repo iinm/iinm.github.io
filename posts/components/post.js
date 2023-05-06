@@ -3,7 +3,10 @@
 /** @typedef {import("../../lib/markdown.type").InlineSegment} InlineSegment */
 /** @typedef {import("../../lib/dom.type").VirtualDomNode} VirtualDomNode */
 
-import { MarkdownContents, MarkdownContentToc } from "../../components/markdown.js";
+import {
+  MarkdownContents,
+  MarkdownContentToc,
+} from "../../components/markdown.js";
 import { h, t } from "../../lib/dom.js";
 
 /**
@@ -27,10 +30,12 @@ export const MetaContents = ({ metadata }) => {
   return [
     h("title", {}, t(metadata.title)),
     h("meta", { name: "description", content: metadata.description }),
-    ...Object.entries(metadata.ogp).map(([property, content]) => h("meta", {
-      property,
-      content,
-    })),
+    ...Object.entries(metadata.ogp).map(([property, content]) =>
+      h("meta", {
+        property,
+        content,
+      })
+    ),
   ];
 };
 
@@ -51,9 +56,11 @@ export const Post = ({ markdownBlocks, metadata }) => {
   contents.splice(tocPosition, 0, toc);
 
   return [
-    h("div", { cls: "post__date" },
-      h("date", { datetime: metadata.date }, t(metadata.date))),
+    h(
+      "div",
+      { cls: "post__date" },
+      h("date", { datetime: metadata.date }, t(metadata.date))
+    ),
     ...contents,
   ];
 };
-

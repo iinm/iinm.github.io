@@ -19,7 +19,7 @@
   font-weight: 600;
 }
 
-.code-block__language-label+pre {
+.code-block__language-label + pre {
   margin-top: 0;
 }
 
@@ -44,7 +44,7 @@
   transition: transform 0.1s ease-out;
 }
 
-.collapsible__toggle:checked+.collapsible__label::before {
+.collapsible__toggle:checked + .collapsible__label::before {
   transform: rotate(90deg);
 }
 
@@ -55,7 +55,7 @@
   transition: max-height 0.1s ease-in-out;
 }
 
-.collapsible__toggle:checked+.collapsible__label+.collapsible__content {
+.collapsible__toggle:checked + .collapsible__label + .collapsible__content {
   max-height: 50rem;
 }
 

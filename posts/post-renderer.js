@@ -1,6 +1,10 @@
 /** @typedef {import("../lib/markdown.type").HeadingBlock} HeadingBlock */
 
-import { firstHeadingAsString, firstParagraphAsString, parseMarkdown } from "../lib/markdown.js";
+import {
+  firstHeadingAsString,
+  firstParagraphAsString,
+  parseMarkdown,
+} from "../lib/markdown.js";
 import { writeVirtualDom } from "../lib/dom.js";
 import { MetaContents, Post } from "./components/post.js";
 
@@ -45,7 +49,9 @@ const metadata = {
 writeVirtualDom(MetaContents({ metadata }), document.head);
 writeVirtualDom(
   Post({ markdownBlocks, metadata }),
-  /** @type {HTMLElement} */(document.querySelector(".post"))
+  /** @type {HTMLElement} */ (document.querySelector(".post"))
 );
 
-/** @type {HTMLElement} */ (document.querySelector("#renderer-script")).remove();
+/** @type {HTMLElement} */ (
+  document.querySelector("#renderer-script")
+).remove();
