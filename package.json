@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "scripts": {
+    "check": "prettier --check --cache . && eslint . && tsc",
+    "fix": "prettier --write --cache . && eslint --fix ."
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "eslint": "^8.40.0",
+    "prettier": "2.8.8",
+    "typescript": "^5.0.4"
+  }
+}
