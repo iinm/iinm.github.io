@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="/site.css" type="text/css" media="all">
   <link rel="stylesheet" href="../components/markdown.css" type="text/css" media="all">
   <link rel="stylesheet" href="post.css" type="text/css" media="all">
-<title>Arch Linux インストールログ</title><meta name="description" content="Arch Linux のインストールから、基本的なデスクトップ環境、Web ブラウザと日本語入力をインストールするまでのメモです。 基本的には Installation Guide の流れの通りですが、今後のアップデートで問題が発生したときに対応できるように設定した内容を残すことが目的です。 (特に考えることがなかった部分は省略します。)"><meta property="og:url" content="https://iinm.github.io/posts/2022-01-30--install-arch-linux.html"><meta property="og:type" content="article"><meta property="og:title" content="Arch Linux インストールログ"><meta property="og:description" content="Arch Linux のインストールから、基本的なデスクトップ環境、Web ブラウザと日本語入力をインストールするまでのメモです。 基本的には Installation Guide の流れの通りですが、今後のアップデートで問題が発生したときに対応できるように設定した内容を残すことが目的です。 (特に考えることがなかった部分は省略します。)"><meta property="og:image" content="https://avatars.githubusercontent.com/u/8685693"><meta property="og:site_name" content="iinm.github.io"></head>
+<title>Arch Linux インストールログ</title><meta name="description" content="最終更新: 2023-07-23"><meta property="og:url" content="https://iinm.github.io/posts/2022-01-30--install-arch-linux.html"><meta property="og:type" content="article"><meta property="og:title" content="Arch Linux インストールログ"><meta property="og:description" content="最終更新: 2023-07-23"><meta property="og:image" content="https://avatars.githubusercontent.com/u/8685693"><meta property="og:site_name" content="iinm.github.io"></head>
 
 <body>
   <nav>
@@ -15,18 +15,18 @@
       <a class="navigation__link" href="..">back to index</a>
     </div>
   </nav>
-  <section class="post"><div class="post__date"><date datetime="2022-01-30">2022-01-30</date></div><h1 id="684957305307429">Arch Linux インストールログ</h1><p>Arch Linux のインストールから、基本的なデスクトップ環境、Web ブラウザと日本語入力をインストールするまでのメモです。 基本的には <a href="https://wiki.archlinux.org/title/installation_guide">Installation Guide</a> の流れの通りですが、今後のアップデートで問題が発生したときに対応できるように設定した内容を残すことが目的です。 (特に考えることがなかった部分は省略します。)</p><section class="collapsible"><input class="collapsible__toggle" id="toc-toggle" type="checkbox" checked=""><label class="collapsible__label" for="toc-toggle">Table of Contents</label><ul class="collapsible__content"><li><a href="#4324697285423508">環境</a></li><li><a href="#5001208425483745">パーティショニング</a></li><li><a href="#1184471389249843">パッケージのインストール</a></li><li><a href="#5613699024055698">Initramfs</a></li><li><a href="#2313109497199640">ブートローダー</a></li><li><a href="#7379647988840513">Swapfile 追加</a></li><li><a href="#867166261171560">ユーザ作成</a></li><li><a href="#6483976390450512">Wifi 設定</a></li><li><a href="#1858076102264236">GNOME のインストール</a></li><li><a href="#3240397808338624">フォント</a></li><li><a href="#1068491666103540">AUR Helper のインストール</a></li><li><a href="#7561743398933804">ブラウザ (Google Chrome)</a></li><li><a href="#8960828340983734">日本語入力 (Mozc)</a></li></ul></section><h2 id="4324697285423508">環境</h2><ul><li>ハードウェア: ThinkPad T490s</li><li>インストールに使用したイメージ: <a href="http://ftp.jaist.ac.jp/pub/Linux/ArchLinux/iso/2022.01.01/">archlinux-2022.01.01-x86_64.iso</a></li><li>デュアルブート: なし</li><li>Desktop 環境: GNOME</li></ul><hr><p>ここからはライブ環境での操作</p><h2 id="5001208425483745">パーティショニング</h2><ul><li>EFI 用と root 用の 2 つに分割</li><li>後で swapfile を追加するので swap 用パーティションはなし</li><li>root ファイルシステムは <a href="https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition">LUKS on a partition</a> の方法で暗号化<ul><li><code>cryptsetup open /dev/nvme0n1p2 root</code> とすると <code>/dev/mapper/root</code> を通して暗号化された volume に読み書きできるようになる。</li></ul></li></ul><pre><code>NAME        MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
+  <section class="post"><div class="post__date"><date datetime="2022-01-30">2022-01-30</date></div><h1 id="684957305307429">Arch Linux インストールログ</h1><p>最終更新: 2023-07-23</p><p>Arch Linux のインストールから、基本的なデスクトップ環境、Web ブラウザと日本語入力をインストールするまでのメモです。 基本的には <a href="https://wiki.archlinux.org/title/installation_guide">Installation Guide</a> の流れの通りですが、今後のアップデートで問題が発生したときに対応できるように設定した内容を残すことが目的です。 (特に考えることがなかった部分は省略します。)</p><section class="collapsible"><input class="collapsible__toggle" id="toc-toggle" type="checkbox" checked=""><label class="collapsible__label" for="toc-toggle">Table of Contents</label><ul class="collapsible__content"><li><a href="#4324697285423508">環境</a></li><li><a href="#5001208425483745">パーティショニング</a></li><li><a href="#1184471389249843">パッケージのインストール</a></li><li><a href="#5613699024055698">Initramfs</a></li><li><a href="#2313109497199640">ブートローダー</a></li><li><a href="#7379647988840513">Swapfile 追加</a></li><li><a href="#867166261171560">ユーザ作成</a></li><li><a href="#1858076102264236">GNOME のインストール</a></li><li><a href="#4172958291942654">WezTerm のインストール</a></li><li><a href="#3240397808338624">フォント</a></li><li><a href="#1068491666103540">AUR Helper のインストール</a></li><li><a href="#7561743398933804">ブラウザ (Google Chrome)</a></li><li><a href="#8960828340983734">日本語入力 (Mozc)</a></li></ul></section><h2 id="4324697285423508">環境</h2><ul><li>ハードウェア: ThinkPad T490s</li><li>インストールに使用したイメージ: <a href="https://ftp.jaist.ac.jp/pub/Linux/ArchLinux/iso/2023.07.01/">archlinux-2023.07.01-x86_64.iso</a></li><li>デュアルブート: なし</li><li>Desktop 環境: GNOME</li></ul><h2 id="5001208425483745">パーティショニング</h2><ul><li>EFI 用と root 用の 2 つに分割</li><li>後で swapfile を追加するので swap 用パーティションはなし</li><li>root ファイルシステムは <a href="https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition">LUKS on a partition</a> の方法で暗号化<ul><li><code>cryptsetup open /dev/nvme0n1p2 root</code> とすると <code>/dev/mapper/root</code> を通して暗号化された volume に読み書きできるようになる。</li></ul></li></ul><pre><code>NAME        MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
 nvme0n1     259:0    0 238.5G  0 disk
 ├─nvme0n1p1 259:1    0   512M  0 part  /boot
 └─nvme0n1p2 259:2    0   238G  0 part
-  └─root    254:0    0   238G  0 crypt /</code></pre><h2 id="1184471389249843">パッケージのインストール</h2><ul><li>Kernel は LTS 版の linux-lts を選択</li><li>その他、最低限必要なパッケージを追加でインストール</li></ul><div class="code-block__language-label">sh</div><pre><code>pacstrap /mnt base linux-lts linux-firmware \
-  neovim iwd sudo intel-ucode</code></pre><p>ref. <a href="https://wiki.archlinux.org/title/Kernel">Kernel - ArchWiki</a></p><h2 id="5613699024055698">Initramfs</h2><p>volume を暗号化しているので HOOKS に encrypt を追加。</p><div class="code-block__language-label">conf</div><pre><code># mkinitcpio.conf
+  └─root    254:0    0   238G  0 crypt /</code></pre><h2 id="1184471389249843">パッケージのインストール</h2><ul><li>Kernel は LTS 版の linux-lts を選択</li><li>その他、最低限必要なパッケージを追加でインストール</li></ul><div class="code-block__language-label">sh</div><pre><code>pacstrap /mnt base linux-lts linux-firmware intel-ucode \
+  sudo networkmanager neovim</code></pre><p>ref. <a href="https://wiki.archlinux.org/title/Kernel">Kernel - ArchWiki</a></p><h2 id="5613699024055698">Initramfs</h2><p>volume を暗号化しているので HOOKS に encrypt を追加。</p><div class="code-block__language-label">conf</div><pre><code># mkinitcpio.conf
 HOOKS=(... block encrypt filesystem ...)</code></pre><h2 id="2313109497199640">ブートローダー</h2><ul><li><a href="https://wiki.archlinux.org/title/Systemd-boot">systemd-boot</a> を選択。追加でパッケージをインストールする必要がなく、機能も必要十分だったため。</li><li>Intel のプロセッサを使っているので intel-ucode を読み込むように設定。</li><li>volume を暗号化しているので options に設定を追加。</li></ul><div class="code-block__language-label">conf</div><pre><code># /boot/loader/entries/arch.conf
 title   Arch Linux
 linux   /vmlinuz-linux-lts
 initrd  /intel-ucode.img
 initrd  /initramfs-linux-lts.img
-options cryptdevice=UUID=4fdc1b7b-1991-4458-b33c-8639d59b3758:root root=/dev/mapper/root</code></pre><hr><p>ここからはインストール後の root ユーザによる操作</p><h2 id="7379647988840513">Swapfile 追加</h2><div class="code-block__language-label">sh</div><pre><code>dd if=/dev/zero of=/swapfile bs=1M count=512 status=progress
+options cryptdevice=UUID=4fdc1b7b-1991-4458-b33c-8639d59b3758:root root=/dev/mapper/root</code></pre><h2 id="7379647988840513">Swapfile 追加</h2><div class="code-block__language-label">sh</div><pre><code>dd if=/dev/zero of=/swapfile bs=1M count=512 status=progress
 chmod 600 /swapfile
 mkswap /swapfile
 swapon /swapfile</code></pre><pre><code># /etc/fstab
@@ -36,30 +36,19 @@ useradd -m -g wheel me
 
 <span class="code--comment"># パスワード設定</span>
 passwd me</code></pre><div class="code-block__language-label">conf</div><pre><code># /etc/sudoers ( edit by command 'EDITOR=nvim visudo' )
-%wheel ALL=(ALL) ALL</code></pre><hr><p>ここからは追加した一般ユーザによる操作</p><h2 id="6483976390450512">Wifi 設定</h2><p>GNOME &amp; NetworkManager をインストールするまでは iwd を使う。 ※ 先に NetworkManager をインストールして nmcli を使うでも良かったが、ライブ環境にインストールされていた iwd を初めて触ったので、使ってみたかった。</p><p>iwd の設定</p><ul><li>DHCP を使うには <code>EnableNetworkConfiguration=True</code> が必要</li><li>DNS の設定も必要で、特に追加パッケージのインストールが不要な systemd のものを使うことにした。</li></ul><div class="code-block__language-label">conf</div><pre><code># /etc/iwd/main.conf
-
-[General]
-EnableNetworkConfiguration=True
-
-[Network]
-NameResolvingService=systemd</code></pre><p>ref. <a href="https://wiki.archlinux.org/title/Iwd#Optional_configuration">iwd - ArchWiki</a></p><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># GNOMEインストール後はNetworkManagerを使うのでenableにはしない</span>
-sudo systemctl start iwd
-sudo systemctl start systemd-resolved</code></pre><h2 id="1858076102264236">GNOME のインストール</h2><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># パッケージのインストール</span>
-sudo pacman -Sy gnome gnome-terminal networkmanager
+%wheel ALL=(ALL) ALL</code></pre><h2 id="1858076102264236">GNOME のインストール</h2><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># パッケージのインストール</span>
+pacman -Sy gnome gnome-tweaks networkmanager
 
 <span class="code--comment"># 自動起動設定</span>
-sudo systemctl enable gdm
-sudo systemctl enable NetworkManager
-
-sudo reboot</code></pre><p>ref. <a href="https://wiki.archlinux.org/title/GNOME">GNOME - ArchWiki</a></p><h2 id="3240397808338624">フォント</h2><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># Notoフォントをインストール</span>
-sudo pacman -Sy noto-fonts noto-fonts-cjk noto-fonts-emoji
+systemctl enable gdm
+systemctl enable NetworkManager</code></pre><p>ref. <a href="https://wiki.archlinux.org/title/GNOME">GNOME - ArchWiki</a></p><h2 id="4172958291942654">WezTerm のインストール</h2><div class="code-block__language-label">sh</div><pre><code>pacman -Sy wezterm ttf-nerd-fonts-symbols</code></pre><h2 id="3240397808338624">フォント</h2><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># Notoフォントをインストール</span>
+pacman -Sy noto-fonts noto-fonts-cjk noto-fonts-emoji
 
 <span class="code--comment"># その他、購入したフォントを ~/.fonts に配置</span></code></pre><h2 id="1068491666103540">AUR Helper のインストール</h2><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># AURを使うには開発用パッケージが必要</span>
-sudo pacman -Sy git base-devel
+pacman -Sy git base-devel
 
-cd ~/Downloads
 git clone https://aur.archlinux.org/yay-bin.git &amp;&amp; cd yay-bin
-makepkg -si</code></pre><p>ref. <a href="https://github.com/Jguer/yay">yay</a></p><h2 id="7561743398933804">ブラウザ (Google Chrome)</h2><p>インストール</p><div class="code-block__language-label">sh</div><pre><code>yay -Sy google-chrome</code></pre><p>画面共有できるようにする</p><div class="code-block__language-label">sh</div><pre><code>sudo pacman -Sy xdg-desktop-portal xdg-desktop-portal-gnome</code></pre><p><a href="chrome://flags/#enable-webrtc-pipewire-capturer">chrome://flags/#enable-webrtc-pipewire-capturer</a> を有効化</p><p>ref. <a href="https://wiki.archlinux.org/title/PipeWire#WebRTC_screen_sharing">PipeWire - ArchWiki</a></p><h2 id="8960828340983734">日本語入力 (Mozc)</h2><div class="code-block__language-label">sh</div><pre><code>sudo pacman -Sy fcitx5-im fcitx5-mozc</code></pre><p>環境変数を設定</p><pre><code># /etc/environment
+makepkg -si</code></pre><p>ref. <a href="https://github.com/Jguer/yay">yay</a></p><h2 id="7561743398933804">ブラウザ (Google Chrome)</h2><p>インストール</p><div class="code-block__language-label">sh</div><pre><code>yay -Sy google-chrome</code></pre><p>画面共有できるようにする</p><div class="code-block__language-label">sh</div><pre><code>pacman -Sy wireplumber</code></pre><h2 id="8960828340983734">日本語入力 (Mozc)</h2><div class="code-block__language-label">sh</div><pre><code>pacman -Sy fcitx5-im fcitx5-mozc</code></pre><p>環境変数を設定</p><pre><code># /etc/environment
 
 GTK_IM_MODULE=fcitx
 QT_IM_MODULE=fcitx

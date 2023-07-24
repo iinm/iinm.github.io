@@ -1,5 +1,7 @@
 # Arch Linux インストールログ
 
+最終更新: 2023-07-23
+
 Arch Linux のインストールから、基本的なデスクトップ環境、Web ブラウザと日本語入力をインストールするまでのメモです。
 基本的には [Installation Guide](https://wiki.archlinux.org/title/installation_guide) の流れの通りですが、今後のアップデートで問題が発生したときに対応できるように設定した内容を残すことが目的です。
 (特に考えることがなかった部分は省略します。)
@@ -7,13 +9,9 @@ Arch Linux のインストールから、基本的なデスクトップ環境、
 ## 環境
 
 - ハードウェア: ThinkPad T490s
-- インストールに使用したイメージ: [archlinux-2022.01.01-x86_64.iso](http://ftp.jaist.ac.jp/pub/Linux/ArchLinux/iso/2022.01.01/)
+- インストールに使用したイメージ: [archlinux-2023.07.01-x86_64.iso](https://ftp.jaist.ac.jp/pub/Linux/ArchLinux/iso/2023.07.01/)
 - デュアルブート: なし
 - Desktop 環境: GNOME
-
----
-
-ここからはライブ環境での操作
 
 ## パーティショニング
 
@@ -36,8 +34,8 @@ nvme0n1     259:0    0 238.5G  0 disk
 - その他、最低限必要なパッケージを追加でインストール
 
 ```sh
-pacstrap /mnt base linux-lts linux-firmware \
-  neovim iwd sudo intel-ucode
+pacstrap /mnt base linux-lts linux-firmware intel-ucode \
+  sudo networkmanager neovim
 ```
 
 ref. [Kernel - ArchWiki](https://wiki.archlinux.org/title/Kernel)
@@ -65,10 +63,6 @@ initrd  /intel-ucode.img
 initrd  /initramfs-linux-lts.img
 options cryptdevice=UUID=4fdc1b7b-1991-4458-b33c-8639d59b3758:root root=/dev/mapper/root
 ```
-
----
-
-ここからはインストール後の root ユーザによる操作
 
 ## Swapfile 追加
 
@@ -100,58 +94,30 @@ passwd me
 %wheel ALL=(ALL) ALL
 ```
 
----
-
-ここからは追加した一般ユーザによる操作
-
-## Wifi 設定
-
-GNOME & NetworkManager をインストールするまでは iwd を使う。
-※ 先に NetworkManager をインストールして nmcli を使うでも良かったが、ライブ環境にインストールされていた iwd を初めて触ったので、使ってみたかった。
-
-iwd の設定
-
-- DHCP を使うには `EnableNetworkConfiguration=True` が必要
-- DNS の設定も必要で、特に追加パッケージのインストールが不要な systemd のものを使うことにした。
-
-```conf
-# /etc/iwd/main.conf
-
-[General]
-EnableNetworkConfiguration=True
-
-[Network]
-NameResolvingService=systemd
-```
-
-ref. [iwd - ArchWiki](https://wiki.archlinux.org/title/Iwd#Optional_configuration)
-
-```sh
-# GNOMEインストール後はNetworkManagerを使うのでenableにはしない
-sudo systemctl start iwd
-sudo systemctl start systemd-resolved
-```
-
 ## GNOME のインストール
 
 ```sh
 # パッケージのインストール
-sudo pacman -Sy gnome gnome-terminal networkmanager
+pacman -Sy gnome gnome-tweaks networkmanager
 
 # 自動起動設定
-sudo systemctl enable gdm
-sudo systemctl enable NetworkManager
-
-sudo reboot
+systemctl enable gdm
+systemctl enable NetworkManager
 ```
 
 ref. [GNOME - ArchWiki](https://wiki.archlinux.org/title/GNOME)
+
+## WezTerm のインストール
+
+```sh
+pacman -Sy wezterm ttf-nerd-fonts-symbols
+```
 
 ## フォント
 
 ```sh
 # Notoフォントをインストール
-sudo pacman -Sy noto-fonts noto-fonts-cjk noto-fonts-emoji
+pacman -Sy noto-fonts noto-fonts-cjk noto-fonts-emoji
 
 # その他、購入したフォントを ~/.fonts に配置
 ```
@@ -160,9 +126,8 @@ sudo pacman -Sy noto-fonts noto-fonts-cjk noto-fonts-emoji
 
 ```sh
 # AURを使うには開発用パッケージが必要
-sudo pacman -Sy git base-devel
+pacman -Sy git base-devel
 
-cd ~/Downloads
 git clone https://aur.archlinux.org/yay-bin.git && cd yay-bin
 makepkg -si
 ```
@@ -180,17 +145,13 @@ yay -Sy google-chrome
 画面共有できるようにする
 
 ```sh
-sudo pacman -Sy xdg-desktop-portal xdg-desktop-portal-gnome
+pacman -Sy wireplumber
 ```
-
-[chrome://flags/#enable-webrtc-pipewire-capturer](chrome://flags/#enable-webrtc-pipewire-capturer) を有効化
-
-ref. [PipeWire - ArchWiki](https://wiki.archlinux.org/title/PipeWire#WebRTC_screen_sharing)
 
 ## 日本語入力 (Mozc)
 
 ```sh
-sudo pacman -Sy fcitx5-im fcitx5-mozc
+pacman -Sy fcitx5-im fcitx5-mozc
 ```
 
 環境変数を設定
