@@ -35,7 +35,7 @@ nvme0n1     259:0    0 238.5G  0 disk
 
 ```sh
 pacstrap /mnt base linux-lts linux-firmware intel-ucode \
-  sudo networkmanager neovim
+  sudo neovim
 ```
 
 ref. [Kernel - ArchWiki](https://wiki.archlinux.org/title/Kernel)
@@ -98,7 +98,8 @@ passwd me
 
 ```sh
 # パッケージのインストール
-pacman -Sy gnome gnome-tweaks networkmanager
+pacman -Sy gdm gnome-shell gnome-control-center gnome-tweaks gnome-backgrounds \
+  networkmanager
 
 # 自動起動設定
 systemctl enable gdm
@@ -110,7 +111,7 @@ ref. [GNOME - ArchWiki](https://wiki.archlinux.org/title/GNOME)
 ## WezTerm のインストール
 
 ```sh
-pacman -Sy wezterm ttf-nerd-fonts-symbols
+pacman -Sy wezterm ttf-nerd-fonts-symbols-mono
 ```
 
 ## フォント

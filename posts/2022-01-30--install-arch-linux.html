@@ -20,7 +20,7 @@ nvme0n1     259:0    0 238.5G  0 disk
 ├─nvme0n1p1 259:1    0   512M  0 part  /boot
 └─nvme0n1p2 259:2    0   238G  0 part
   └─root    254:0    0   238G  0 crypt /</code></pre><h2 id="1184471389249843">パッケージのインストール</h2><ul><li>Kernel は LTS 版の linux-lts を選択</li><li>その他、最低限必要なパッケージを追加でインストール</li></ul><div class="code-block__language-label">sh</div><pre><code>pacstrap /mnt base linux-lts linux-firmware intel-ucode \
-  sudo networkmanager neovim</code></pre><p>ref. <a href="https://wiki.archlinux.org/title/Kernel">Kernel - ArchWiki</a></p><h2 id="5613699024055698">Initramfs</h2><p>volume を暗号化しているので HOOKS に encrypt を追加。</p><div class="code-block__language-label">conf</div><pre><code># mkinitcpio.conf
+  sudo neovim</code></pre><p>ref. <a href="https://wiki.archlinux.org/title/Kernel">Kernel - ArchWiki</a></p><h2 id="5613699024055698">Initramfs</h2><p>volume を暗号化しているので HOOKS に encrypt を追加。</p><div class="code-block__language-label">conf</div><pre><code># mkinitcpio.conf
 HOOKS=(... block encrypt filesystem ...)</code></pre><h2 id="2313109497199640">ブートローダー</h2><ul><li><a href="https://wiki.archlinux.org/title/Systemd-boot">systemd-boot</a> を選択。追加でパッケージをインストールする必要がなく、機能も必要十分だったため。</li><li>Intel のプロセッサを使っているので intel-ucode を読み込むように設定。</li><li>volume を暗号化しているので options に設定を追加。</li></ul><div class="code-block__language-label">conf</div><pre><code># /boot/loader/entries/arch.conf
 title   Arch Linux
 linux   /vmlinuz-linux-lts
@@ -37,11 +37,12 @@ useradd -m -g wheel me
 <span class="code--comment"># パスワード設定</span>
 passwd me</code></pre><div class="code-block__language-label">conf</div><pre><code># /etc/sudoers ( edit by command 'EDITOR=nvim visudo' )
 %wheel ALL=(ALL) ALL</code></pre><h2 id="1858076102264236">GNOME のインストール</h2><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># パッケージのインストール</span>
-pacman -Sy gnome gnome-tweaks networkmanager
+pacman -Sy gdm gnome-shell gnome-control-center gnome-tweaks gnome-backgrounds \
+  networkmanager
 
 <span class="code--comment"># 自動起動設定</span>
 systemctl enable gdm
-systemctl enable NetworkManager</code></pre><p>ref. <a href="https://wiki.archlinux.org/title/GNOME">GNOME - ArchWiki</a></p><h2 id="4172958291942654">WezTerm のインストール</h2><div class="code-block__language-label">sh</div><pre><code>pacman -Sy wezterm ttf-nerd-fonts-symbols</code></pre><h2 id="3240397808338624">フォント</h2><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># Notoフォントをインストール</span>
+systemctl enable NetworkManager</code></pre><p>ref. <a href="https://wiki.archlinux.org/title/GNOME">GNOME - ArchWiki</a></p><h2 id="4172958291942654">WezTerm のインストール</h2><div class="code-block__language-label">sh</div><pre><code>pacman -Sy wezterm ttf-nerd-fonts-symbols-mono</code></pre><h2 id="3240397808338624">フォント</h2><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># Notoフォントをインストール</span>
 pacman -Sy noto-fonts noto-fonts-cjk noto-fonts-emoji
 
 <span class="code--comment"># その他、購入したフォントを ~/.fonts に配置</span></code></pre><h2 id="1068491666103540">AUR Helper のインストール</h2><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># AURを使うには開発用パッケージが必要</span>
