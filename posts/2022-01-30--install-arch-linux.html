@@ -37,8 +37,7 @@ useradd -m -g wheel me
 <span class="code--comment"># パスワード設定</span>
 passwd me</code></pre><div class="code-block__language-label">conf</div><pre><code># /etc/sudoers ( edit by command 'EDITOR=nvim visudo' )
 %wheel ALL=(ALL) ALL</code></pre><h2 id="1858076102264236">GNOME のインストール</h2><div class="code-block__language-label">sh</div><pre><code><span class="code--comment"># パッケージのインストール</span>
-pacman -Sy gdm gnome-shell gnome-control-center gnome-tweaks gnome-backgrounds \
-  networkmanager
+pacman -Sy gnome gnome-tweaks networkmanager
 
 <span class="code--comment"># 自動起動設定</span>
 systemctl enable gdm

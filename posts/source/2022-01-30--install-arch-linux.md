@@ -98,8 +98,7 @@ passwd me
 
 ```sh
 # パッケージのインストール
-pacman -Sy gdm gnome-shell gnome-control-center gnome-tweaks gnome-backgrounds \
-  networkmanager
+pacman -Sy gnome gnome-tweaks networkmanager
 
 # 自動起動設定
 systemctl enable gdm
