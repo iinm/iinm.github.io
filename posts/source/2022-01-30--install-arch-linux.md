@@ -35,7 +35,7 @@ nvme0n1     259:0    0 238.5G  0 disk
 
 ```sh
 pacstrap /mnt base linux-lts linux-firmware intel-ucode \
-  sudo neovim
+  sudo busybox
 ```
 
 ref. [Kernel - ArchWiki](https://wiki.archlinux.org/title/Kernel)
@@ -90,7 +90,7 @@ passwd me
 ```
 
 ```conf
-# /etc/sudoers ( edit by command 'EDITOR=nvim visudo' )
+# /etc/sudoers ( edit by command 'EDITOR="busybox vi" visudo' )
 %wheel ALL=(ALL) ALL
 ```
 
