@@ -1,6 +1,6 @@
 # Arch Linux インストールログ
 
-最終更新: 2023-07-23
+最終更新: 2023-12-10
 
 Arch Linux のインストールから、基本的なデスクトップ環境、Web ブラウザと日本語入力をインストールするまでのメモです。
 基本的には [Installation Guide](https://wiki.archlinux.org/title/installation_guide) の流れの通りですが、今後のアップデートで問題が発生したときに対応できるように設定した内容を残すことが目的です。
@@ -107,6 +107,14 @@ systemctl enable NetworkManager
 
 ref. [GNOME - ArchWiki](https://wiki.archlinux.org/title/GNOME)
 
+## Firewall
+
+```sh
+pacman -Sy firewalld
+
+systemctl enable firewalld
+```
+
 ## WezTerm のインストール
 
 ```sh
@@ -140,11 +148,8 @@ ref. [yay](https://github.com/Jguer/yay)
 
 ```sh
 yay -Sy google-chrome
-```
 
-画面共有できるようにする
-
-```sh
+# 画面共有に必要
 pacman -Sy wireplumber
 ```
 
