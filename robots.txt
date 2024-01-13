@@ -1,1 +1,1 @@
-Sitemap: https://iinm.github.io/sitemap.txt
+Sitemap: https://iinm.work/sitemap.txt

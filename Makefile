@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-BASE_URL := https://iinm.github.io
+BASE_URL := https://iinm.work
 LOCAL_BASE_URL := http://127.0.0.1:8000
 POSTS = $(shell find posts/source -name '*.md' | xargs -n 1 basename | sed -E 's,(.+)\.md,posts/\1.html,g')
 
