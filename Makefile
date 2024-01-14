@@ -35,12 +35,12 @@ $(DOC_ROOT)/sitemap.txt:
 		| xargs -I {} echo $(BASE_URL)/posts/{} \
 		>> $(DOC_ROOT)/sitemap.txt
 
-$(DOC_ROOT)/posts/%.html: $(DOC_ROOT)/posts/source/%.md
+$(DOC_ROOT)/posts/%.html: $(DOC_ROOT)/posts/source/%.md $(DOC_ROOT)/posts/post.html
 	$(info --- $@)
 	google-chrome-stable --headless --disable-gpu --disable-software-rasterizer \
 		--virtual-time-budget=5000 \
 		--dump-dom \
-		'$(LOCAL_BASE_URL)/posts/post.html?path=$(shell basename $@)' \
+		'$(LOCAL_BASE_URL)/posts/post.html?path=$(shell basename $@)&mode=prerender' \
 		> $(DOC_ROOT)/posts/$(shell basename $@)
 
 .PHONY: clean

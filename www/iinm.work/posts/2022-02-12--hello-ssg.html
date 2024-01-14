@@ -24,6 +24,16 @@ find posts -name <span class="code--string">'*.md'</span> \
   | sed 's,\.md$$,,g' \
   | xargs -I {} bash -c <span class="code--string">"google-chrome-stable --disable-gpu --disable-software-rasterizer --headless --virtual-time-budget=5000 --dump-dom 'http://127.0.0.1:8000/posts/?post={}' &gt; posts/{}.html"</span></code></pre><p>ref. <a href="https://github.com/iinm/iinm.github.io/commit/9bf527b13cc017b14a49f0174a419be9ae1180c6">Makefile</a></p></section>
   
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: false });
+    if (!window.location.href.includes('mode=prerender')) {
+      const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+      const theme = darkThemeMq.matches ? 'dark' : 'default';
+      mermaid.initialize({ startOnLoad: true, theme });
+    }
+  </script>
+
 
 
 </body></html>

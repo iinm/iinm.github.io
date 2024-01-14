@@ -126,6 +126,16 @@ This **is** inline element.
   <span class="code--keyword">return</span> [{ type: <span class="code--string">'text'</span>, props: { text: inlineContent } }]
 }</code></pre><p>HTML要素への変換は上記の出力結果をトレースしながら<code>document.createElement</code>を呼んでいるだけなので割愛します。</p><h2 id="6365036642601039">今後の課題</h2><ul><li>TableやInline HTMLなどサポートしてない要素は今後必要に応じて実装する予定です。</li><li>HTML要素への変換部分が<code>createElement</code>、<code>appendChild</code>の繰り返しで煩雑になってしまったので、仮想DOMみたいな層を挟んでみようと考えています。</li><li>分かってはいましたがClient-sideレンダリングするとMarkdownファイルをダウンロードするまで白い画面が表示されてしまいます。他にもいくつか気づきがあり、対策してみたのでこれは次の記事で紹介できればと思います。</li><li>コードハイライトしたい。</li></ul><p>まだまだ改善の余地がありますが、これでブログを書くための最低限の環境ができました。 これからいろいろ書いていきます。</p><h2 id="8716940465055766">参考</h2><ul><li><a href="https://www.bigomega.dev/markdown-parser">Simple Markdown Parser with JavaScript and Regular Expressions</a> - 最終的にはやりませんでしたが、正規表現でHTMLに直接書き換えるという発想を得ました。</li><li><a href="https://github.com/markedjs/marked">marked</a> - block要素とinline要素に分けて処理するという発想を得ました。</li></ul></section>
   
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: false });
+    if (!window.location.href.includes('mode=prerender')) {
+      const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+      const theme = darkThemeMq.matches ? 'dark' : 'default';
+      mermaid.initialize({ startOnLoad: true, theme });
+    }
+  </script>
+
 
 
 </body></html>

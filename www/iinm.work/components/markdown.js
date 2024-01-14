@@ -132,6 +132,11 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
         break;
       }
       case "code_block": {
+        if (block.props.language === "mermaid") {
+          nodes.push(h("pre", { cls: "mermaid" }, t(block.props.code)));
+          break;
+        }
+
         // language label
         if (block.props.language) {
           nodes.push(

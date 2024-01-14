@@ -40,6 +40,16 @@
 &lt;<span class="code--keyword">link</span> rel=<span class="code--string">"prefetch"</span> href=<span class="code--string">"posts/?post=2021-04-24--markdown-to-html"</span>&gt;
 &lt;<span class="code--keyword">link</span> rel=<span class="code--string">"prefetch"</span> href=<span class="code--string">"posts/2021-04-24--markdown-to-html.md"</span>&gt;</code></pre><p>結果、Markdownファイルのfetch時間がほぼなくなりました。</p><p><div class="image-link"><a href="https://storage.googleapis.com/iinm-blog/2021-04-29--speed-up-my-blog/153013178-4d4b1787-ad1f-421f-97ec-2fa3984ba81a.png" target="_blank" rel="noopener"><img src="https://storage.googleapis.com/iinm-blog/2021-04-29--speed-up-my-blog/153013178-4d4b1787-ad1f-421f-97ec-2fa3984ba81a.png" alt="" loading="lazy"></a></div></p><h2 id="5240030972569932">おまけ: ローディング画面を表示して、白い画面が表示される時間を短くする</h2><p>このブログの作り上、Prefetchできない状況ではMarkdownファイルをfetchするまで白い画面が表示されてしまいます。 読み込み中であることが分かるようにローディング画面を表示するように修正しました。</p><p>before:</p><p><div class="image-link"><a href="https://storage.googleapis.com/iinm-blog/2021-04-29--speed-up-my-blog/153013174-4e5f77a6-2029-40ab-ab1f-3c6609eee953.gif" target="_blank" rel="noopener"><img src="https://storage.googleapis.com/iinm-blog/2021-04-29--speed-up-my-blog/153013174-4e5f77a6-2029-40ab-ab1f-3c6609eee953.gif" alt="" loading="lazy"></a></div></p><p>after:</p><p><div class="image-link"><a href="https://storage.googleapis.com/iinm-blog/2021-04-29--speed-up-my-blog/153013167-d3b47a07-e280-40fe-8833-8e5a38431de8.gif" target="_blank" rel="noopener"><img src="https://storage.googleapis.com/iinm-blog/2021-04-29--speed-up-my-blog/153013167-d3b47a07-e280-40fe-8833-8e5a38431de8.gif" alt="" loading="lazy"></a></div></p><h2 id="6365036642601039">今後の課題</h2><ul><li>JavaScript Modulesの使い方改善: 結果的にDepedency Indejction風になりテストが書きやすそうな形になったものの、Moduleが増えて依存関係が複雑になると煩雑になることが見えている。（Bundler使おうな！って結論になるかもしれない）</li><li>modulepreloadの挙動確認: 今回は白い画面が表示される時間が長くなってしまったため使わなかったが、使い方を間違えただけかもしれないのでもう一度調べる。</li><li>Service workerの利用: 他のサイトではService workerを使ってリソースをprefetchしていた。このブログでも使えないか？</li></ul></section>
   
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: false });
+    if (!window.location.href.includes('mode=prerender')) {
+      const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+      const theme = darkThemeMq.matches ? 'dark' : 'default';
+      mermaid.initialize({ startOnLoad: true, theme });
+    }
+  </script>
+
 
 
 </body></html>

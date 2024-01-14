@@ -105,3 +105,12 @@ const hello = () => {
 
 <iframe src="https://www.youtube.com/embed/lRaL-8qZ0mM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
+
+## Mermaid
+
+```mermaid
+graph TD
+A[Client] --http--> B[Load Balancer]
+B --> C[Server01]
+B --> D[Server02]
+```

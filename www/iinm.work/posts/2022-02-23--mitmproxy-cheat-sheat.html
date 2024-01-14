@@ -40,6 +40,16 @@ mitmproxy -p 8080</code></pre><h2 id="3035882808695628">証明書とプロキシ
 
 addons = [ClientHintsOverride()]</code></pre><div class="code-block__language-label">sh</div><pre><code>mitmproxy -s ./client_hints_override.py</code></pre><p>ref. <a href="https://lucaslegname.github.io/mitmproxy/2020/11/04/mitmproxy-scripts.html">Creating scripts for mitmproxy - Bad Gateway</a></p></section>
   
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: false });
+    if (!window.location.href.includes('mode=prerender')) {
+      const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+      const theme = darkThemeMq.matches ? 'dark' : 'default';
+      mermaid.initialize({ startOnLoad: true, theme });
+    }
+  </script>
+
 
 
 </body></html>
