@@ -1,8 +1,10 @@
 .DEFAULT_GOAL := help
 
+DOC_ROOT := $(CURDIR)/www/iinm.github.io
 BASE_URL := https://iinm.github.io
 LOCAL_BASE_URL := http://127.0.0.1:8000
-POSTS = $(shell find posts/source -name '*.md' | xargs -n 1 basename | sed -E 's,(.+)\.md,posts/\1.html,g')
+# POSTS = $(shell find $(DOC_ROOT)/posts/source -name '*.md' | xargs -n 1 basename | sed -E 's,(.+)\.md,posts/\1.html,g')
+POSTS = $(shell find $(DOC_ROOT)/posts/source -name '*.md' | sed -E 's,source/,,g; s,.md$$,.html,g')
 
 .PHONY: help
 ## help | show help
@@ -16,36 +18,36 @@ help:
 ## run | run web server
 run:
 	$(info --- $@)
-	python3 -m http.server
+	python3 -m http.server --directory $(DOC_ROOT)
 
 .PHONY: site
 ## site | generate site
-site: $(POSTS) sitemap.txt
+site: $(POSTS) $(DOC_ROOT)/sitemap.txt
 	$(info --- $@)
 
-sitemap.txt:
+$(DOC_ROOT)/sitemap.txt:
 	$(info --- $@)
-	echo $(BASE_URL) > sitemap.txt
-	find posts -maxdepth 1 -name '*.html' \
+	echo $(BASE_URL) > $(DOC_ROOT)/sitemap.txt
+	find $(DOC_ROOT)/posts -maxdepth 1 -name '*.html' \
 		| grep -v 'post.html' \
 		| sort \
 		| xargs -n 1 basename \
 		| xargs -I {} echo $(BASE_URL)/posts/{} \
-		>> sitemap.txt
+		>> $(DOC_ROOT)/sitemap.txt
 
-posts/%.html: posts/source/%.md
+$(DOC_ROOT)/posts/%.html: $(DOC_ROOT)/posts/source/%.md
 	$(info --- $@)
 	google-chrome-stable --headless --disable-gpu --disable-software-rasterizer \
 		--virtual-time-budget=5000 \
 		--dump-dom \
 		'$(LOCAL_BASE_URL)/posts/post.html?path=$(shell basename $@)' \
-		> posts/$(shell basename $@)
+		> $(DOC_ROOT)/posts/$(shell basename $@)
 
 .PHONY: clean
 ## clean | delete generated files
 clean:
 	$(info --- $@)
-	rm sitemap.txt
-	find posts/source -name '*.md' \
-		| xargs -n 1 basename | sed -E 's,(.+)\.md,posts/\1.html,g' \
-		| xargs rm
+	rm -fv $(DOC_ROOT)/sitemap.txt
+	find $(DOC_ROOT)/posts/source -name '*.md' \
+		| sed -E 's,source/,,g; s,.md$$,.html,g' \
+		| xargs rm -fv
