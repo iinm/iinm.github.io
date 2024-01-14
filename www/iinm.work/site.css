@@ -1,0 +1,120 @@
+:root {
+  --bg-color: #444;
+  --font-color: #fffffc;
+  --primary-color: #9ae8ff;
+  --code-bg-color: #3f3f3f;
+  --border-color: #ddd;
+  --table-row-primary-bg-color: #505050;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-color: #fffffc;
+    --font-color: #444;
+    --primary-color: #079;
+    --code-bg-color: #f6f6f6;
+    --table-row-primary-bg-color: #f6f6f6;
+  }
+}
+
+html {
+  font-size: 17px;
+}
+
+body {
+  /* for Ubuntu */
+  font-family: "Noto Serif CJK JP", /* for macOS */ "Hiragino Mincho ProN",
+    /* for Windows */ "Yu Mincho", serif;
+  font-weight: 500;
+  background-color: var(--bg-color);
+  color: var(--font-color);
+}
+
+h1,
+h2 {
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 1.7rem;
+}
+
+h2 {
+  font-size: 1.3rem;
+}
+
+hr {
+  border-top: 0.05rem solid var(--border-color);
+}
+
+ul,
+ol {
+  padding: 0 0 0 2rem;
+}
+
+pre,
+blockquote {
+  border-left: 0.2rem solid var(--border-color);
+}
+
+pre {
+  padding: 0.5rem 1rem;
+  line-height: 1.3;
+  overflow-x: scroll;
+}
+
+pre,
+code {
+  /* for macOS */
+  font-family: Monaco, /* for Windows */ Consolas, monospace;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  background-color: var(--code-bg-color);
+}
+
+/* Hide scrollbar */
+pre::-webkit-scrollbar {
+  display: none;
+}
+
+pre {
+  /* IE and Edge */
+  -ms-overflow-style: none;
+  /* Firefox */
+  scrollbar-width: none;
+}
+
+blockquote {
+  margin: 0;
+  padding: 0 0 0 0.5rem;
+}
+
+img {
+  max-width: 100%;
+}
+
+a,
+a:visited {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover,
+a:focus,
+a:active {
+  text-decoration: underline;
+}
+
+table {
+  margin-bottom: 1rem;
+}
+
+th,
+td {
+  font-size: 0.9rem;
+  padding: 0.2rem 0.6rem;
+}
+
+tr:nth-child(odd) {
+  background-color: var(--table-row-primary-bg-color);
+}
