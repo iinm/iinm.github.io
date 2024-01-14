@@ -11,7 +11,7 @@
 
 ## 改善前
 
-![](https://storage.cloud.google.com/iinm-blog/2021-04-29--speed-up-my-blog/153013157-8669c86c-6e3f-49a5-a792-f35229a878fe.png)
+![](https://storage.googleapis.com/iinm-blog/2021-04-29--speed-up-my-blog/153013157-8669c86c-6e3f-49a5-a792-f35229a878fe.png)
 
 Developer toolsで通信内容を確認すると以下のことがわかります。
 
@@ -94,7 +94,7 @@ after: `index.html`でまとめてimport、dependency injection風に依存modul
 
 ここまでの修正でCSSファイル2つ、JavaScriptファイル2つを並列でGETするようになりました。
 
-![](https://storage.cloud.google.com/iinm-blog/2021-04-29--speed-up-my-blog/153013170-8d748514-ad69-4600-ad10-1b4166585457.png)
+![](https://storage.googleapis.com/iinm-blog/2021-04-29--speed-up-my-blog/153013170-8d748514-ad69-4600-ad10-1b4166585457.png)
 
 ## Step 3: インデックスページで最新の記事をPrefetchする
 
@@ -114,7 +114,7 @@ JavaScriptとMarkdownのGETリクエストはどうしても直列になって�
 
 結果、Markdownファイルのfetch時間がほぼなくなりました。
 
-![](https://storage.cloud.google.com/iinm-blog/2021-04-29--speed-up-my-blog/153013178-4d4b1787-ad1f-421f-97ec-2fa3984ba81a.png)
+![](https://storage.googleapis.com/iinm-blog/2021-04-29--speed-up-my-blog/153013178-4d4b1787-ad1f-421f-97ec-2fa3984ba81a.png)
 
 ## おまけ: ローディング画面を表示して、白い画面が表示される時間を短くする
 
@@ -123,11 +123,11 @@ JavaScriptとMarkdownのGETリクエストはどうしても直列になって�
 
 before:
 
-![](https://storage.cloud.google.com/iinm-blog/2021-04-29--speed-up-my-blog/153013174-4e5f77a6-2029-40ab-ab1f-3c6609eee953.gif)
+![](https://storage.googleapis.com/iinm-blog/2021-04-29--speed-up-my-blog/153013174-4e5f77a6-2029-40ab-ab1f-3c6609eee953.gif)
 
 after:
 
-![](https://storage.cloud.google.com/iinm-blog/2021-04-29--speed-up-my-blog/153013167-d3b47a07-e280-40fe-8833-8e5a38431de8.gif)
+![](https://storage.googleapis.com/iinm-blog/2021-04-29--speed-up-my-blog/153013167-d3b47a07-e280-40fe-8833-8e5a38431de8.gif)
 
 ## 今後の課題
 
