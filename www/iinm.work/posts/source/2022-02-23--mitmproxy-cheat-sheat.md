@@ -32,20 +32,20 @@ mitmproxy -p 8080
 
 設定 > ネットワークとインターネット > インターネット >
 利用しているWifiの⚙️アイコン > 詳細設定
-![](https://storage.cloud.google.com/iinm-blog/2022-02-23--mitmproxy-cheat-sheat/155329499-b8154ce4-45ce-4920-a3a8-a43d79e0bcce.png)
+![](https://user-images.githubusercontent.com/8685693/155329499-b8154ce4-45ce-4920-a3a8-a43d79e0bcce.png)
 
 mitmproxyを動かしているマシンのIPアドレス、ポートを設定する。
-![](https://storage.cloud.google.com/iinm-blog/2022-02-23--mitmproxy-cheat-sheat/155329504-326bd614-5c7c-42d5-9b29-97f592f09538.png) 
+![](https://user-images.githubusercontent.com/8685693/155329504-326bd614-5c7c-42d5-9b29-97f592f09538.png) 
 
 HTTPSの通信をプロキシするにはAndroid端末に証明書を設定する必要があります。
 
 [http://mitm.it](http://mitm.it)にAndroidのChromeでアクセスすると、各クライアント向けの証明書と設定方法が参照できます。ここからAndroid向けの証明書をダウンロードします。
-![](https://storage.cloud.google.com/iinm-blog/2022-02-23--mitmproxy-cheat-sheat/155329507-024702c0-4107-4cff-ba2f-005e78bc6700.png)
+![](https://user-images.githubusercontent.com/8685693/155329507-024702c0-4107-4cff-ba2f-005e78bc6700.png)
 
 このページの下にも書いてあるとおり、この証明書をインストールしても他のユーザから通信を覗かれるようなことはありません。
 - このページや証明書のファイルはmitmproxyを動かしてるマシンから返しています。
 - ここからダウンロードできる証明書はmitmproxy初回起動時にランダムに生成されたものです。
-![](https://storage.cloud.google.com/iinm-blog/2022-02-23--mitmproxy-cheat-sheat/155329510-2280a9ef-c159-4212-81d7-c403cbc2a0f9.png)
+![](https://user-images.githubusercontent.com/8685693/155329510-2280a9ef-c159-4212-81d7-c403cbc2a0f9.png)
 
 設定 > セキュリティ > 詳細設定 > 暗号化と認証情報 > 証明書のインストール >
 CA証明書を選択して、ダウンロードした証明書をインストールします。
@@ -53,7 +53,7 @@ CA証明書を選択して、ダウンロードした証明書をインストー
 ## 証明書とプロキシの設定 (Archlinux / GNOME)
 
 Settings > Network > Network Proxy
-![](https://storage.cloud.google.com/iinm-blog/2022-02-23--mitmproxy-cheat-sheat/155333350-b1e24322-6278-4884-9bb1-3c8678f28a4b.png)
+![](https://user-images.githubusercontent.com/8685693/155333350-b1e24322-6278-4884-9bb1-3c8678f28a4b.png)
 
 Androidと同じようにmitm.itから証明書をダウンロードしてインストールします。
 ref. [Grawity/Adding a trusted CA certificate - Arch Linux Wiki](https://wiki.archlinux.org/title/User:Grawity/Adding_a_trusted_CA_certificate)
@@ -69,7 +69,7 @@ sudo trust anchor --remove ./mitmproxy-ca-cert.pem
 
 ## mitmproxyの操作方法
 
-![](https://storage.cloud.google.com/iinm-blog/2022-02-23--mitmproxy-cheat-sheat/155335446-dc9ea697-3aeb-4f5c-b7cf-c53da65a3be0.png)
+![](https://user-images.githubusercontent.com/8685693/155335446-dc9ea697-3aeb-4f5c-b7cf-c53da65a3be0.png)
 
 | key / command | 説明 |
 | --- | --- |
