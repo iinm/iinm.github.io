@@ -36,12 +36,12 @@ const metadata = {
   date,
   description: description,
   ogp: {
-    "og:url": `https://iinm.work/posts/${pagePath}`,
+    "og:url": `https://iinm.github.io/posts/${pagePath}`,
     "og:type": "article",
     "og:title": pageTitle,
     "og:description": description,
     "og:image": "https://avatars.githubusercontent.com/u/8685693",
-    "og:site_name": "iinm.work",
+    "og:site_name": "iinm.github.io",
   },
 };
 

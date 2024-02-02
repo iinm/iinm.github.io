@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 
-DOC_ROOT := $(CURDIR)/www/iinm.work
-BASE_URL := https://iinm.work
+DOC_ROOT := $(CURDIR)/www/iinm.github.io
+BASE_URL := https://iinm.github.io
 LOCAL_BASE_URL := http://127.0.0.1:8000
 
 POSTS = $(shell find $(DOC_ROOT)/posts/source -name '*.md' | sed -E 's,source/,,g; s,.md$$,.html,g')
