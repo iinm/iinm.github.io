@@ -1,6 +1,6 @@
 # Arch Linux インストールログ
 
-最終更新: 2023-12-10
+最終更新: 2024-03-23
 
 Arch Linux のインストールから、基本的なデスクトップ環境、Web ブラウザと日本語入力をインストールするまでのメモです。
 基本的には [Installation Guide](https://wiki.archlinux.org/title/installation_guide) の流れの通りですが、今後のアップデートで問題が発生したときに対応できるように設定した内容を残すことが目的です。
@@ -42,24 +42,25 @@ ref. [Kernel - ArchWiki](https://wiki.archlinux.org/title/Kernel)
 
 ## Initramfs
 
-volume を暗号化しているので HOOKS に encrypt を追加。
+- microcodeを追加。
+- volume を暗号化しているので HOOKS に encrypt を追加。
 
 ```conf
 # mkinitcpio.conf
-HOOKS=(... block encrypt filesystem ...)
+HOOKS=(... autodetect microcode ... block encrypt filesystem ...)
 ```
+
+ref. [Microcode - ArchWiki](https://wiki.archlinux.org/title/microcode)
 
 ## ブートローダー
 
 - [systemd-boot](https://wiki.archlinux.org/title/Systemd-boot) を選択。追加でパッケージをインストールする必要がなく、機能も必要十分だったため。
-- Intel のプロセッサを使っているので intel-ucode を読み込むように設定。
 - volume を暗号化しているので options に設定を追加。
 
 ```conf
 # /boot/loader/entries/arch.conf
 title   Arch Linux
 linux   /vmlinuz-linux-lts
-initrd  /intel-ucode.img
 initrd  /initramfs-linux-lts.img
 options cryptdevice=UUID=4fdc1b7b-1991-4458-b33c-8639d59b3758:root root=/dev/mapper/root
 ```
