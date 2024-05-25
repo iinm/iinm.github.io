@@ -1,13 +1,14 @@
 {
+  "include": ["www/**/*.js"],
   "compilerOptions": {
-    "module": "es2022",
-    "target": "es2022",
+    "allowJs": true,
+    "checkJs": true,
+
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "allowJs": true,
-    "checkJs": true,
+
     "noEmit": true
   }
 }
