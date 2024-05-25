@@ -14,11 +14,35 @@ help:
 		| column -s '|' -t \
 		| sed -E "s,^([^ ]+),$(shell tput setaf 6)\1$(shell tput sgr0),"
 
-.PHONY: run
-## run | run web server
-run:
+.PHONY: up
+## up | run web server
+up: up-precondition
 	$(info --- $@)
-	python3 -m http.server --directory $(DOC_ROOT)
+	python3 -m http.server --bind 127.0.0.1 --directory $(DOC_ROOT) \
+		2> run/server.stderr \
+		> run/server.stdout \
+		& \
+		echo "$$!" > run/server.pid
+
+.PHONY: up-precondition
+up-precondition:
+	@if test -f run/server.pid; then \
+		echo "server.pid exists"; \
+		exit 1; \
+	fi
+
+.PHONY: logs
+## logs | show server logs
+logs:
+	$(info --- $@)
+	tail -f run/server.stdout run/server.stderr
+
+.PHONY: down
+## down | stop web server
+down:
+	$(info --- $@)
+	kill "$$(cat run/server.pid)"
+	rm -f run/server.pid run/server.stdout run/server.stderr
 
 .PHONY: site
 ## site | generate site
@@ -41,6 +65,7 @@ $(DOC_ROOT)/posts/%.html: $(DOC_ROOT)/posts/source/%.md $(DOC_ROOT)/posts/post.h
 		--virtual-time-budget=5000 \
 		--dump-dom \
 		'$(LOCAL_BASE_URL)/posts/post.html?path=$(shell basename $@)&mode=prerender' \
+		2>> run/chrome.stderr \
 		> $(DOC_ROOT)/posts/$(shell basename $@)
 
 .PHONY: clean

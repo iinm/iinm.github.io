@@ -1,6 +1,6 @@
 # Arch Linux インストールログ
 
-最終更新: 2024-03-23
+最終更新: 2024-05-25
 
 Arch Linux のインストールから、基本的なデスクトップ環境、Web ブラウザと日本語入力をインストールするまでのメモです。
 基本的には [Installation Guide](https://wiki.archlinux.org/title/installation_guide) の流れの通りですが、今後のアップデートで問題が発生したときに対応できるように設定した内容を残すことが目的です。
@@ -63,6 +63,12 @@ title   Arch Linux
 linux   /vmlinuz-linux-lts
 initrd  /initramfs-linux-lts.img
 options cryptdevice=UUID=4fdc1b7b-1991-4458-b33c-8639d59b3758:root root=/dev/mapper/root
+```
+
+自動更新を有効化
+
+```sh
+systemctl enable systemd-boot-update
 ```
 
 ## Swapfile 追加
@@ -149,9 +155,16 @@ ref. [yay](https://github.com/Jguer/yay)
 
 ```sh
 yay -Sy google-chrome
+```
 
-# 画面共有に必要
-pacman -Sy wireplumber
+フラグを設定
+
+```sh
+cat << CONFIG > ~/.config/chrome-flags.conf
+#--enable-features=UseOzonePlatform
+#--ozone-platform=wayland
+--force-device-scale-factor=1.10
+CONFIG
 ```
 
 ## 日本語入力 (Mozc)
