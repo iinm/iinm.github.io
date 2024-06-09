@@ -155,7 +155,7 @@ const highlighters = {
     genericSingleQuoteStringHighlighter,
     // keyword
     keywordHighlighter(
-      /\b(return|const|let|for|while|break|continue|import|export)\b/
+      /\b(return|const|let|for|while|break|continue|import|export)\b/,
     ),
   ],
   markdown: [

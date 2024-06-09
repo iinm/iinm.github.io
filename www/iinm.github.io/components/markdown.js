@@ -30,7 +30,7 @@ export const MarkdownContentToc = ({ markdownBlocks }) => {
         cls: "collapsible__label",
         for: "toc-toggle",
       },
-      t("Table of Contents")
+      t("Table of Contents"),
     ),
     h(
       "ul",
@@ -49,11 +49,11 @@ export const MarkdownContentToc = ({ markdownBlocks }) => {
               {
                 href: `#${cyrb53(headingBlock.props.heading)}`,
               },
-              t(headingBlock.props.heading)
-            )
+              t(headingBlock.props.heading),
+            ),
           );
-        })
-    )
+        }),
+    ),
   );
 };
 
@@ -77,8 +77,8 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
           h(
             `h${block.props.level}`,
             { id: String(cyrb53(block.props.heading)) },
-            t(block.props.heading)
-          )
+            t(block.props.heading),
+          ),
         );
         break;
       }
@@ -88,7 +88,7 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
       }
       case "blockquote": {
         nodes.push(
-          h("blockquote", {}, ...MarkdownContents({ blocks: block.contents }))
+          h("blockquote", {}, ...MarkdownContents({ blocks: block.contents })),
         );
         break;
       }
@@ -100,8 +100,8 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
             ...MarkdownContents({
               blocks: block.contents,
               parentTag: "ul",
-            })
-          )
+            }),
+          ),
         );
         break;
       }
@@ -113,8 +113,8 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
             ...MarkdownContents({
               blocks: block.contents,
               parentTag: "ol",
-            })
-          )
+            }),
+          ),
         );
         break;
       }
@@ -126,8 +126,8 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
             ...MarkdownContents({
               blocks: block.contents,
               parentTag: "li",
-            })
-          )
+            }),
+          ),
         );
         break;
       }
@@ -143,8 +143,8 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
             h(
               "div",
               { cls: "code-block__language-label" },
-              t(block.props.language)
-            )
+              t(block.props.language),
+            ),
           );
         }
         // pre, code
@@ -158,9 +158,9 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
               ...HighlightedCodeSegments({
                 code: block.props.code,
                 language: block.props.language,
-              })
-            )
-          )
+              }),
+            ),
+          ),
         );
         break;
       }
@@ -178,9 +178,9 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
                   "th",
                   {},
                   // @ts-ignore
-                  ...segments.map(MarkdownSegment).filter((s) => s)
-                )
-              )
+                  ...segments.map(MarkdownSegment).filter((s) => s),
+                ),
+              ),
             ),
             ...block.props.rows.map((row) =>
               h(
@@ -191,12 +191,14 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
                     "td",
                     { style: { textAlign: block.props.align[index] } },
                     // @ts-ignore
-                    ...row[index].segments.map(MarkdownSegment).filter((s) => s)
-                  )
-                )
-              )
-            )
-          )
+                    ...row[index].segments
+                      .map(MarkdownSegment)
+                      .filter((s) => s),
+                  ),
+                ),
+              ),
+            ),
+          ),
         );
         break;
       }
@@ -220,8 +222,8 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
               "p",
               {},
               // @ts-ignore
-              ...block.props.segments.map(MarkdownSegment).filter((s) => s)
-            )
+              ...block.props.segments.map(MarkdownSegment).filter((s) => s),
+            ),
           );
         }
         break;
@@ -247,7 +249,7 @@ const MarkdownSegment = (segment) => {
         {
           href: segment.props.url,
         },
-        t(segment.props.text)
+        t(segment.props.text),
       );
     }
     case "image": {
@@ -265,8 +267,8 @@ const MarkdownSegment = (segment) => {
             src: segment.props.src,
             alt: segment.props.alt || "",
             loading: "lazy",
-          })
-        )
+          }),
+        ),
       );
     }
     case "bold": {
@@ -305,7 +307,7 @@ const HighlightedCodeSegments = ({ code, language }) => {
         {
           cls: `code--${segment.type}`,
         },
-        t(segment.text)
+        t(segment.text),
       );
     }
     return t(segment.text);

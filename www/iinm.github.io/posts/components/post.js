@@ -34,7 +34,7 @@ export const MetaContents = ({ metadata }) => {
       h("meta", {
         property,
         content,
-      })
+      }),
     ),
   ];
 };
@@ -59,7 +59,7 @@ export const Post = ({ markdownBlocks, metadata }) => {
     h(
       "div",
       { cls: "post__date" },
-      h("date", { datetime: metadata.date }, t(metadata.date))
+      h("date", { datetime: metadata.date }, t(metadata.date)),
     ),
     ...contents,
   ];

@@ -31,7 +31,7 @@ const mergeInlineBlocks = (blocks) => {
       );
       const mergedSegments = previousBlock.props.segments.concat(
         [{ type: "text", props: { text: " " } }],
-        block.props.segments
+        block.props.segments,
       );
       previousBlock.props.segments = mergedSegments;
     } else {
@@ -53,7 +53,7 @@ const parseBlocks = (markdownContentLines) => {
       if (reader.match(markdownContentLines, start)) {
         const { block, readLineCount } = reader.read(
           markdownContentLines,
-          start
+          start,
         );
         blocks.push(block);
         start += readLineCount;
@@ -65,7 +65,7 @@ const parseBlocks = (markdownContentLines) => {
         "Cannot parse after:",
         markdownContentLines[start],
         "blocks:",
-        blocks
+        blocks,
       );
       break;
     }
@@ -236,7 +236,7 @@ const blockReaders = [
         ?.slice(1, 1 + header.length);
       if (alignParts?.length !== header.length) {
         throw new Error(
-          `Failed to read lines, ${lines.slice(start, start + 1)} as table`
+          `Failed to read lines, ${lines.slice(start, start + 1)} as table`,
         );
       }
       const align = alignParts.map((col) => {
@@ -365,7 +365,7 @@ const inlineContentSegmenters = [
   // image
   (inlineContent) => {
     const match = inlineContent.match(
-      "(.*)!\\[([^\\]]*)\\]\\(([^\\)]+)\\)(.*)"
+      "(.*)!\\[([^\\]]*)\\]\\(([^\\)]+)\\)(.*)",
     );
     if (match === null) return;
     return {
@@ -470,7 +470,7 @@ export const firstParagraphAsString = (markdownBlocks) => {
       texts.push(
         block.props.segments
           .map((segment) => ("text" in segment.props ? segment.props.text : ""))
-          .join("")
+          .join(""),
       );
     } else {
       break;

@@ -50,7 +50,7 @@ async function render() {
   writeVirtualDom(MetaContents({ metadata }), document.head);
   writeVirtualDom(
     Post({ markdownBlocks, metadata }),
-    /** @type {HTMLElement} */ (document.querySelector(".post"))
+    /** @type {HTMLElement} */ (document.querySelector(".post")),
   );
 
   /** @type {HTMLElement} */ (
