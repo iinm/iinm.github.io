@@ -1,7 +1,5 @@
-/** @typedef {import("../../lib/markdown.type").Block} MarkdownBlock */
-/** @typedef {import("../../lib/markdown.type").HeadingBlock} HeadingBlock */
-/** @typedef {import("../../lib/markdown.type").InlineSegment} InlineSegment */
-/** @typedef {import("../../lib/dom.type").VirtualDomNode} VirtualDomNode */
+/** @import { Block as MarkdownBlock } from "../../lib/markdown.type"; */
+/** @import { VirtualDomNode } from "../../lib/dom.type"; */
 
 import {
   MarkdownContents,
