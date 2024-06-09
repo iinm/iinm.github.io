@@ -14,27 +14,18 @@ import { highlightCode } from "../lib/code-highlight.js";
  */
 export const MarkdownContentToc = ({ markdownBlocks }) => {
   return h(
-    "section",
-    { cls: "collapsible" },
-    h("input", {
-      cls: "collapsible__toggle",
-      id: "toc-toggle",
-      type: "checkbox",
-      checked: "",
-    }),
+    "details",
+    { cls: "toc" },
     h(
-      "label",
+      "summary",
       {
-        cls: "collapsible__label",
-        for: "toc-toggle",
+        cls: "toc__summary",
       },
       t("Table of Contents"),
     ),
     h(
       "ul",
-      {
-        cls: "collapsible__content",
-      },
+      { cls: "toc__details" },
       ...markdownBlocks
         .filter((block) => block.type === "heading" && block.props.level === 2)
         .map((block) => {
