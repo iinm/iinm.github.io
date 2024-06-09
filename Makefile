@@ -14,35 +14,32 @@ help:
 		| column -s '|' -t \
 		| sed -E "s,^([^ ]+),$(shell tput setaf 6)\1$(shell tput sgr0),"
 
-.PHONY: up
-## up | run web server
-up: up-precondition
+.PHONY: start-server
+## start-server | start web server
+start-server:
 	$(info --- $@)
+	@if test -f run/server.pid; then \
+		echo "server.pid exists"; \
+		exit 1; \
+	fi
 	python3 -m http.server --bind 127.0.0.1 --directory $(DOC_ROOT) \
 		2> run/server.stderr \
 		> run/server.stdout \
 		& \
 		echo "$$!" > run/server.pid
 
-.PHONY: up-precondition
-up-precondition:
-	@if test -f run/server.pid; then \
-		echo "server.pid exists"; \
-		exit 1; \
-	fi
-
-.PHONY: logs
-## logs | show server logs
-logs:
-	$(info --- $@)
-	tail -f run/server.stdout run/server.stderr
-
-.PHONY: down
-## down | stop web server
-down:
+.PHONY: stop-server
+## stop-server | stop web server
+stop-server:
 	$(info --- $@)
 	kill "$$(cat run/server.pid)"
 	rm -f run/server.pid run/server.stdout run/server.stderr
+
+.PHONY: tail-logs
+## tail-logs | show server logs
+tail-logs:
+	$(info --- $@)
+	tail -f run/server.stdout run/server.stderr
 
 .PHONY: site
 ## site | generate site
