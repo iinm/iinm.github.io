@@ -421,6 +421,20 @@ const inlineContentSegmenters = [
       after: match[3],
     };
   },
+  (inlineContent) => {
+    const match = inlineContent.match(/(.*)_([^_]+)_(.*)/);
+    if (match === null) return;
+    return {
+      before: match[1],
+      segment: {
+        type: "italic",
+        props: {
+          text: match[2],
+        },
+      },
+      after: match[3],
+    };
+  },
   // code
   (inlineContent) => {
     const match = inlineContent.match("(.*)`([^`]+)`(.*)");
