@@ -1,9 +1,4 @@
-/** @typedef {import("./markdown.type").Block} Block */
-/** @typedef {import("./markdown.type").HeadingBlock} HeadingBlock */
-/** @typedef {import("./markdown.type").InlineSegment} InlineSegment */
-/** @typedef {import("./markdown.type").InlineBlock} InlineBlock */
-/** @typedef {import("./markdown.type").BlockReader} BlockReader */
-/** @typedef {import("./markdown.type").InlineContentSegmenter} InlineContentSegmenter */
+/** @import { Block, HeadingBlock, InlineSegment, InlineBlock, BlockReader, InlineContentSegmenter } from "./markdown.type" */
 
 /**
  * @param {string} content

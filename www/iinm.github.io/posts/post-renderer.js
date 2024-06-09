@@ -1,5 +1,3 @@
-/** @typedef {import("../lib/markdown.type").HeadingBlock} HeadingBlock */
-
 import {
   firstHeadingAsString,
   firstParagraphAsString,

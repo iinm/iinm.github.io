@@ -1,7 +1,4 @@
-/** @typedef {import("./dom.type").VirtualDomNode} VirtualDomNode */
-/** @typedef {import("./dom.type").ElementNode} ElementNode */
-/** @typedef {import("./dom.type").TextNode} TextNode */
-/** @typedef {import("./dom.type").RawHTMLNode} RawHTMLNode */
+/** @import { VirtualDomNode, ElementNode, TextNode, RawHTMLNode } from "./dom.type" */
 
 /**
  * @param {string} tag
