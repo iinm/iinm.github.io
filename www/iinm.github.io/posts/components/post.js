@@ -1,5 +1,5 @@
-/** @import { Block as MarkdownBlock } from "../../lib/markdown.type"; */
-/** @import { VirtualDomNode } from "../../lib/dom.type"; */
+/** @import { Block as MarkdownBlock } from "../../lib/markdown"; */
+/** @import { VirtualDomNode } from "../../lib/dom"; */
 
 import {
   MarkdownContents,

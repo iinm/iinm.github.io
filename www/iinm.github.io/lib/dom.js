@@ -1,4 +1,16 @@
-/** @import { VirtualDomNode, ElementNode, TextNode, RawHTMLNode } from "./dom.type" */
+/** @typedef {(ElementNode | TextNode | RawHTMLNode)} VirtualDomNode */
+
+/**
+ * @typedef {object} ElementNode
+ * @property {string} tag
+ * @property {string} [cls]
+ * @property {Object<string, string>} [attr]
+ * @property {Object<string, string>} [style]
+ * @property {VirtualDomNode[]} [children]
+ */
+
+/** @typedef {{ tag: "text*", text: string }} TextNode */
+/** @typedef {{ tag: "html*", html: string }} RawHTMLNode */
 
 /**
  * @param {string} tag
