@@ -1,5 +1,5 @@
-/** @import { Block as MarkdownBlock, HeadingBlock, InlineSegment } from "../lib/markdown.type"; */
-/** @import { VirtualDomNode } from "../lib/dom.type"; */
+/** @import { Block as MarkdownBlock, HeadingBlock, InlineSegment } from "../lib/markdown"; */
+/** @import { VirtualDomNode } from "../lib/dom"; */
 
 import { h, t } from "../lib/dom.js";
 import { cyrb53 } from "../lib/hash.js";
