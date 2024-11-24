@@ -1,7 +1,7 @@
 {
   "private": true,
   "engines": {
-    "node": "20.x"
+    "node": "22.x"
   },
   "type": "module",
   "scripts": {
@@ -9,11 +9,11 @@
     "fix": "prettier --write --cache . && eslint --fix ."
   },
   "devDependencies": {
-    "@eslint/js": "^9.4.0",
-    "@types/node": "^20.14.2",
-    "eslint": "^9.4.0",
-    "globals": "^15.4.0",
-    "prettier": "3.3.1",
-    "typescript": "^5.5.1-rc"
+    "@eslint/js": "^9.15.0",
+    "@types/node": "^22.9.3",
+    "eslint": "^9.15.0",
+    "globals": "^15.12.0",
+    "prettier": "3.3.3",
+    "typescript": "^5.7.2"
   }
 }
