@@ -14,9 +14,9 @@ help:
 		| column -s '|' -t \
 		| sed -E "s,^([^ ]+),$(shell tput setaf 6)\1$(shell tput sgr0),"
 
-.PHONY: start-server
-## start-server | start web server
-start-server:
+.PHONY: server/start
+## server/start | start web server
+server/start:
 	$(info --- $@)
 	@if test -f run/server.pid; then \
 		echo "server.pid exists"; \
@@ -28,16 +28,16 @@ start-server:
 		& \
 		echo "$$!" > run/server.pid
 
-.PHONY: stop-server
-## stop-server | stop web server
-stop-server:
+.PHONY: server/stop
+## server/stop | stop web server
+server/stop:
 	$(info --- $@)
 	kill "$$(cat run/server.pid)"
 	rm -f run/server.pid run/server.stdout run/server.stderr
 
-.PHONY: tail-logs
-## tail-logs | show server logs
-tail-logs:
+.PHONY: logs/tail
+## logs/tail | show server logs
+logs/tail:
 	$(info --- $@)
 	tail -f run/server.stdout run/server.stderr
 

@@ -1,6 +1,6 @@
 # Arch Linux インストールログ
 
-最終更新: 2024-05-25
+最終更新: 2024-11-24
 
 Arch Linux のインストールから、基本的なデスクトップ環境、Web ブラウザと日本語入力をインストールするまでのメモです。
 基本的には [Installation Guide](https://wiki.archlinux.org/title/installation_guide) の流れの通りですが、今後のアップデートで問題が発生したときに対応できるように設定した内容を残すことが目的です。
@@ -105,14 +105,38 @@ passwd me
 
 ```sh
 # パッケージのインストール
-pacman -Sy gnome gnome-tweaks networkmanager
+pacman -Sy gnome gnome-tweaks
 
 # 自動起動設定
 systemctl enable gdm
-systemctl enable NetworkManager
 ```
 
 ref. [GNOME - ArchWiki](https://wiki.archlinux.org/title/GNOME)
+
+## Network
+
+以前はnetworkmanagerを使っていたが、特定の環境でIPv4のアドレスが取得できない問題が発生したためiwdを利用する。
+
+```sh
+pacman -Sy iwd
+systemctl enable iwd
+systemctl enable systemd-resolved
+
+# pacman -Sy networkmanager
+# systemctl enable NetworkManager
+
+```
+
+```conf
+# /etc/iwd/main.conf
+
+[General]
+EnableNetworkConfiguration=true
+
+[Network]
+NameResolvingService=systemd
+EnableIPv6=false
+```
 
 ## Firewall
 
