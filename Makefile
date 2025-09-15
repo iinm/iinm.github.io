@@ -1,5 +1,12 @@
 .DEFAULT_GOAL := help
 
+UNAME_OUT := $(shell uname -s)
+ifeq ($(UNAME_OUT),Linux)
+    CHROME_PATH := google-chrome
+else ifeq ($(UNAME_OUT),Darwin)
+    CHROME_PATH := /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
+endif
+
 DOC_ROOT := $(CURDIR)/www/iinm.github.io
 BASE_URL := https://iinm.github.io
 LOCAL_BASE_URL := http://127.0.0.1:8000
@@ -58,7 +65,7 @@ $(DOC_ROOT)/sitemap.txt:
 
 $(DOC_ROOT)/posts/%.html: $(DOC_ROOT)/posts/source/%.md $(DOC_ROOT)/posts/post.html
 	$(info --- $@)
-	google-chrome-stable --headless --disable-gpu --disable-software-rasterizer \
+	$(CHROME_PATH) --headless --disable-gpu --disable-software-rasterizer \
 		--virtual-time-budget=5000 \
 		--dump-dom \
 		'$(LOCAL_BASE_URL)/posts/post.html?path=$(shell basename $@)&mode=prerender' \
