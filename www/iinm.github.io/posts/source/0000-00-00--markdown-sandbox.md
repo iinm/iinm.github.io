@@ -87,7 +87,7 @@ const hello = () => {
 
 ## Image
 
-![alt](https://github.com/identicons/iinm.png)
+![alt](/images/0000-00-00--markdown-sandbox/iinm.png)
 
 ## Table
 
