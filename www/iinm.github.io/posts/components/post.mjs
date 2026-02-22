@@ -1,11 +1,11 @@
-/** @import { Block as MarkdownBlock } from "../../lib/markdown"; */
-/** @import { VirtualDomNode } from "../../lib/dom"; */
+/** @import { Block as MarkdownBlock } from "../../lib/markdown.mjs"; */
+/** @import { VirtualDomNode } from "../../lib/dom.mjs"; */
 
 import {
   MarkdownContents,
   MarkdownContentToc,
-} from "../../components/markdown.js";
-import { h, t } from "../../lib/dom.js";
+} from "../../components/markdown.mjs";
+import { h, t } from "../../lib/dom.mjs";
 
 /**
  * @typedef {object} PageMetadata

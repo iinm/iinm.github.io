@@ -3,7 +3,6 @@
   "engines": {
     "node": ">=22"
   },
-  "type": "module",
   "scripts": {
     "check": "npx @biomejs/biome check && tsc",
     "fix": "npx @biomejs/biome check --fix"

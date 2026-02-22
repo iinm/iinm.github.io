@@ -1,10 +1,10 @@
-import { writeVirtualDom } from "../lib/dom.js";
+import { writeVirtualDom } from "../lib/dom.mjs";
 import {
   firstHeadingAsString,
   firstParagraphAsString,
   parseMarkdown,
-} from "../lib/markdown.js";
-import { MetaContents, Post } from "./components/post.js";
+} from "../lib/markdown.mjs";
+import { MetaContents, Post } from "./components/post.mjs";
 
 async function render() {
   const basePath = location.pathname.split("/").slice(0, -1).join("/"); // "/posts"

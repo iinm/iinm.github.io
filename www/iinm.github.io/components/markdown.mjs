@@ -1,9 +1,9 @@
-/** @import { Block as MarkdownBlock, HeadingBlock, InlineSegment } from "../lib/markdown"; */
-/** @import { VirtualDomNode } from "../lib/dom"; */
+/** @import { Block as MarkdownBlock, HeadingBlock, InlineSegment } from "../lib/markdown.mjs"; */
+/** @import { VirtualDomNode } from "../lib/dom.mjs"; */
 
-import { highlightCode } from "../lib/code-highlight.js";
-import { h, t } from "../lib/dom.js";
-import { cyrb53 } from "../lib/hash.js";
+import { highlightCode } from "../lib/code-highlight.mjs";
+import { h, t } from "../lib/dom.mjs";
+import { cyrb53 } from "../lib/hash.mjs";
 
 /** @typedef {{ markdownBlocks: MarkdownBlock[] }} TocProps */
 
