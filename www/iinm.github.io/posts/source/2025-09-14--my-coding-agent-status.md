@@ -7,6 +7,12 @@
 
 このようなタイミングで、さらにこの先の理想状態を想像するためにも現状を整理しようと思います。
 
+> 🎧 この記事の内容について、AIがポッドキャスト風に解説した音声です。
+
+<audio controls preload="metadata" style="display:block; width:100%; margin:1em 0;">
+  <source src="https://pub-0bb49aa929f242d49c89ed8c297932b5.r2.dev/audio/posts/2025-09-14--my-coding-agent-status--96k.m4a" type="audio/mp4">
+</audio>
+
 ## Background
 
 コーディングエージェントの活用のしやすさは、関わるプロジェクトの性質や役割にも影響を受けると思うので、後で読み返したときに思い出せるよう今の状況を書き残しておこうと思います。
