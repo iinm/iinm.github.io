@@ -1,9 +1,9 @@
 /** @import { Block as MarkdownBlock, HeadingBlock, InlineSegment } from "../lib/markdown"; */
 /** @import { VirtualDomNode } from "../lib/dom"; */
 
+import { highlightCode } from "../lib/code-highlight.js";
 import { h, t } from "../lib/dom.js";
 import { cyrb53 } from "../lib/hash.js";
-import { highlightCode } from "../lib/code-highlight.js";
 
 /** @typedef {{ markdownBlocks: MarkdownBlock[] }} TocProps */
 
@@ -166,7 +166,7 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
                 h(
                   "th",
                   {},
-                  // @ts-ignore
+                  // @ts-expect-error
                   ...segments.map(MarkdownSegment).filter((s) => s),
                 ),
               ),
@@ -179,7 +179,7 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
                   h(
                     "td",
                     { style: { textAlign: block.props.align[index] } },
-                    // @ts-ignore
+                    // @ts-expect-error
                     ...row[index].segments
                       .map(MarkdownSegment)
                       .filter((s) => s),
@@ -210,7 +210,7 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
             h(
               "p",
               {},
-              // @ts-ignore
+              // @ts-expect-error
               ...block.props.segments.map(MarkdownSegment).filter((s) => s),
             ),
           );

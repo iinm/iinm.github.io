@@ -24,10 +24,8 @@ html {
 body {
   /* for Ubuntu */
   font-family:
-    "Noto Serif CJK JP",
-    /* for macOS */ "Hiragino Mincho ProN",
-    /* for Windows */ "Yu Mincho",
-    serif;
+    "Noto Serif CJK JP", /* for macOS */ "Hiragino Mincho ProN",
+    /* for Windows */ "Yu Mincho", serif;
   font-weight: 500;
   background-color: var(--bg-color);
   color: var(--font-color);
@@ -68,11 +66,8 @@ pre {
 
 pre,
 code {
-  font-family:
   /* for macOS */
-    Monaco,
-    /* for Windows */ Consolas,
-    monospace;
+  font-family: Monaco, /* for Windows */ Consolas, monospace;
   font-size: 0.9rem;
   line-height: 1.4;
   background-color: var(--code-bg-color);

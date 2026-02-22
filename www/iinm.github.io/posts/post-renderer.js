@@ -1,9 +1,9 @@
+import { writeVirtualDom } from "../lib/dom.js";
 import {
   firstHeadingAsString,
   firstParagraphAsString,
   parseMarkdown,
 } from "../lib/markdown.js";
-import { writeVirtualDom } from "../lib/dom.js";
 import { MetaContents, Post } from "./components/post.js";
 
 async function render() {

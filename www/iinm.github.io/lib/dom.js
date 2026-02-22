@@ -66,7 +66,7 @@ export const writeVirtualDom = (nodes, parent) => {
     }
     if (vNode.style) {
       for (const [key, value] of Object.entries(vNode.style)) {
-        // @ts-ignore
+        // @ts-expect-error
         el.style[key] = value;
       }
     }
