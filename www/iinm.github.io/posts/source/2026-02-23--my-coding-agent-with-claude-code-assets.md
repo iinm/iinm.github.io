@@ -7,6 +7,12 @@
 そんな中、実務でSDD (Spec-Driven Development) 補助ツールの [Spec Kit](https://github.com/github/spec-kit) をClaude Code
 で試した際にいくつか発見があり、Claude Codeの資産を自作エージェントから活用できるように機能拡張しました。
 
+> 🎧 この記事の内容について、AIがポッドキャスト風に解説した音声です。
+
+<audio controls preload="metadata" style="display:block; width:100%; margin:1em 0;">
+  <source src="https://pub-0bb49aa929f242d49c89ed8c297932b5.r2.dev/audio/posts/2026-02-23--my-coding-agent-with-claude-code-assets--96k.m4a" type="audio/mp4">
+</audio>
+
 ## Spec Kit + Claude Code を使っての発見
 
 ※ Spec Kitの話はほぼありません
