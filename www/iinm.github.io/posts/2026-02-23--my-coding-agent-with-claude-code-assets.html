@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja"><head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="https://avatars.githubusercontent.com/u/8685693?s=48" type="image/x-icon">
+  <link rel="stylesheet" href="/site.css" type="text/css" media="all">
+  <link rel="stylesheet" href="../components/markdown.css" type="text/css" media="all">
+  <link rel="stylesheet" href="post.css" type="text/css" media="all">
+<title>自作コーディングエージェントでClaude Codeの資産を使う</title><meta name="description" content="昨年から、学習機会や安全性を高める目的で、自分専用のコーディングエージェントとサンドボックス環境を作り、実務でも活用しています。"><meta property="og:url" content="https://iinm.github.io/posts/2026-02-23--my-coding-agent-with-claude-code-assets.html"><meta property="og:type" content="article"><meta property="og:title" content="自作コーディングエージェントでClaude Codeの資産を使う"><meta property="og:description" content="昨年から、学習機会や安全性を高める目的で、自分専用のコーディングエージェントとサンドボックス環境を作り、実務でも活用しています。"><meta property="og:image" content="https://avatars.githubusercontent.com/u/8685693"><meta property="og:site_name" content="iinm.github.io"></head>
+
+<body>
+  <nav>
+    <div class="navigation">
+      <img class="navigation__icon" src="https://avatars.githubusercontent.com/u/8685693?s=128" alt="">
+      <a class="navigation__link" href="..">back to index</a>
+    </div>
+  </nav>
+  <section class="post"><div class="post__date"><date datetime="2026-02-23">2026-02-23</date></div><h1 id="2670141018191570">自作コーディングエージェントでClaude Codeの資産を使う</h1><p>昨年から、学習機会や安全性を高める目的で、自分専用のコーディングエージェントとサンドボックス環境を作り、実務でも活用しています。</p><p>周囲はほぼ全員Claude Codeを利用しており、commandやsubagent、skillなどの資産が少しずつ蓄積されつつありますが、 基本的にはプレーンテキストで書かれた指示書であり、ファイルパスを渡して読み込ませれば良いというスタンスでした。 そんな中、実務でSDD (Spec-Driven Development) 補助ツールの <a href="https://github.com/github/spec-kit">Spec Kit</a> をClaude Code で試した際にいくつか発見があり、Claude Codeの資産を自作エージェントから活用できるように機能拡張しました。</p><details class="toc"><summary class="toc__summary">Table of Contents</summary><ul class="toc__details"><li><a href="#5975806422201408">Spec Kit + Claude Code を使っての発見</a></li><li><a href="#4778689755719103">自作エージェントからClaude Codeの資産を使う</a></li><li><a href="#8716940465055766">参考</a></li></ul></details><h2 id="5975806422201408">Spec Kit + Claude Code を使っての発見</h2><p>※ Spec Kitの話はほぼありません</p><p>Spec KitはSDDを補助するcommand (<code>/</code> で呼び出せるプロンプト、例えば、仕様検討、調査、システム設計、タスク分解、実装など) を 様々なコーディングエージェント向けにインストールしてくれます。 今回は、同僚の環境に合わせてClaude Code向けのcommandを <code>.claude/commands</code> にインストール、 私も素直にClaude Codeを使ってSpec Kitが提唱するSDDのプロセスを実践してみました。</p><p>以下、気がついたポイントです。もう、自作なんてやめてClaude Codeを使おうかと思いました。</p><ul><li><b>`/` commandをこれまで以上に頻繁に使うようになった、そしてClaude Codeの使い心地が良い</b><ul><li>当たり前ですが、Spec Kitのcommandを頻繁に使うようになり、自作エージェントにもcommand機能が欲しくなってきました。</li><li>そして、Claude Codeのcommandの補完など、使い心地が良い。自作エージェントにも <code>/commit</code> などの組み込みコマンドはありますが、前方一致のTab補完機能しかありません。</li></ul></li><li><b>subagentによって一度に任せられる仕事のスコープが広がる</b><ul><li>実装計画用の <a href="https://github.com/github/spec-kit/blob/6f523ede22c9ac22691b50cb4fcaeaa92891f7ff/templates/commands/plan.md?plain=1#L53">`/speckit.plan`</a> では、調査項目ごとにsubagentを起動するように指示されています。subagentもただの指示書に過ぎないとナメていました。ごめんなさい。実際に使ってみて、これはエージェントの仕事のスコープを狭めて成功率を高め、かつ、調査や試行錯誤の過程をメインのコンテキストから分離することでトークンの消費を抑えてくれる仕組みであると理解できました。</li><li>これまでの自作エージェントの使い方だと、調査項目ごとに調査依頼 → 調査結果をファイルに書き出してもらう → コンテキストをリセットする、という流れで実行する必要がありますが、subagentの機能があれば最初の一度の指示で複数項目の調査が可能になります。</li></ul></li></ul><h2 id="4778689755719103">自作エージェントからClaude Codeの資産を使う</h2><p>もう、Claude Codeを使えば良いじゃないかと思うところですが、学習機会や安全性へのこだわりを諦めることはできず、 Claude Codeの資産を活用できるように自作エージェントを進化させることにしました。</p><h3 id="8236607910019515">Memory (CLAUDE.md, .claude/rules)</h3><p>前提として、自作エージェントは <code>AGENTS.md</code> を読むようになっています。</p><ul><li><code>.claude/rules</code> を使わないプロジェクトでは、<code>AGENTS.md</code> を <code>CLAUDE.md</code> へのシンボリックリンクにすることで対応していました。</li><li><code>.claude/rules</code> を使うプロジェクトでは、<code>AGENTS.md</code> でセッション開始時にルールファイルのYAML front matterをリストアップするよう指示します。ただし、自動で読んでくれないこともあるので、「プロジェクトルールの確認・適用」を明示的に指示しています。（今後の改善ポイント）</li></ul><div class="code-block__language-label">AGENTS.md</div><pre><code>Locate project rule files at session start:
+
+Global rules: list files without `paths:` in frontmatter
+
+    rg --files-without-match --hidden --glob '*.md' --pcre2 --multiline '\A---\npaths:' ./.claude/rules
+
+Scoped rules: list files with `paths:` in frontmatter
+
+    rg --hidden --glob '*.md' --heading --pcre2 --multiline --only-matching '\A---\npaths:[\s\S]*?\n---\n' ./.claude/rules
+
+When to Read Rules:
+
+- Global rules: Read before working on any file.
+- Scoped rules: Read when your target path matches any pattern in `paths`.</code></pre><h3 id="1395379020356187">Commands (.claude/commands)</h3><p>単純に <code>/prompts:claude/&lt;id&gt;</code> の形式で呼び出せるようにしました。</p><ul><li>独自管理のプロンプトも同じ枠組みで呼び出したいので、プレフィックス <code>claude/</code> を付けています。</li><li>部分一致でTab補完が効くようになり、 <code>/pr&lt;Tab&gt;</code> → <code>/prompts:</code> → <code>/prompts:dep&lt;Tab&gt;</code> → <code>/prompts:claude/deploy</code> のように指定できます。</li></ul><p><div class="image-link"><a href="/images/2026-02-23--my-coding-agent-with-claude-code-assets/2026-02-23--22-47-05.png" target="_blank" rel="noopener"><img src="/images/2026-02-23--my-coding-agent-with-claude-code-assets/2026-02-23--22-47-05.png" alt="" loading="lazy"></a></div></p><p>また、Claude Codeのプラグインとして公開されているURLを補足説明付きで読み込むことができます。</p><div class="code-block__language-label">markdown</div><pre><code>---
+import: https://raw.githubusercontent.com/anthropics/claude-plugins-official/4ca561fb8532594e7a5faef945e85096fcec0616/plugins/feature-dev/commands/feature-dev.md
+---
+
+- Use memory file instead of TodoWrite
+- Parallel execution is not supported. Execute all tasks sequentially.</code></pre><h3 id="2830943157823542">Skills (.claude/skills)</h3><p>Skillsはエージェントが自己判断で読み込むことができ、かつ、ユーザーがcommandとして呼び出すこともできることが特徴です。</p><ul><li>commandとして呼び出す際は <code>/prompts:claude/skill/&lt;id&gt;</code> の形式で呼び出し可能です。</li><li>エージェント判断で読み込めるように、Skillのfront matterを取得する指示をシステムプロンプトに入れましたが、まだ試験運用中です。</li></ul><div class="code-block__language-label">markdown</div><pre><code>- SKILL.md: Reusable workflows with specialized knowledge
+  Find: rg ["--hidden", "--heading", "--line-number", "--pcre2", "--multiline", "--glob", "SKILL.md", "\\A---\\n[\\s\\S]*?\\n---", "./"]
+  If skill matches task: read full file and apply the workflow</code></pre><h3 id="3887227311642382">Subagents (.claude/agents)</h3><p>Subagentの実現がもっとも難しいポイントです。 Claude Codeのsubagentは並列実行が可能ですが、自作エージェントで実現するには大掛かりな構成変更が必要になります。 私個人としてはエージェントが並列実行で早く仕事が終わっても、私自身が別プロジェクトの仕事でブロックされることが多いため、 あまり恩恵は受けられません。そこで、今回は直列実行しかできないという制約のもとsubagentを実現しました。</p><p>並列実行を捨てると実は簡単に実現できて、私の場合は、<b>メインのコンテキストをForkして最終結果だけを残す</b>、というアプローチで実現しました。単純なアプローチですが、subagentによる調査や試行錯誤の過程をクリアできるので、コンテキストを肥大化させずに複数ステップを連続実行する、という私がやりたかったことは実現できました。</p><ul><li>(1) User: QA Engineerサブエージェントでテストケースをレビューして</li><li>(2) Agent: ツール <code>delegateToSubagent(agent=qa-engineer, goal=テストケースのレビューをする...)</code> を呼び出す</li><li>(3) System: あなたは今から、QA Engineerです。テストケースをレビューしてください... 完了したら <code>reportAsSubagent</code> ツールで報告すること</li><li>(4) Agent: (これまでの会話は保持したまま) QA Engineerとしてテストケースのレビュー</li><li>(5) Agent: ツール <code>reportAsSubagent</code> で最終結果を報告<ul><li><b>ここで、subagentとしての(3)~(5)までの履歴はクリアして、最終結果だけを残します</b></li></ul></li></ul><p>また、commandと同様に<code>/agents:qa-engineer 直近編集したテストをレビュー</code> のように明示的に呼び出し可能です。</p><h2 id="8716940465055766">参考</h2><p><a href="https://github.com/iinm/dotfiles/tree/main/agent">agent</a> - コーディングエージェントの実装</p></section>
+  
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: false });
+    if (!window.location.href.includes('mode=prerender')) {
+      const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+      const theme = darkThemeMq.matches ? 'dark' : 'default';
+      mermaid.initialize({ startOnLoad: true, theme });
+    }
+  </script>
+
+
+
+</body></html>
