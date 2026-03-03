@@ -7,3 +7,5 @@ https://iinm.github.io/posts/2022-01-30--install-arch-linux.html
 https://iinm.github.io/posts/2022-02-12--hello-ssg.html
 https://iinm.github.io/posts/2022-02-23--mitmproxy-cheat-sheat.html
 https://iinm.github.io/posts/2025-09-14--my-coding-agent-status.html
+https://iinm.github.io/posts/2026-02-23--my-coding-agent-with-claude-code-assets.html
+https://iinm.github.io/posts/2026-02-28--coding-agent-permission-control.html

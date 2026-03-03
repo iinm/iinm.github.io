@@ -53,7 +53,7 @@ logs/tail:
 site: $(POSTS) $(DOC_ROOT)/sitemap.txt
 	$(info --- $@)
 
-$(DOC_ROOT)/sitemap.txt:
+$(DOC_ROOT)/sitemap.txt: $(POSTS)
 	$(info --- $@)
 	echo $(BASE_URL) > $(DOC_ROOT)/sitemap.txt
 	find $(DOC_ROOT)/posts -maxdepth 1 -name '*.html' \
