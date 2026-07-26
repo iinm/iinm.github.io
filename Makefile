@@ -56,7 +56,8 @@ site: $(POSTS) $(DOC_ROOT)/sitemap.txt strip-image-metadata
 .PHONY: strip-image-metadata
 strip-image-metadata:
 	$(info --- $@)
-	find $(DOC_ROOT)/images -type f -exec exiftool -overwrite_original -all= {} \;
+	find $(DOC_ROOT)/images -type f \
+		| xargs -n1 -P4 exiftool -overwrite_original -all=
 
 $(DOC_ROOT)/sitemap.txt: $(POSTS)
 	$(info --- $@)

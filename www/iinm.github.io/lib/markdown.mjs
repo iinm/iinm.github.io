@@ -6,7 +6,8 @@
 /** @typedef {{ type: "code", props: { text: string } }} CodeTextSegment */
 /** @typedef {(TextSegment | ImageSegment | LinkSegment | BoldTextSegment | ItalicTextSegment | CodeTextSegment)} InlineSegment */
 
-/** @typedef {function(string): InlineContentSegmenterResult | undefined} InlineContentSegmenter */
+/** @typedef {(content: string) => InlineContentSegmenterResult | undefined} InlineContentSegmenter */
+
 /**
  * @typedef {object} InlineContentSegmenterResult
  * @property {string} before
@@ -30,8 +31,8 @@
 
 /**
  * @typedef {object} BlockReader
- * @property {function(string[], number): boolean} match
- * @property {function(string[], number): BlockReaderResult} read
+ * @property {(lines: string[], start: number) => boolean} match
+ * @property {(lines: string[], start: number) => BlockReaderResult} read
  */
 /**
  * @typedef {object} BlockReaderResult

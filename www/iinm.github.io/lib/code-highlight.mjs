@@ -19,7 +19,8 @@ export const highlightCode = (code, language) => {
   return highlightSegment(code, segmentHighlighters);
 };
 
-/** @typedef {function(string): HighlighterResult} SegmentHighlighter */
+/** @typedef {(segment: string) => HighlighterResult} SegmentHighlighter */
+
 /**
  * @typedef {object} HighlighterResult
  * @property {HighlightedCodeSegment} [segment]
