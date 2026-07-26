@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja"><head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="https://avatars.githubusercontent.com/u/8685693?s=48" type="image/x-icon">
+  <link rel="stylesheet" href="/site.css" type="text/css" media="all">
+  <link rel="stylesheet" href="../components/markdown.css" type="text/css" media="all">
+  <link rel="stylesheet" href="post.css" type="text/css" media="all">
+<title>コーディングエージェントの権限制御の仕組みを再発明したら、ただのイタチごっこだった</title><meta name="description" content="Claude Codeの自動承認機能に不安があり、同じような仕組みを自分でも作ってみました。しかし、実際に使ってみると、権限制御というのは思っていたより単純な問題ではなく、新しい穴を見つけては防ぐの繰り返しでした。この取り組みの中で考えたことを書き残したいと思います。"><meta property="og:url" content="https://iinm.github.io/posts/2026-02-28--coding-agent-permission-control.html"><meta property="og:type" content="article"><meta property="og:title" content="コーディングエージェントの権限制御の仕組みを再発明したら、ただのイタチごっこだった"><meta property="og:description" content="Claude Codeの自動承認機能に不安があり、同じような仕組みを自分でも作ってみました。しかし、実際に使ってみると、権限制御というのは思っていたより単純な問題ではなく、新しい穴を見つけては防ぐの繰り返しでした。この取り組みの中で考えたことを書き残したいと思います。"><meta property="og:image" content="https://avatars.githubusercontent.com/u/8685693"><meta property="og:site_name" content="iinm.github.io"></head>
+
+<body>
+  <nav>
+    <div class="navigation">
+      <img class="navigation__icon" src="https://avatars.githubusercontent.com/u/8685693?s=128" alt="">
+      <a class="navigation__link" href="..">back to index</a>
+    </div>
+  </nav>
+  <section class="post"><div class="post__date"><date datetime="2026-02-28">2026-02-28</date></div><h1 id="5904663559782686">コーディングエージェントの権限制御の仕組みを再発明したら、ただのイタチごっこだった</h1><p>Claude Codeの自動承認機能に不安があり、同じような仕組みを自分でも作ってみました。しかし、実際に使ってみると、権限制御というのは思っていたより単純な問題ではなく、新しい穴を見つけては防ぐの繰り返しでした。この取り組みの中で考えたことを書き残したいと思います。</p><blockquote><p>🎧 この記事の内容について、AIがポッドキャスト風に解説した音声です。</p></blockquote><audio controls="" preload="metadata" style="display:block; width:100%; margin:1em 0;">
+  <source src="https://pub-0bb49aa929f242d49c89ed8c297932b5.r2.dev/audio/posts/2026-02-28--coding-agent-permission-control.m4a" type="audio/mp4">
+</audio>
+<details class="toc"><summary class="toc__summary">Table of Contents</summary><ul class="toc__details"><li><a href="#2399111338832652">Claude Codeの権限設定に対する不安</a></li><li><a href="#3238727090324070">試作した権限制御の仕組み</a></li><li><a href="#1883847998399698">権限制御の落とし穴</a></li><li><a href="#2654196450305698">Sandbox環境</a></li><li><a href="#1752679539232984">おわりに</a></li></ul></details><h2 id="2399111338832652">Claude Codeの権限設定に対する不安</h2><p>Claude Codeはツール呼び出しの自動承認設定をサポートしており、例えば <code>Bash(find *)</code> のように許可リストに記載することで、ユーザーへの確認をスキップして<code>find</code>コマンドを実行できるようになります。</p><p>ここで問題になるのが、<code>find</code>コマンドには <code>-exec</code> というオプションがあり、見つかったファイルに対して任意のコマンドを実行する機能があるということです。つまり、<code>find</code>を許可するということは全てのコマンド実行を許可しているのと同じなのです。</p><p>また、<code>.gitignore</code>に記載されたバージョン管理されないファイルの扱いも気になるポイントでした。ファイルの読み書きを許可したら、特に特別扱いはされず承認はスキップされます。（※ 現在は何かしら対策が入っているかもしれません）何が困るかというと、<code>.env</code>のようなGit管理外の開発用のシークレットを勝手に読んでしまうのです。</p><p>これらを踏まえて、以下のような制御が可能なエージェントを作ることにしました。</p><ul><li>コマンドの実行を条件付きで許可（ <code>find</code> は許可するが <code>-exec</code> オプションは許可しない）</li><li>Git管理外のファイルアクセスにはユーザーの承認を必須化</li></ul><h2 id="3238727090324070">試作した権限制御の仕組み</h2><h3 id="7353811185602228">1. 入力をチェックしやすいコマンド呼び出しのInterface設計</h3><p>ソフトウェアには不具合がつきもので、入力チェックの容易性が不具合のない安全な権限制御の実装につながると考え、まずはInterfaceを考えました。</p><p>工夫したのは、コマンドに対する引数を文字列の配列として受け取ること、また、ワイルドカード展開などのシェルの機能はサポートしない、というところです。これによって例えば <code>cat .*</code>のような呼び出しはできず、 <code>cat .env</code> のような明示的なファイル指定を必須化します。また、 <code>echo foo; rm -rf /</code> のようなシェルによる複数コマンドの実行防ぐことができます。</p><div class="code-block__language-label">javascript</div><pre><code>{
+  name: <span class="code--string">"exec_command"</span>,
+  description: <span class="code--string">"Run a command without shell interpretation."</span>,
+  inputSchema: {
+    type: <span class="code--string">"object"</span>,
+    properties: {
+    command: {
+      description: <span class="code--string">"The executable name or path. e.g., rg"</span>,
+      type: <span class="code--string">"string"</span>,
+    },
+    args: {
+      description: <span class="code--string">"Array of arguments to pass to the command."</span>,
+      type: <span class="code--string">"array"</span>,
+      items: {
+        type: <span class="code--string">"string"</span>,
+       },
+    },
+  },
+  required: [<span class="code--string">"command"</span>],
+}</code></pre><h3 id="5970923390576627">2. 入力項目がワーキングディレクトリ内のGit管理対象ファイルであることの確認</h3><p>明示的なファイルパスの指定がされているという前提で、全てのコマンド引数をファイルパスとして扱い、それがワーキングディレクトリ内であること、また、Git管理されていることを確認する仕組みを作りました。</p><p>※ 例えば、 <code>ls -l</code> のオプション <code>-l</code> もワーキングディレクトリからの相対パスとして扱われますが、 <code>.gitignore</code> に記載されないので、Git管理対象と判定されます。</p><h3 id="2908117346085160">3. 正規表現ベースの自動承認設定</h3><p>そして、条件付きでコマンドを許可できるように、以下のような仕組みを作りました。</p><ul><li>ツール名 <code>toolName</code> と入力 <code>input</code> のパターンとマッチした際の <code>action</code> （承認、拒否、ユーザーに確認）を設定</li><li>正規表現 <code>$regex</code> と配列要素の有無確認 <code>$has</code> のサポート</li></ul><p>この仕組みにより、 <code>fd</code> は許可するが、Git管理外のファイルやコマンド実行のオプションはユーザーに確認を求める、という設定が可能になります。※ <code>find</code> を例に話してましたが、デフォルトでGit管理外のファイルを無視する <code>fd</code> や <code>rg</code> を使うことで、 <code>grep -r KEY ./</code> のように明示的なパス指定なしで <code>.env</code> の中身を読むような操作も防ぐことができます。</p><div class="code-block__language-label">javascript</div><pre><code>{
+  <span class="code--string">"autoApproval"</span>: {
+    <span class="code--string">"defaultAction"</span>: <span class="code--string">"ask"</span>,
+    <span class="code--string">"maxApprovals"</span>: 50,
+    <span class="code--string">"patterns"</span>: [
+      {
+        <span class="code--string">"toolName"</span>: <span class="code--string">"exec_command"</span>,
+        <span class="code--string">"input"</span>: { <span class="code--string">"command"</span>: { <span class="code--string">"$regex"</span>: <span class="code--string">"^(find|grep)$"</span> } },
+        <span class="code--string">"action"</span>: <span class="code--string">"deny"</span>,
+        <span class="code--string">"reason"</span>: <span class="code--string">"Use rg or fd instead"</span>
+      },
+      {
+        <span class="code--string">"toolName"</span>: <span class="code--string">"exec_command"</span>,
+        <span class="code--string">"input"</span>: {
+          <span class="code--string">"command"</span>: <span class="code--string">"fd"</span>,
+          <span class="code--string">"args"</span>: {
+            <span class="code--string">"$has"</span>: {
+              <span class="code--string">"$regex"</span>: <span class="code--string">"^(--unrestricted|--no-ignore|--exec|--exec-batch|--follow|-[^-]*[uIxXL])"</span>
+            }
+          }
+        },
+        <span class="code--string">"action"</span>: <span class="code--string">"ask"</span>
+      },
+      {
+        <span class="code--string">"toolName"</span>: <span class="code--string">"exec_command"</span>,
+        <span class="code--string">"input"</span>: {
+          <span class="code--string">"command"</span>: <span class="code--string">"rg"</span>,
+          <span class="code--string">"args"</span>: {
+            <span class="code--string">"$has"</span>: {
+              <span class="code--string">"$regex"</span>: <span class="code--string">"^(--unrestricted|--no-ignore|--follow|-[^-]*[uL])"</span>
+            }
+          }
+        },
+        <span class="code--string">"action"</span>: <span class="code--string">"ask"</span>
+      },
+      {
+        <span class="code--string">"toolName"</span>: <span class="code--string">"exec_command"</span>,
+        <span class="code--string">"input"</span>: {
+          <span class="code--string">"command"</span>: {
+            <span class="code--string">"$regex"</span>: <span class="code--string">"^(echo|ls|cat|head|tail|wc|date|pwd|uname|fd|rg|jq)$"</span>
+          }
+        },
+        <span class="code--string">"action"</span>: <span class="code--string">"allow"</span>
+      }
+    ]
+  }
+}</code></pre><h2 id="1883847998399698">権限制御の落とし穴</h2><p>実際にエージェントを使う中で、さまざまな問題が見つかりました。</p><h3 id="6918457991067291">落とし穴 #1 拒否すべきパターンの考慮もれ</h3><p>これは恥ずかしい話ですが、当初書いたルールでは <code>rg -HI</code> (<code>—-hidden</code> と <code>-—no-ignore</code> の組み合わせ) のような、オプションの省略表記の組み合わせや、 <code>—-follow</code> (シンボリックリンクをたどって、ワーキングディレクトリ外にアクセスする可能性がある)を拒否できてませんでした。</p><p>汎用性が高く、多様なオプションのあるコマンドは拒否すべきパターンを漏れなく考慮することは難しいと認知し、別のアプローチで解決すべきでした。 <code>rg</code> の例では、多くのコーディングエージェントがそうしているように、機能制限版のGrep toolを実装するアプローチにより、こういったすり抜けを軽減することができると考えています。</p><h3 id="1656506658259276">落とし穴 #2 エージェントが生成したコードによる権限設定のバイパス</h3><p>こちらは最初から気がついていたので許可はしてませんでしたが、 <code>package.json</code> の <code>scripts</code> や <code>Makefile</code> に定義したタスクの実行を許可すると、ワーキングディレクトリ内であることやGit管理対象であることのチェックは無意味になります。</p><p>コーディングエージェントであれば、ファイルの読み書きを自動許可するのは普通のことかと思います。ファイルを変更できるということは、 <code>package.json</code> を書き換えることで <code>npm run lint</code> などの内容を変更できてしまいます。では、 <code>package.json</code> を書き換えられないように <code>deny</code> の設定をしたらどうでしょう？</p><div class="code-block__language-label">javascript</div><pre><code>{
+  <span class="code--string">"toolName"</span>: { <span class="code--string">"$regex"</span>: <span class="code--string">"write_file|patch_file"</span> },
+  <span class="code--string">"input"</span>: { <span class="code--string">"filePath"</span>: { <span class="code--string">"$regex"</span>: <span class="code--string">"package.json"</span> } },
+  <span class="code--string">"action"</span>: <span class="code--string">"deny"</span>
+}</code></pre><p>許可されているのがlinterの実行くらいであれば問題ないかもしれません。しかし、 <code>npm run test</code> のようなエージェントが生成したコードの実行を許可するような設定があるとすべて破綻します。 <code>package.json</code> を書き換えることもできますし、コードを通してワーキングディレクトリ外やGit管理外のファイルの読み書きや、任意のコマンドを実行することも可能です。</p><h2 id="2654196450305698">Sandbox環境</h2><p>次に用意したのが、エージェントが暴走した際に被害を最小化するためのSandbox環境です。デフォルトではワーキングディレクトリでのReadのみを許可、書き込みやネットワークアクセスは明示的な許可が必要、という仕様です。</p><div class="code-block__language-label">bash</div><pre><code>agent-sandbox --dockerfile Dockerfile \
+  --allow-write \
+  --allow-net registry.npmjs.org \
+  npm install</code></pre><p>これを使うことで、ワーキングディレクトリの外は機密情報がなく、仮に <code>.env</code> 内の機密情報を読んでも外部には送信できない、という環境を作ることができます。エージェントの設定ではコマンド単位でネットワークアクセスなどの権限を指定可能です。</p><div class="code-block__language-label">javascript</div><pre><code>{
+  <span class="code--string">"sandbox"</span>: {
+    <span class="code--string">"command"</span>: <span class="code--string">"agent-sandbox"</span>,
+    <span class="code--string">"args"</span>: [<span class="code--string">"--dockerfile"</span>, <span class="code--string">".agent/sandbox/Dockerfile"</span>, <span class="code--string">"--allow-write"</span>],
+    <span class="code--string">"separator"</span>: <span class="code--string">"--"</span>,
+    <span class="code--string">"rules"</span>: [
+      <span class="code--comment">// ghコマンドはサンドボックス外で動かす ※ ユーザ承認必須の前提</span>
+      {
+        <span class="code--string">"pattern"</span>: {
+	        <span class="code--string">"command"</span>: <span class="code--string">"gh"</span>,
+	      },
+	      <span class="code--string">"mode"</span>: <span class="code--string">"unsandboxed"</span>
+      },
+      {
+        <span class="code--string">"pattern"</span>: {
+          <span class="code--string">"command"</span>: <span class="code--string">"npm"</span>,
+          <span class="code--string">"args"</span>: [<span class="code--string">"ci"</span>]
+        },
+        <span class="code--string">"mode"</span>: <span class="code--string">"sandbox"</span>,
+        <span class="code--string">"extraArgs"</span>: [<span class="code--string">"--allow-net"</span>, <span class="code--string">"registry.npmjs.org"</span>]
+      }
+      <span class="code--comment">// マッチしないものはすべてサンドボックス環境で実行</span>
+    ]
+  }
+}</code></pre><h3 id="2547085336762188">エージェントそのものをサンドボックスで動かすか、コマンドをサンドボックスで動かすか？</h3><p>私のアプローチではコマンド単位でサンドボックス上で動かす方式にしましたが、dev containerなどのコンテナ環境内でエージェントを動かすというアプローチも広く採用されている方式かと思います。ユースケースによる部分もありますが、コンテナ環境でエージェントを動かすアプローチには懸念があります。</p><p>前提として、守るべきポイントは2つあると考えてます</p><ul><li>ファイルシステムへのアクセス：機密情報を読ませない</li><li>ネットワークアクセス：<ul><li>万が一機密情報を読んでしまっても、ネットワークを通して外に送らせない</li><li>プロンプトインジェクションの危険性がある信頼できないドメインにアクセスさせない</li></ul></li></ul><p>実際の同僚たちのユースケースをみると、GitHub CLIを操作させてGitHubのissueをコンテキストとして与えたり、Pull Requestをエージェントに作らせる、ということをやっています。これをコンテナ環境でやろうとすると、GitHubの認証情報をコンテナ内に置いて、github.comやapi.github.comへのアクセスを許可することになります。これまでに考えてきたように、エージェントが生成したコードの実行権限を与えた時点で、認証情報を読ませないというのはほぼ不可能ではないでしょうか？そして、github.comへの通信を許可するということは、万が一トークンの権限設定に不備がある場合、例えば攻撃者が用意したリポジトリのissueへのコメントやgistなどを通して、ソースコードやGitHubの認証情報を持ち出し可能になるということです。繰り返しになりますが、GitHub CLIの実行を自動承認してなくても、エージェントが生成したコードから気が付かずに実行される可能性は残ります。</p><h2 id="1752679539232984">おわりに</h2><h3 id="6962801057307053">いろいろ考えたが、実際のところ情報漏洩は起きるのか？</h3><p>使い方にもよりますが、実際のところ確率は極めて低いと考えています。（= 考えなくて良い、対策しなくて良いというわけではない）直近1年、GPT、Claude、Geminiなどの主要なモデルやKimi、GLMなどのオープンモデルなども実務で試してきましたが、指示に従わずに情報を外に持ち出ししようとしたことは一度もありません。もし起こる可能性があるとしたら、プロンプトインジェクションでしょうか。偶然、攻撃の指示が書かれたコンテンツを読み込んでしまって、というケースです。</p><p>Webコンテンツからのプロンプトインジェクションに関しては各社対策をしていまして、例えば、Claude CodeではWebページを読み込む際、メインのコンテキストとは分けて必要な情報のみをメインのコンテキストに渡すという工夫をしているそうです。私のエージェントでも <code>ask_google</code> というツールを用意して、エージェントがGeminiを通してGoogle検索の結果を要約したものだけを受け取れるように工夫しています。</p><h3 id="5836699312475766">結局、自動承認機能なんてないほうが良いのではないか？</h3><p>様々な工夫を重ねる中で、設定ミスのリスクがあり、これで防御できているという偽の安心感を与えてしまうような機能はむしろ害なのではないかとも考えました。エージェントの行動はコントロール不能であるという前提で、エージェントが動くサンドボックス環境のほうで防御するということです。</p><p>これに関してはまだ答えは出せてません。今のところは、GitHubのissueやコメントを直接読ませるなど、利便性を求めるとコマンド単位での承認・確認の設定は有用であると考えています。</p></section>
+  
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: false });
+    if (!window.location.href.includes('mode=prerender')) {
+      const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+      const theme = darkThemeMq.matches ? 'dark' : 'default';
+      mermaid.initialize({ startOnLoad: true, theme });
+    }
+  </script>
+
+
+
+</body></html>

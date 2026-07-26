@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "check": "npx @biomejs/biome check && tsc",
+    "fix": "npx @biomejs/biome check --fix"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.2",
+    "@types/node": "^22.18.3",
+    "globals": "^16.4.0",
+    "typescript": "^5.9.2"
+  }
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja"><head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="https://avatars.githubusercontent.com/u/8685693?s=48" type="image/x-icon">
+  <link rel="stylesheet" href="/site.css" type="text/css" media="all">
+  <link rel="stylesheet" href="../components/markdown.css" type="text/css" media="all">
+  <link rel="stylesheet" href="post.css" type="text/css" media="all">
+<title>Corne Cherry のPro Microの交換</title><meta name="description" content="今年4月にオフィス勤務が増えたことで外付けキーボードの持ち運びが面倒になり、3ヶ月ほどMacBookのキーボードを使っていました。 6月頃からリモートワークが増えてきたのでまたCorne Cherryを使おうと引っ張り出したら、なんと、USB端子が剥がれていました。 2022年6月頃購入したものなので、ちょうど4年ほど使用したタイミングとなります。 長く使っていればまた起きることなので、Pro Micro交換の手順を整理しておこうと思います。"><meta property="og:url" content="https://iinm.github.io/posts/2026-07-26--corne-cherry-pro-micro-replacement-linux.html"><meta property="og:type" content="article"><meta property="og:title" content="Corne Cherry のPro Microの交換"><meta property="og:description" content="今年4月にオフィス勤務が増えたことで外付けキーボードの持ち運びが面倒になり、3ヶ月ほどMacBookのキーボードを使っていました。 6月頃からリモートワークが増えてきたのでまたCorne Cherryを使おうと引っ張り出したら、なんと、USB端子が剥がれていました。 2022年6月頃購入したものなので、ちょうど4年ほど使用したタイミングとなります。 長く使っていればまた起きることなので、Pro Micro交換の手順を整理しておこうと思います。"><meta property="og:image" content="https://avatars.githubusercontent.com/u/8685693"><meta property="og:site_name" content="iinm.github.io"></head>
+
+<body>
+  <nav>
+    <div class="navigation">
+      <img class="navigation__icon" src="https://avatars.githubusercontent.com/u/8685693?s=128" alt="">
+      <a class="navigation__link" href="..">back to index</a>
+    </div>
+  </nav>
+  <section class="post"><div class="post__date"><date datetime="2026-07-26">2026-07-26</date></div><h1 id="4221156019383241">Corne Cherry のPro Microの交換</h1><p>今年4月にオフィス勤務が増えたことで外付けキーボードの持ち運びが面倒になり、3ヶ月ほどMacBookのキーボードを使っていました。 6月頃からリモートワークが増えてきたのでまたCorne Cherryを使おうと引っ張り出したら、なんと、USB端子が剥がれていました。 2022年6月頃購入したものなので、ちょうど4年ほど使用したタイミングとなります。 長く使っていればまた起きることなので、Pro Micro交換の手順を整理しておこうと思います。</p><p><div class="image-link"><a href="/images/2026-07-26--corne-cherry-pro-micro-replacement-linux/broken-pro-micro.jpg" target="_blank" rel="noopener"><img src="/images/2026-07-26--corne-cherry-pro-micro-replacement-linux/broken-pro-micro.jpg" alt="" loading="lazy"></a></div></p><details class="toc"><summary class="toc__summary">Table of Contents</summary><ul class="toc__details"><li><a href="#4324697285423508">環境</a></li><li><a href="#5943494356958253">必要だったもの</a></li><li><a href="#7032894966841006">手順</a></li></ul></details><h2 id="4324697285423508">環境</h2><ul><li>Corne Cherry:<ul><li><a href="https://bit-trade-one.co.jp/selfmadekb/adskbcc/">“Corne Cherry” – 半田付けのいらない42キー スプリットキーボードキット</a> (2022年6月頃購入)</li><li>ビルドガイド: <a href="https://github.com/bit-trade-one/crkbd/blob/master/corne-cherry/doc/buildguide_ver.BTO_jp.md">corne-cherry/doc/buildguide_ver.BTO_jp.md</a></li><li>現行のCorne V4 Cherryよりも前のモデルで、v1-3のどれなのかは不明</li></ul></li><li>ファームウェア書き込みなどのセットアップ用のPC: ThinkPad T490s (Debian 13)</li></ul><h2 id="5943494356958253">必要だったもの</h2><ul><li><a href="https://shop.yushakobo.jp/products/21">Pro Micro Micro-B版 コンスルーセット</a><ul><li>遊舎工房で 1,210円 + 配送料 550円 + 税 160円 = 1,760円 でした</li></ul></li><li>はんだごて<ul><li>ど素人すぎて、コンスルーってやつを基板とPro Microに挿すだけだと勘違いしていたのですが、挿してみるとPro Micro側はゆるゆるで、はんだ付けが必要でした</li></ul></li></ul><h2 id="7032894966841006">手順</h2><ul><li>Pro Microにファームウェアを書き込んでおく<ul><li>v1-v3はファームウェアが共通です: <a href="https://github.com/foostan/crkbd/blob/main/docs/firmware/firmware_en.md">docs/firmware/firmware_en.md</a></li><li><a href="https://remap-keys.app/catalog/EfziB9K7ZcxLnIHXl5AQ/firmware">Crkbd - Remap</a> の <code>crkbd:via</code> (qmk018じゃない方) を書き込みます ※ 以前ファームウェアを書き込むときはCLIで書き込みましたが、今はChromeからできることに驚きました</li><li>ブートローダーは通常のPro Microであれば <code>caterina</code> を選択します（互換機だと違うらしい）</li><li>Chromeからファームウェアを書き込むためには、非rootユーザーがデバイスにアクセスできるように以下の設定が必要でした<pre><code>sudo tee /etc/udev/rules.d/50-qmk.rules &gt; /dev/null &lt;&lt;'EOF'
+# Caterina (Pro Micro)
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", TAG+="uaccess"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1b4f", TAG+="uaccess"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="2a03", TAG+="uaccess"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="239a", TAG+="uaccess"
+EOF
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+sudo usermod -aG dialout $USER</code></pre></li></ul></li><li>Pro Microにコンスルーを挿して、はんだ付けで固定する<ul><li>向きはもともと使っていたPro Microをよく見て合わせます</li></ul></li><li>Pro Microを基板に挿す</li><li>キーマップの再設定<ul><li>以前は <a href="https://caniusevia.com/">VIA</a> のデスクトップアプリを使ってましたが、現在は <a href="https://usevia.app/">VIAのWebアプリ</a>から設定できます</li><li>設定をJSONでエクスポートしていたので、インポートするだけで復旧できました<a href="https://github.com/iinm/dotfiles/blob/main/crkbd.json">crkbd.json</a></li><li>ここでもChromeからキーボードの設定を書き換えるために、非rootユーザーからのアクセスを許可する必要がありました※ 一時的な設定なので雑に <code>MODE=0666</code> としてますが、恒久的な設定にする場合は専用のgroup作り、そのグループのユーザーだけがアクセスできるよう制限したほうが良いです。<pre><code>sudo tee /etc/udev/rules.d/92-viia.rules &gt; /dev/null &lt;&lt;'EOF'
+KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666", TAG+="uaccess", TAG+="udev-acl"
+EOF
+sudo udevadm control --reload
+sudo udevadm trigger</code></pre></li></ul></li></ul></section>
+  
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: false });
+    if (!window.location.href.includes('mode=prerender')) {
+      const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+      const theme = darkThemeMq.matches ? 'dark' : 'default';
+      mermaid.initialize({ startOnLoad: true, theme });
+    }
+  </script>
+
+
+
+</body></html>
