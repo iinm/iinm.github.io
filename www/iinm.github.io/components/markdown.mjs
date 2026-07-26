@@ -126,29 +126,35 @@ export const MarkdownContents = ({ blocks, parentTag }) => {
           break;
         }
 
-        // language label
-        if (block.props.language) {
-          nodes.push(
-            h(
-              "div",
-              { cls: "code-block__language-label" },
-              t(block.props.language),
-            ),
-          );
-        }
-        // pre, code
         nodes.push(
           h(
-            "pre",
-            {},
-            h(
-              "code",
-              {},
-              ...HighlightedCodeSegments({
-                code: block.props.code,
-                language: block.props.language,
-              }),
-            ),
+            "div",
+            { cls: "code-block" },
+            // language label
+            ...[
+              ...(block.props.language
+                ? [
+                    h(
+                      "div",
+                      { cls: "code-block__language-label" },
+                      t(block.props.language),
+                    ),
+                  ]
+                : []),
+              // pre, code
+              h(
+                "pre",
+                {},
+                h(
+                  "code",
+                  {},
+                  ...HighlightedCodeSegments({
+                    code: block.props.code,
+                    language: block.props.language,
+                  }),
+                ),
+              ),
+            ],
           ),
         );
         break;

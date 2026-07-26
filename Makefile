@@ -34,6 +34,8 @@ server/start:
 		> run/server.stdout \
 		& \
 		echo "$$!" > run/server.pid
+	@echo
+	@echo "Preview URL: http://localhost:8000/posts/post.html?path=0000-00-00--markdown-sandbox.html"
 
 .PHONY: server/stop
 ## server/stop | stop web server

@@ -30,7 +30,7 @@
   - [Crkbd - Remap](https://remap-keys.app/catalog/EfziB9K7ZcxLnIHXl5AQ/firmware) の `crkbd:via` (qmk018じゃない方) を書き込みます ※ 以前ファームウェアを書き込むときはCLIで書き込みましたが、今はChromeからできることに驚きました
   - ブートローダーは通常のPro Microであれば `caterina` を選択します（互換機だと違うらしい）
   - Chromeからファームウェアを書き込むためには、非rootユーザーがデバイスにアクセスできるように以下の設定が必要でした
-    ```
+    ```sh
     sudo tee /etc/udev/rules.d/50-qmk.rules > /dev/null <<'EOF'
     # Caterina (Pro Micro)
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", TAG+="uaccess"
@@ -51,7 +51,7 @@
     [crkbd.json](https://github.com/iinm/dotfiles/blob/main/crkbd.json)
   - ここでもChromeからキーボードの設定を書き換えるために、非rootユーザーからのアクセスを許可する必要がありました
     ※ 一時的な設定なので雑に `MODE=0666` としてますが、恒久的な設定にする場合は専用のgroup作り、そのグループのユーザーだけがアクセスできるよう制限したほうが良いです。
-    ```
+    ```sh
     sudo tee /etc/udev/rules.d/92-viia.rules > /dev/null <<'EOF'
     KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666", TAG+="uaccess", TAG+="udev-acl"
     EOF
